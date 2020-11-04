@@ -32,9 +32,11 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs;
 
+use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\Map;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
 class AmongUs extends PluginBase{
@@ -42,6 +44,8 @@ class AmongUs extends PluginBase{
 	public static $prefix = "§b§l[AmongUs] §r§7";
 	/** @var AmongUs|null */
 	private static $instance = null;
+	/** @var Game[] */
+	protected $games = [];
 
 	public function onLoad() : void{
 		self::$instance = $this;
@@ -55,5 +59,22 @@ class AmongUs extends PluginBase{
 		$this->saveDefaultConfig();
 
 		ItemFactory::registerItem(new Map(ItemIds::FILLED_MAP, 0, "Filled Map"));
+	}
+
+	public function registerGame(Game $game) : void{
+		$this->games[$game->getId()] = $game;
+	}
+
+	public function getGame(int $id) : ?Game{
+		return $this->games[$id] ?? null;
+	}
+
+	public function getGameByPlayer(Player $player) : ?Game{
+		foreach($this->games as $game){
+			if($game->hasPlayer($player)){
+				return $game;
+			}
+		}
+		return null;
 	}
 }
