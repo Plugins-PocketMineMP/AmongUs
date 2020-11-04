@@ -123,9 +123,8 @@ class Game{
 			if(isset($this->crews[$player->getName()])){
 				unset($this->crews[$player->getName()]);
 			}
+			$this->broadcastMessage("Player " . $player->getName() . " has left the game.");
 		}
-
-		$this->broadcastMessage("Player " . $player->getName() . " has left the game.");
 	}
 
 	protected function broadcastMessage(string $message) : void{
