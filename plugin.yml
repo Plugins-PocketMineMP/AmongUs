@@ -1,0 +1,7 @@
+name: AmongUs
+author: alvin0319
+main: alvin0310\AmongUs\AmongUs
+version: 0.0.1-ALPHA
+api: 3.0.0
+
+mcpe-protocol: 408
