@@ -102,6 +102,7 @@ class FileSendObjective extends Objective{
 					}else{
 						ObjectiveQueue::$fileSendQueue[$player->getName()] = true;
 						$menu->onClose($player);
+						$handler->cancel();
 					}
 				}), 20);
 			}
