@@ -33,16 +33,20 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs;
 
 use alvin0319\AmongUs\item\Map;
-use blugin\traits\singleton\SingletonTrait;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\plugin\PluginBase;
 
 class AmongUs extends PluginBase{
-	use SingletonTrait;
+	/** @var AmongUs|null */
+	private static $instance = null;
 
 	public function onLoad() : void{
 		self::$instance = $this;
+	}
+
+	public static function getInstance() : AmongUs{
+		return self::$instance;
 	}
 
 	public function onEnable() : void{
