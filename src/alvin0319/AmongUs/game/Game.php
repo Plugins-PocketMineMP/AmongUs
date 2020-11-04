@@ -128,7 +128,7 @@ class Game{
 	}
 
 	protected function broadcastMessage(string $message) : void{
-		Server::getInstance()->broadcastMessage("§b§l[AmongUs] §r§7" . $message, $this->getPlayers());
+		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, $this->getPlayers());
 	}
 
 	/**
