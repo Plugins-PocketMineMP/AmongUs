@@ -86,6 +86,8 @@ class Game{
 	protected $map;
 	/** @var Position */
 	protected $spawnPos;
+	/** @var string[] */
+	protected $dead = [];
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -122,6 +124,10 @@ class Game{
 			}
 			if(isset($this->crews[$player->getName()])){
 				unset($this->crews[$player->getName()]);
+			}
+			if(in_array($player->getName(), $this->dead)){
+				unset($this->dead[array_search($player->getName(), $this->dead)]);
+				$this->dead = array_values($this->dead);
 			}
 			$this->broadcastMessage("Player " . $player->getName() . " has left the game.");
 		}
@@ -170,5 +176,9 @@ class Game{
 				}), 10);
 			}
 		}), 20);
+	}
+
+	public function killPlayer(Player $player) : void{
+		$this->dead[] = $player->getName();
 	}
 }
