@@ -38,9 +38,8 @@ use pocketmine\item\ItemIds;
 use pocketmine\plugin\PluginBase;
 
 class AmongUs extends PluginBase{
-
+	/** @var string */
 	public static $prefix = "§b§l[AmongUs] §r§7";
-
 	/** @var AmongUs|null */
 	private static $instance = null;
 
