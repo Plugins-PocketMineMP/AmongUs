@@ -33,8 +33,19 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\character;
 
 use pocketmine\item\Item;
+use pocketmine\Player;
 
 abstract class Character{
+	/** @var Player */
+	protected $player;
+
+	public function __construct(Player $player){
+		$this->player = $player;
+	}
+
+	final public function getPlayer() : Player{
+		return $this->player;
+	}
 
 	abstract public function getName() : string;
 

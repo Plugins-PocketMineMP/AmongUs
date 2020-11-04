@@ -32,6 +32,138 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\game;
 
+use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\character\Crew;
+use alvin0319\AmongUs\character\Imposter;
+use pocketmine\level\Position;
+use pocketmine\Player;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\Server;
+
+use function array_filter;
+use function array_map;
+use function array_search;
+use function array_values;
+use function count;
+use function in_array;
+use function shuffle;
+use function strlen;
+use function substr;
+
 class Game{
 
+	public const SETTING_MAX_IMPOSTERS = "max_imposter";
+
+	public const SETTING_MAX_CREW = "max_crew";
+
+	public const SETTING_EMERGENCY_TIME = "emergency_time";
+
+	public const DEFAULT_SETTINGS = [
+		self::SETTING_MAX_IMPOSTERS => 2,
+		self::SETTING_MAX_CREW => 10,
+		self::SETTING_EMERGENCY_TIME => 120 //seconds
+	];
+
+	/** @var int */
+	protected $id;
+	/** @var array */
+	protected $players = [];
+	/** @var int[] */
+	protected $settings = self::DEFAULT_SETTINGS;
+	/** @var Imposter[] */
+	protected $imposters = [];
+	/** @var Crew[] */
+	protected $crews = [];
+	/** @var int */
+	protected $emergencyTime = -1;
+	/** @var string */
+	protected $map;
+	/** @var Position */
+	protected $spawnPos;
+
+	public function __construct(int $id, string $map, Position $spawnPos, array $settings = self::DEFAULT_SETTINGS){
+		$this->id = $id;
+		$this->map = $map;
+		$this->settings = $settings;
+		$this->spawnPos = $spawnPos;
+	}
+
+	public function getId() : int{
+		return $this->id;
+	}
+
+	public function getMap() : string{
+		return $this->map;
+	}
+
+	public function addPlayer(Player $player) : void{
+		if(!$this->hasPlayer($player)){
+			$this->players[] = $player->getName();
+			$this->broadcastMessage("Player " . $player->getName() . " has joined the game.");
+		}
+	}
+
+	public function hasPlayer(Player $player) : bool{
+		return in_array($player->getName(), $this->players);
+	}
+
+	public function removePlayer(Player $player) : void{
+		if($this->hasPlayer($player)){
+			unset($this->players[array_search($player->getName(), $this->players)]);
+			$this->players = array_values($this->players);
+			if(isset($this->imposters[$player->getName()])){
+				unset($this->imposters[$player->getName()]);
+			}
+			if(isset($this->crews[$player->getName()])){
+				unset($this->crews[$player->getName()]);
+			}
+		}
+
+		$this->broadcastMessage("Player " . $player->getName() . " has left the game.");
+	}
+
+	protected function broadcastMessage(string $message) : void{
+		Server::getInstance()->broadcastMessage("§b§l[AmongUs] §r§7" . $message, $this->getPlayers());
+	}
+
+	/**
+	 * @return Player[]
+	 */
+	public function getPlayers() : array{
+		return array_values(
+			array_filter(array_map(function(string $name) : ?Player{
+				return Server::getInstance()->getPlayerExact($name);
+			}, $this->players), function(?Player $player) : bool{
+				return $player !== null;
+			})
+		);
+	}
+
+	private function shufflePlayers() : void{
+		$players = $this->getPlayers();
+
+		shuffle($players);
+
+		foreach($players as $player){
+			if(count($this->crews) > $this->imposters && count($this->imposters) < $this->settings[self::SETTING_MAX_IMPOSTERS]){
+				$this->imposters[$player->getName()] = $character = new Imposter($player);
+			}else{
+				$this->crews[$player->getName()] = $character = new Crew($player);
+			}
+			$player->sendMessage(AmongUs::$prefix . "You are " . $character->getName() . "!");
+			$player->teleport($this->spawnPos);
+		}
+
+		AmongUs::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($players) : void{
+			$maxImposters = $this->settings[self::SETTING_MAX_IMPOSTERS];
+			$str = "There are {$maxImposters} imposters in AmongUs";
+			for($i = 0; $i < strlen($str); $i++){
+				AmongUs::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($players, $str, $i) : void{
+					foreach($players as $player){
+						$player->sendSubTitle(substr($str, 0, $i));
+					}
+				}), 10);
+			}
+		}), 20);
+	}
 }
