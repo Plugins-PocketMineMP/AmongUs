@@ -145,7 +145,7 @@ class Game{
 		shuffle($players);
 
 		foreach($players as $player){
-			if(count($this->crews) > $this->imposters && count($this->imposters) < $this->settings[self::SETTING_MAX_IMPOSTERS]){
+			if(count($this->crews) > count($this->imposters) && count($this->imposters) < $this->settings[self::SETTING_MAX_IMPOSTERS]){
 				$this->imposters[$player->getName()] = $character = new Imposter($player);
 			}else{
 				$this->crews[$player->getName()] = $character = new Crew($player);
