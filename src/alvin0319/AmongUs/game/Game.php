@@ -58,10 +58,16 @@ class Game{
 
 	public const SETTING_EMERGENCY_TIME = "emergency_time";
 
+	public const SETTING_EMERGENCY_PRESS = "emergency_press";
+
+	public const SETTING_KILL_COOLDOWN = "kill_cooldown";
+
 	public const DEFAULT_SETTINGS = [
 		self::SETTING_MAX_IMPOSTERS => 2,
 		self::SETTING_MAX_CREW => 10,
-		self::SETTING_EMERGENCY_TIME => 120 //seconds
+		self::SETTING_EMERGENCY_TIME => 120, //seconds
+		self::SETTING_EMERGENCY_PRESS => 2,
+		self::SETTING_KILL_COOLDOWN => 25, //seconds
 	];
 
 	/** @var int */
