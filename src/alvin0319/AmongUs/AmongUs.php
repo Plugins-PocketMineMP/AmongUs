@@ -34,6 +34,7 @@ namespace alvin0319\AmongUs;
 
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\Map;
+use muqsit\invmenu\InvMenuHandler;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
@@ -56,6 +57,9 @@ class AmongUs extends PluginBase{
 	}
 
 	public function onEnable() : void{
+		if(!InvMenuHandler::isRegistered()){
+			InvMenuHandler::register($this);
+		}
 		$this->saveDefaultConfig();
 
 		ItemFactory::registerItem(new Map(ItemIds::FILLED_MAP, 0, "Filled Map"));

@@ -30,56 +30,24 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\character;
+namespace alvin0319\AmongUs\object;
 
-use alvin0319\AmongUs\object\Objective;
-use pocketmine\item\Item;
+use pocketmine\level\Position;
 use pocketmine\Player;
 
-abstract class Character{
-	/** @var Player */
-	protected $player;
-	/** @var Objective[] */
-	protected $objectives = [];
-	/** @var Objective[] */
-	protected $completedObjectives = [];
+abstract class Objective{
+	/** @var Position */
+	protected $pos;
 
-	public function __construct(Player $player){
-		$this->player = $player;
+	public function __construct(Position $pos){
+		$this->pos = $pos;
 	}
 
-	final public function getPlayer() : Player{
-		return $this->player;
+	final public function getPosition() : Position{
+		return $this->pos;
 	}
 
 	abstract public function getName() : string;
 
-	abstract public function getDescription() : string;
-
-	/**
-	 * @return Item[]
-	 */
-	abstract public function getItems() : array;
-
-	public function completeObjective(Objective $objective) : void{
-		if(!isset($this->objectives[$objective->getName()])){
-			return;
-		}
-		$this->completedObjectives[$objective->getName()] = $objective;
-	}
-
-	/**
-	 * @param Objective[] $objectives
-	 */
-	public function setObjectives(array $objectives) : void{
-		$this->objectives = $objectives;
-	}
-
-	public function isCompletedObjective(Objective $objective) : bool{
-		return isset($this->completedObjectives[$objective->getName()]);
-	}
-
-	public function hasObjective(Objective $objective) : bool{
-		return isset($this->objectives[$objective->getName()]);
-	}
+	abstract public function onInteract(Player $player) : void;
 }

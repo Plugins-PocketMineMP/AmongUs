@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\game;
 
 use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\character\Character;
 use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
 use pocketmine\level\Position;
@@ -44,6 +45,7 @@ use function array_filter;
 use function array_map;
 use function array_search;
 use function array_values;
+use function ceil;
 use function count;
 use function in_array;
 use function shuffle;
@@ -88,6 +90,10 @@ class Game{
 	protected $spawnPos;
 	/** @var string[] */
 	protected $dead = [];
+	/** @var int */
+	protected $objectiveCount = 0;
+	/** @var int */
+	protected $objectiveProgress = 0;
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -180,5 +186,24 @@ class Game{
 
 	public function killPlayer(Player $player) : void{
 		$this->dead[] = $player->getName();
+	}
+
+	public function getCharacter(Player $player) : ?Character{
+		if(!$this->hasPlayer($player)){
+			return null;
+		}
+		return $this->imposters[$player->getName()] ?? $this->crews[$player->getName()] ?? null;
+	}
+
+	public function addProgress() : void{
+		$this->objectiveProgress += 1;
+	}
+
+	public function getProgress() : float{
+		return (float) (ceil($this->objectiveProgress / $this->objectiveCount) * 100);
+	}
+
+	public function getRawProgress() : int{
+		return $this->objectiveCount;
 	}
 }
