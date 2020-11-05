@@ -32,7 +32,9 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\character;
 
+use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\Objective;
+use pocketmine\entity\Skin;
 use pocketmine\item\Item;
 use pocketmine\Player;
 
@@ -43,6 +45,8 @@ abstract class Character{
 	protected $objectives = [];
 	/** @var Objective[] */
 	protected $completedObjectives = [];
+	/** @var Skin */
+	protected $oldSkin = null;
 
 	public function __construct(Player $player){
 		$this->player = $player;
@@ -81,5 +85,9 @@ abstract class Character{
 
 	public function hasObjective(Objective $objective) : bool{
 		return isset($this->objectives[$objective->getName()]);
+	}
+
+	public function start(Game $game) : void{
+		$this->oldSkin = clone $this->player->getSkin();
 	}
 }

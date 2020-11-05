@@ -36,7 +36,11 @@ use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\character\Character;
 use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
+use pocketmine\entity\Entity;
 use pocketmine\level\Position;
+use pocketmine\nbt\tag\ByteArrayTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
@@ -51,6 +55,7 @@ use function in_array;
 use function shuffle;
 use function strlen;
 use function substr;
+use function time;
 
 class Game{
 
@@ -94,6 +99,8 @@ class Game{
 	protected $objectiveCount = 0;
 	/** @var int */
 	protected $objectiveProgress = 0;
+	/** @var int[] */
+	protected $killCooldowns = [];
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -184,8 +191,41 @@ class Game{
 		}), 20);
 	}
 
-	public function killPlayer(Player $player) : void{
+	public function canKillPlayer(Player $imposter, Player $crew) : bool{
+		if($this->isDead($crew)){
+			return false;
+		}
+		if(isset($this->killCooldowns[$imposter->getName()])){
+			if(time() - $this->killCooldowns[$imposter->getName()] < $this->settings[self::SETTING_KILL_COOLDOWN]){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public function killPlayer(Player $player, Player $killer) : void{
 		$this->dead[] = $player->getName();
+
+		$nbt = Entity::createBaseNBT($player);
+		$nbt->setTag(new CompoundTag("Skin", [
+			new StringTag("Name", $player->getSkin()->getSkinId()),
+			new ByteArrayTag("Data", $player->getSkin()->getSkinData())
+		]));
+		$entity = Entity::createEntity("DeadPlayerEntity", $player->getLevel(), $nbt);
+		$entity->spawnToAll();
+
+		$player->despawnFromAll();
+		$player->setGamemode(Player::SPECTATOR);
+		$player->setAllowFlight(true);
+		$player->setFlying(true);
+
+		$player->sendTitle("§c§l[ §f! §c]", "You are killed by " . $killer->getName() . "!");
+
+		$this->killCooldowns[$killer->getName()] = time();
+	}
+
+	public function isDead(Player $player) : bool{
+		return in_array($player->getName(), $this->dead);
 	}
 
 	public function getCharacter(Player $player) : ?Character{

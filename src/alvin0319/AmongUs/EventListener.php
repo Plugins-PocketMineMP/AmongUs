@@ -32,10 +32,13 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs;
 
+use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\Player;
 
 class EventListener implements Listener{
 
@@ -53,5 +56,28 @@ class EventListener implements Listener{
 			return;
 		}
 		$entity->interact($player);
+	}
+
+	public function onEntityDamage(EntityDamageByEntityEvent $event) : void{
+		$victim = $event->getDamager();
+		$entity = $event->getEntity();
+		if(!$victim instanceof Player || !$entity instanceof Player){
+			return;
+		}
+		if(AmongUs::getInstance()->getGameByPlayer($victim) === null || AmongUs::getInstance()->getGameByPlayer($entity) === null){
+			return;
+		}
+		$game = AmongUs::getInstance()->getGameByPlayer($victim);
+		$victimCharacter = $game->getCharacter($victim);
+		$entityCharacter = $game->getCharacter($entity);
+		if($victimCharacter === null || $entityCharacter === null){
+			return;
+		}
+		if(!$victimCharacter instanceof Imposter){
+			return;
+		}
+		if($entityCharacter instanceof Imposter){
+			return;
+		}
 	}
 }
