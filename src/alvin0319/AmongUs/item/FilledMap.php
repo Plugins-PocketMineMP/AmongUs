@@ -34,6 +34,6 @@ namespace alvin0319\AmongUs\item;
 
 use pocketmine\item\Item;
 
-class Map extends Item{
+class FilledMap extends Item{
 
 }

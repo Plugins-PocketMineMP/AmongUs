@@ -34,7 +34,7 @@ namespace alvin0319\AmongUs;
 
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\item\Map;
+use alvin0319\AmongUs\item\FilledMap;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
@@ -66,7 +66,7 @@ class AmongUs extends PluginBase{
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 
-		ItemFactory::registerItem(new Map(ItemIds::FILLED_MAP, 0, "Filled Map"));
+		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"));
 	}
 
 	public function registerGame(Game $game) : void{
