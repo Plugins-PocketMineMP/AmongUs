@@ -69,6 +69,7 @@ class FilledMapTest extends PluginBase implements Listener{
 		$packet = $event->getPacket();
 		if($packet instanceof MapInfoRequestPacket){
 			$this->sendMapPacket($event->getPlayer(), $packet->mapId);
+			$event->setCancelled(); // Tells the pmmp to ignore this packet
 		}
 	}
 
