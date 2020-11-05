@@ -36,6 +36,8 @@ use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\character\Character;
 use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
+use alvin0319\AmongUs\event\GameStartEvent;
+use alvin0319\AmongUs\object\Objective;
 use pocketmine\entity\Entity;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\ByteArrayTag;
@@ -57,6 +59,8 @@ use function strlen;
 use function substr;
 use function time;
 
+use const PHP_EOL;
+
 class Game{
 
 	public const SETTING_MAX_IMPOSTERS = "max_imposter";
@@ -69,12 +73,30 @@ class Game{
 
 	public const SETTING_KILL_COOLDOWN = "kill_cooldown";
 
+	public const SETTING_MIN_PLAYER_TO_START = "min_player_to_start";
+
+	public const SETTING_WAIT_SECOND = "wait_second";
+
+	public const MAP_TYPE_SKELD = "skeld";
+
+	public const MAP_TYPE_POLUS = "polus";
+
+	//public const MAP_TYPE_MIRA_HQ = "mira_hq";
+
 	public const DEFAULT_SETTINGS = [
 		self::SETTING_MAX_IMPOSTERS => 2,
 		self::SETTING_MAX_CREW => 10,
 		self::SETTING_EMERGENCY_TIME => 120, //seconds
 		self::SETTING_EMERGENCY_PRESS => 2,
 		self::SETTING_KILL_COOLDOWN => 25, //seconds
+		self::SETTING_MIN_PLAYER_TO_START => 5,
+		self::SETTING_WAIT_SECOND => 30 //seconds
+	];
+
+	public const MAP_LIST = [
+		self::MAP_TYPE_SKELD,
+		self::MAP_TYPE_POLUS
+		//self::MAP_TYPE_MIRA_HQ
 	];
 
 	/** @var int */
@@ -88,7 +110,7 @@ class Game{
 	/** @var Crew[] */
 	protected $crews = [];
 	/** @var int */
-	protected $emergencyTime = -1;
+	protected $emergencyTime = self::DEFAULT_SETTINGS[self::SETTING_EMERGENCY_TIME];
 	/** @var string */
 	protected $map;
 	/** @var Position */
@@ -101,6 +123,10 @@ class Game{
 	protected $objectiveProgress = 0;
 	/** @var int[] */
 	protected $killCooldowns = [];
+	/** @var int */
+	protected $waitTick = self::DEFAULT_SETTINGS[self::SETTING_MIN_PLAYER_TO_START];
+	/** @var bool */
+	protected $running = false;
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -148,6 +174,10 @@ class Game{
 
 	protected function broadcastMessage(string $message) : void{
 		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, $this->getPlayers());
+	}
+
+	protected function broadcastPopup(string $popup) : void{
+		Server::getInstance()->broadcastPopup($popup, $this->getPlayers());
 	}
 
 	/**
@@ -245,5 +275,60 @@ class Game{
 
 	public function getRawProgress() : int{
 		return $this->objectiveCount;
+	}
+
+	///////////////////////////////////////////
+	//////////// INTERNAL METHODS /////////////
+	///////////////////////////////////////////
+
+	/**
+	 * Called every 1 seconds
+	 *
+	 * @internal
+	 */
+	public function doTick() : void{
+		if($this->running){
+			// TODO: implement running logics.
+		}else{
+			if(count($this->players) > $this->settings[self::SETTING_MIN_PLAYER_TO_START]){
+				if(--$this->waitTick < 1){
+					$this->start();
+					$this->waitTick = $this->settings[self::SETTING_WAIT_SECOND];
+				}
+			}else{
+				$text = "§b§l[AmongUs]§r§7" . PHP_EOL;
+				$text .= "Waiting for more players..." . PHP_EOL;
+				$text .= "need §d" . ($this->settings[self::SETTING_MIN_PLAYER_TO_START] - count($this->players)) . "§f more players to start";
+				$this->broadcastPopup($text);
+			}
+		}
+	}
+
+	private function start() : void{
+		$this->running = true;
+		$this->shufflePlayers();
+		$this->assignObjective();
+		(new GameStartEvent($this))->call();
+
+		foreach($this->getPlayers() as $player){
+			$player->teleport($this->spawnPos);
+		}
+	}
+
+	private function assignObjective() : void{
+		/** @var Objective[] $objectives */
+		$objectives = [];
+		foreach($this->crews as $name => $crew){
+			$objectiveCount = 0;
+		}
+	}
+
+	private function hasObjectiveTaken(Objective $objective) : bool{
+		foreach($this->crews as $name => $crew){
+			if($crew->hasObjective($objective)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

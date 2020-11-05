@@ -32,25 +32,17 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\event;
 
-use alvin0319\AmongUs\object\Objective;
-use pocketmine\Player;
+use alvin0319\AmongUs\game\Game;
 
-abstract class ObjectiveEvent extends AmongUsEvent{
-	/** @var Player */
-	protected $player;
-	/** @var Objective */
-	protected $objective;
+class GameStartEvent extends AmongUsEvent{
+	/** @var Game */
+	protected $game;
 
-	public function __construct(Player $player, Objective $objective){
-		$this->player = $player;
-		$this->objective = $objective;
+	public function __construct(Game $game){
+		$this->game = $game;
 	}
 
-	public function getObjective() : Objective{
-		return $this->objective;
-	}
-
-	public function getPlayer() : Player{
-		return $this->player;
+	public function getGame() : Game{
+		return $this->game;
 	}
 }

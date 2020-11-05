@@ -33,7 +33,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\event;
 
 use pocketmine\event\Cancellable;
-use pocketmine\event\player\PlayerEvent;
+use pocketmine\event\Event;
 
-abstract class AmongUsEvent extends PlayerEvent implements Cancellable{
+abstract class AmongUsEvent extends Event implements Cancellable{
 }
