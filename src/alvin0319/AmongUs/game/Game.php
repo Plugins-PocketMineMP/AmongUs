@@ -45,7 +45,6 @@ use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
-use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 
 use function array_filter;
@@ -56,8 +55,6 @@ use function ceil;
 use function count;
 use function in_array;
 use function shuffle;
-use function strlen;
-use function substr;
 use function time;
 
 use const PHP_EOL;
