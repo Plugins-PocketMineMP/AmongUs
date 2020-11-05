@@ -38,6 +38,7 @@ use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\event\GameStartEvent;
 use alvin0319\AmongUs\object\Objective;
+use alvin0319\AmongUs\task\DisplayTextTask;
 use pocketmine\entity\Entity;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\ByteArrayTag;
@@ -208,17 +209,10 @@ class Game{
 			$player->teleport($this->spawnPos);
 		}
 
-		AmongUs::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($players) : void{
-			$maxImposters = $this->settings[self::SETTING_MAX_IMPOSTERS];
-			$str = "There are {$maxImposters} imposters in AmongUs";
-			for($i = 0; $i < strlen($str); $i++){
-				AmongUs::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($players, $str, $i) : void{
-					foreach($players as $player){
-						$player->sendSubTitle(substr($str, 0, $i));
-					}
-				}), 10);
-			}
-		}), 20);
+		$maxImposters = $this->settings[self::SETTING_MAX_IMPOSTERS];
+		$str = "There are {$maxImposters} imposters in AmongUs";
+
+		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 10);
 	}
 
 	public function canKillPlayer(Player $imposter, Player $crew) : bool{
