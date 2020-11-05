@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\character;
 
+use alvin0319\AmongUs\event\PlayerObjectiveCompleteEvent;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\Objective;
 use pocketmine\entity\Skin;
@@ -69,7 +70,11 @@ abstract class Character{
 		if(!isset($this->objectives[$objective->getName()])){
 			return;
 		}
-		$this->completedObjectives[$objective->getName()] = $objective;
+		$ev = new PlayerObjectiveCompleteEvent($this->player, $objective);
+		$ev->call();
+		if(!$ev->isCancelled()){
+			$this->completedObjectives[$objective->getName()] = $objective;
+		}
 	}
 
 	/**
