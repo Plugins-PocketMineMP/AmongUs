@@ -30,17 +30,31 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\object;
+namespace alvin0319\AmongUs\command;
 
-final class ObjectiveQueue{
-	/** @var bool[] */
-	public static $fileSendQueue = [];
-	/** @var bool[] */
-	public static $fileReceiveQueue = [];
-	/** @var array */
-	public static $createQueue = [];
+use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\form\AmongUsMainForm;
+use pocketmine\command\CommandSender;
+use pocketmine\command\PluginCommand;
+use pocketmine\Player;
 
-	private function __construct(){
-		//NOOP
+class AmongUsCommand extends PluginCommand{
+
+	public function __construct(){
+		parent::__construct("amongus", AmongUs::getInstance());
+		$this->setPermission("amongus.command");
+		$this->setAliases(["au", "amu"]);
+	}
+
+	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
+		if(!$this->testPermission($sender)){
+			return false;
+		}
+		if(!$sender instanceof Player){
+			$sender->sendMessage(AmongUs::$prefix . "You must run this command as a player.");
+			return false;
+		}
+		$sender->sendForm(new AmongUsMainForm());
+		return true;
 	}
 }

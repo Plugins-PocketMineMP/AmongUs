@@ -30,17 +30,45 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\object;
+namespace alvin0319\AmongUs\form;
 
-final class ObjectiveQueue{
-	/** @var bool[] */
-	public static $fileSendQueue = [];
-	/** @var bool[] */
-	public static $fileReceiveQueue = [];
-	/** @var array */
-	public static $createQueue = [];
+use alvin0319\AmongUs\AmongUs;
+use pocketmine\form\Form;
+use pocketmine\Player;
 
-	private function __construct(){
-		//NOOP
+use function is_int;
+
+class AmongUsMainForm implements Form{
+
+	public function jsonSerialize(){
+		return [
+			"type" => "form",
+			"title" => "Play Among Us in Minecraft!",
+			"content" => "",
+			"buttons" => [
+				["text" => "Exit"],
+				["text" => "Join the game"],
+				["text" => "See rules"]
+			]
+		];
+	}
+
+	public function handleResponse(Player $player, $data) : void{
+		if(!is_int($data)){
+			return;
+		}
+		switch($data){
+			case 1:
+				$game = AmongUs::getInstance()->getAvailableGame($player);
+				if($game === null){
+					$player->sendMessage(AmongUs::$prefix . "There are no available game. (already joined or all games are running)");
+					return;
+				}
+				$game->addPlayer($player);
+				break;
+			case 2:
+				// TODO: implement rules
+				break;
+		}
 	}
 }

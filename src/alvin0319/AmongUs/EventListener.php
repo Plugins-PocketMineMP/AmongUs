@@ -35,29 +35,47 @@ namespace alvin0319\AmongUs;
 use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
+use alvin0319\AmongUs\game\Game;
+use alvin0319\AmongUs\item\FilledMap;
+use alvin0319\AmongUs\object\ObjectiveQueue;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
 use pocketmine\Player;
+
+use function substr;
 
 class EventListener implements Listener{
 
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
-		if(!$packet instanceof InventoryTransactionPacket){
-			return;
+		switch(true){
+			case ($packet instanceof InventoryTransactionPacket):
+				if($packet->transactionType !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
+					return;
+				}
+				$entity = $player->getServer()->findEntity($packet->trData->entityRuntimeId);
+				if(!$entity instanceof DeadPlayerEntity){
+					return;
+				}
+				$entity->interact($player);
+				break;
+			case ($packet instanceof MapInfoRequestPacket):
+				$item = $player->getInventory()->getItemInHand();
+				if($item instanceof FilledMap){
+					if(($packet = $item->getClientboundMapItemDataPacket()) !== null){
+						$player->sendDataPacket($packet);
+					}
+				}
+				$event->setCancelled();
+				break;
 		}
-		if($packet->transactionType !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
-			return;
-		}
-		$entity = $player->getServer()->findEntity($packet->trData->entityRuntimeId);
-		if(!$entity instanceof DeadPlayerEntity){
-			return;
-		}
-		$entity->interact($player);
 	}
 
 	public function onEntityDamage(EntityDamageByEntityEvent $event) : void{
@@ -84,7 +102,82 @@ class EventListener implements Listener{
 		$game->killPlayer($entity, $victim);
 	}
 
+	/**
+	 * @param PlayerChatEvent $event
+	 *
+	 * @priority HIGHEST
+	 */
 	public function onPlayerChat(PlayerChatEvent $event) : void{
+		$player = $event->getPlayer();
+		$message = $event->getMessage();
 
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
+		if($game === null){
+			return;
+		}
+		if(!$game->isRunning()){
+			return;
+		}
+		if($game->isDead($player)){
+			$game->broadcastMessageToDead("[Dead chat] " . $player->getName() . " > " . $message);
+			return;
+		}
+		if($game->isEmergencyRunning()){
+			$game->broadcastMessage($player->getName() . " > " . $message);
+			return;
+		}
+		$event->setCancelled();
+		$player->sendMessage(AmongUs::$prefix . "You cannot send message during non-emergency time.");
+	}
+
+	/**
+	 * @param PlayerCommandPreprocessEvent $event
+	 *
+	 * @priority HIGHEST
+	 */
+	public function onPlayerCommandPreprocess(PlayerCommandPreprocessEvent $event) : void{
+		$player = $event->getPlayer();
+		$message = $event->getMessage();
+		if(substr($message, 0, 1) === "/" || substr($message, 0, 2) === "./"){
+			$game = AmongUs::getInstance()->getGameByPlayer($player);
+			if($game === null){
+				return;
+			}
+			if(!$game->isRunning()){
+				return;
+			}
+			$event->setCancelled();
+			$player->sendMessage(AmongUs::$prefix . "You cannot use command during in Among Us.");
+		}
+	}
+
+	public function onPlayerInteract(PlayerInteractEvent $event) : void{
+		$player = $event->getPlayer();
+
+		if($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK){
+			return;
+		}
+
+		$block = $event->getBlock();
+
+		if(!isset(ObjectiveQueue::$createQueue[$player->getName()])){
+			return;
+		}
+
+		[$type, $maxImposters, $maxCrews, $emergencyTime, $emergencyCall, $coolDown, $minPlayer, $waitTime] = ObjectiveQueue::$createQueue[$player->getName()];
+
+		$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], null, [
+			Game::SETTING_WAIT_SECOND => $waitTime,
+			Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
+			Game::SETTING_KILL_COOLDOWN => $coolDown,
+			Game::SETTING_EMERGENCY_PRESS => $emergencyCall,
+			Game::SETTING_EMERGENCY_TIME => $emergencyTime,
+			Game::SETTING_MAX_CREW => $maxCrews,
+			Game::SETTING_MAX_IMPOSTERS => $maxImposters
+		]);
+
+		AmongUs::getInstance()->registerGame($game);
+		$player->sendMessage(AmongUs::$prefix . "Game create success. (Game id: {$game->getId()})");
+		unset(ObjectiveQueue::$createQueue[$player->getName()]);
 	}
 }

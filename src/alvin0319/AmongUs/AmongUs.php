@@ -32,6 +32,8 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs;
 
+use alvin0319\AmongUs\command\AmongUsCommand;
+use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
@@ -43,6 +45,7 @@ use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\ClosureTask;
 
 use function explode;
 use function file_exists;
@@ -79,7 +82,7 @@ class AmongUs extends PluginBase{
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 
-		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"));
+		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"), true);
 
 		if(file_exists($file = $this->getDataFolder() . "AmongUsData.json")){
 			$this->data = json_decode(file_get_contents($file), true);
@@ -101,9 +104,22 @@ class AmongUs extends PluginBase{
 
 			[$x, $y, $z, $world] = explode(":", $gameData["spawnPos"]);
 
-			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
+			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, null, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
 			$this->games[$game->getId()] = $game;
 		}
+
+		$this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(int $unused) : void{
+			foreach($this->games as $game){
+				$game->doTick();
+			}
+		}), 20);
+
+		$this->getServer()->getCommandMap()->registerAll("amongus", [
+			new AmongUsCommand(),
+			new AmongUsManageCommand()
+		]);
+
+		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}
 
 	public function onDisable() : void{
@@ -125,6 +141,23 @@ class AmongUs extends PluginBase{
 	public function getGameByPlayer(Player $player) : ?Game{
 		foreach($this->games as $game){
 			if($game->hasPlayer($player)){
+				return $game;
+			}
+		}
+		return null;
+	}
+
+	public function getNextId() : int{
+		$i = 0;
+		while(isset($this->games[$i])){
+			$i++;
+		}
+		return $i;
+	}
+
+	public function getAvailableGame(Player $player) : ?Game{
+		foreach($this->games as $game){
+			if($game->canJoin($player)){
 				return $game;
 			}
 		}

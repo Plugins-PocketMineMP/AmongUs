@@ -5,3 +5,10 @@ version: 0.0.1-ALPHA
 api: 3.0.0
 
 mcpe-protocol: 408
+
+permissions:
+  amongus.command:
+    default: true
+    children:
+      amongus.command.manage:
+        default: op

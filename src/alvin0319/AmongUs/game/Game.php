@@ -38,6 +38,7 @@ use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\event\GameStartEvent;
+use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\DisplayTextTask;
 use pocketmine\entity\Entity;
@@ -131,13 +132,18 @@ class Game{
 	protected $objectives = [];
 	/** @var bool */
 	protected $emergencyRunning = false;
+	/** @var FilledMap|null */
+	protected $mapItem = null;
 
-	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, array $settings = self::DEFAULT_SETTINGS){
+	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, ?FilledMap $mapItem = null, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
 		$this->map = $map;
 		$this->settings = $settings;
 		$this->spawnPos = $spawnPos;
 		$this->objectives = $objectives;
+		if($mapItem !== null){
+			$this->mapItem = clone $mapItem;
+		}
 	}
 
 	public function getId() : int{
@@ -146,6 +152,14 @@ class Game{
 
 	public function getMap() : string{
 		return $this->map;
+	}
+
+	public function getMapItem() : FilledMap{
+		return clone $this->mapItem;
+	}
+
+	public function setMapItem(FilledMap $map) : void{
+		$this->mapItem = clone $map;
 	}
 
 	public function addPlayer(Player $player) : void{
@@ -177,12 +191,20 @@ class Game{
 		}
 	}
 
-	protected function broadcastMessage(string $message) : void{
+	public function broadcastMessage(string $message) : void{
 		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, $this->getPlayers());
 	}
 
 	protected function broadcastPopup(string $popup) : void{
 		Server::getInstance()->broadcastPopup($popup, $this->getPlayers());
+	}
+
+	public function broadcastMessageToDead(string $message) : void{
+		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, array_values(
+			array_filter($this->getPlayers(), function(Player $player) : bool{
+				return $this->isDead($player);
+			})
+		));
 	}
 
 	/**
@@ -223,6 +245,12 @@ class Game{
 		if($this->isDead($crew)){
 			return false;
 		}
+		if($this->isEmergencyRunning()){
+			return false;
+		}
+		if($this->getCharacter($crew) instanceof Imposter){
+			return false;
+		}
 		if(isset($this->killCooldowns[$imposter->getName()])){
 			if(time() - $this->killCooldowns[$imposter->getName()] < $this->settings[self::SETTING_KILL_COOLDOWN]){
 				return false;
@@ -244,7 +272,7 @@ class Game{
 		$entity->spawnToAll();
 
 		$player->despawnFromAll();
-		$player->setGamemode(Player::SPECTATOR);
+		$player->setGamemode(Player::ADVENTURE);
 		$player->setAllowFlight(true);
 		$player->setFlying(true);
 
@@ -276,6 +304,10 @@ class Game{
 		return $this->objectiveCount;
 	}
 
+	public function isRunning() : bool{
+		return $this->running;
+	}
+
 	public function isEmergencyRunning() : bool{
 		return $this->emergencyRunning;
 	}
@@ -294,6 +326,19 @@ class Game{
 	public function endEmergencyTime() : void{
 		$this->emergencyRunning = false;
 		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
+	}
+
+	public function canJoin(Player $player) : bool{
+		if($this->running){
+			return false;
+		}
+		if(count($this->players) > $this->settings[self::SETTING_MAX_IMPOSTERS] + $this->settings[self::SETTING_MAX_CREW]){
+			return false;
+		}
+		if($this->hasPlayer($player)){
+			return false;
+		}
+		return true;
 	}
 
 	///////////////////////////////////////////

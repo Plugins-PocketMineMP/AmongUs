@@ -38,6 +38,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 
 use function explode;
+use function in_array;
 
 abstract class Objective{
 	/** @var Position */
@@ -70,5 +71,15 @@ abstract class Objective{
 			default:
 				return null;
 		}
+	}
+
+	public static function hasObjective(string $name) : bool{
+		$objectives = [
+			"Energy change",
+			"File receive",
+			"File send",
+			"Manifold open"
+		];
+		return in_array($name, $objectives);
 	}
 }
