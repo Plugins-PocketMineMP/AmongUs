@@ -239,6 +239,7 @@ class Game{
 			new StringTag("Name", $player->getSkin()->getSkinId()),
 			new ByteArrayTag("Data", $player->getSkin()->getSkinData())
 		]));
+		$nbt->setString("playerName", $player->getName());
 		$entity = Entity::createEntity("DeadPlayerEntity", $player->getLevel(), $nbt);
 		$entity->spawnToAll();
 
