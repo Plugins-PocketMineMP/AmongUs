@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\entity;
 
+use alvin0319\AmongUs\AmongUs;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -39,11 +40,15 @@ use pocketmine\Player;
 
 class DeadPlayerEntity extends Human{
 
+	protected $playerName;
+
 	protected function initEntity() : void{
 		parent::initEntity();
 		$this->setPlayerFlag(Entity::DATA_PLAYER_BED_POSITION, true);
 
 		$this->setCanSaveWithChunk(false);
+
+		$this->playerName = $this->namedtag->getString("playerName", "");
 	}
 
 	public function attack(EntityDamageEvent $source) : void{
@@ -51,6 +56,14 @@ class DeadPlayerEntity extends Human{
 	}
 
 	public function interact(Player $player) : void{
-		// TODO: implement emergency call
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
+		if($game === null){
+			return;
+		}
+		$game->onEmergencyCall($player, $this);
+	}
+
+	public function getPlayerName() : string{
+		return $this->playerName;
 	}
 }

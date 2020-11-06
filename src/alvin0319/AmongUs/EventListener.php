@@ -32,10 +32,12 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs;
 
+use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\Player;
@@ -64,7 +66,7 @@ class EventListener implements Listener{
 		if(!$victim instanceof Player || !$entity instanceof Player){
 			return;
 		}
-		if(AmongUs::getInstance()->getGameByPlayer($victim) === null || AmongUs::getInstance()->getGameByPlayer($entity) === null){
+		if(AmongUs::getInstance()->getGameByPlayer($victim) === null || AmongUs::getInstance()->getGameByPlayer($entity) === null || AmongUs::getInstance()->getGameByPlayer($victim) !== AmongUs::getInstance()->getGameByPlayer($entity)){
 			return;
 		}
 		$game = AmongUs::getInstance()->getGameByPlayer($victim);
@@ -76,8 +78,13 @@ class EventListener implements Listener{
 		if(!$victimCharacter instanceof Imposter){
 			return;
 		}
-		if($entityCharacter instanceof Imposter){
+		if(!$entityCharacter instanceof Crew){
 			return;
 		}
+		$game->killPlayer($entity, $victim);
+	}
+
+	public function onPlayerChat(PlayerChatEvent $event) : void{
+
 	}
 }

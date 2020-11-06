@@ -36,6 +36,7 @@ use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\character\Character;
 use alvin0319\AmongUs\character\Crew;
 use alvin0319\AmongUs\character\Imposter;
+use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\event\GameStartEvent;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\DisplayTextTask;
@@ -128,6 +129,8 @@ class Game{
 	protected $running = false;
 	/** @var Objective[] */
 	protected $objectives = [];
+	/** @var bool */
+	protected $emergencyRunning = false;
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -272,6 +275,26 @@ class Game{
 		return $this->objectiveCount;
 	}
 
+	public function isEmergencyRunning() : bool{
+		return $this->emergencyRunning;
+	}
+
+	public function onEmergencyCall(Player $who, ?DeadPlayerEntity $entity) : void{
+		$this->emergencyRunning = true;
+		$this->broadcastMessage("Emergency call! (caller: {$who->getName()})");
+		if($entity !== null){
+			$this->broadcastMessage($entity->getPlayerName() . " is dead!");
+		}
+		foreach($this->getPlayers() as $player){
+			$player->teleport($this->spawnPos);
+		}
+	}
+
+	public function endEmergencyTime() : void{
+		$this->emergencyRunning = false;
+		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
+	}
+
 	///////////////////////////////////////////
 	//////////// INTERNAL METHODS /////////////
 	///////////////////////////////////////////
@@ -283,7 +306,11 @@ class Game{
 	 */
 	public function doTick() : void{
 		if($this->running){
-			// TODO: implement running logics.
+			if($this->emergencyRunning){
+				if(--$this->emergencyTime < 1){
+					$this->endEmergencyTime();
+				}
+			}
 		}else{
 			if(count($this->players) > $this->settings[self::SETTING_MIN_PLAYER_TO_START]){
 				if(--$this->waitTick < 1){
