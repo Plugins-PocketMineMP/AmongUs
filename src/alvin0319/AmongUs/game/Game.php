@@ -53,6 +53,7 @@ use function array_filter;
 use function array_map;
 use function array_search;
 use function array_values;
+use function arsort;
 use function ceil;
 use function count;
 use function implode;
@@ -134,6 +135,8 @@ class Game{
 	protected $emergencyRunning = false;
 	/** @var FilledMap|null */
 	protected $mapItem = null;
+	/** @var int[] */
+	protected $votes = [];
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, ?FilledMap $mapItem = null, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -231,7 +234,7 @@ class Game{
 			}else{
 				$this->crews[$player->getName()] = $character = new Crewmate($player);
 			}
-			$player->sendMessage(AmongUs::$prefix . "You are " . $character->getName() . "!");
+			$player->sendMessage(AmongUs::$prefix . "You are a(n)" . $character->getName() . "!");
 			$player->teleport($this->spawnPos);
 		}
 
@@ -259,7 +262,7 @@ class Game{
 		return true;
 	}
 
-	public function killPlayer(Player $player, Player $killer) : void{
+	public function killPlayer(Player $player, ?Player $killer = null) : void{
 		$this->dead[] = $player->getName();
 
 		$nbt = Entity::createBaseNBT($player);
@@ -276,7 +279,10 @@ class Game{
 		$player->setAllowFlight(true);
 		$player->setFlying(true);
 
-		$player->sendTitle("§c§l[ §f! §c]", "You are killed by " . $killer->getName() . "!");
+		if($killer !== null){
+			$player->sendTitle("§c§l[ §f! §c]", "You are killed by " . $killer->getName() . "!");
+		}
+
 
 		$this->killCooldowns[$killer->getName()] = time();
 	}
@@ -321,11 +327,50 @@ class Game{
 		foreach($this->getPlayers() as $player){
 			$player->teleport($this->spawnPos);
 		}
+		foreach($this->getPlayers() as $player){
+			$this->votes[$player->getName()] = 0;
+		}
+		$this->votes["skip"] = 0;
 	}
 
 	public function endEmergencyTime() : void{
 		$this->emergencyRunning = false;
 		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
+
+		arsort($this->votes);
+
+		$max = 0;
+		$topVote = "";
+
+		$duplicate = false;
+
+		foreach($this->votes as $name => $vote){
+			if($vote > $max){
+				if($vote === $max && $name !== $topVote){
+					$duplicate = true;
+				}
+				$max = $vote;
+				$topVote = $name;
+			}
+		}
+
+		if($this->votes["skip"] >= $max){
+			$duplicate = true;
+		}
+
+		if($duplicate){
+			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "", ""), 10);
+		}else{
+			$character = $this->imposters[$topVote] ?? $this->crews[$topVote] ?? null;
+			if($character === null){
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one killed (skipped vote)", "There are " . count($this->imposters) . " imposters in AmongUs"), 10);
+			}else{
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "an" : "not an") . " imposter", "There are " . count($this->imposters) . " imposters in AmongUs"), 10);
+			}
+			$this->killPlayer(AmongUs::getInstance()->getServer()->getPlayerExact($topVote));
+		}
+
+		$this->votes = [];
 	}
 
 	public function canJoin(Player $player) : bool{

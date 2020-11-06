@@ -43,6 +43,7 @@ use pocketmine\item\Item;
 use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
+use pocketmine\network\mcpe\protocol\types\MapTrackedObject;
 use pocketmine\Player;
 use pocketmine\utils\Color;
 
@@ -185,6 +186,10 @@ class FilledMap extends Item{
 
 	public function setMapId(int $id) : void{
 		$this->getNamedTag()->setLong("map_uuid", $id);
+	}
+
+	public function setDisplayPlayers(bool $value) : void{
+		$this->getNamedTag()->setByte("map_display_players", (int) $value);
 	}
 
 	public function getMapId() : int{

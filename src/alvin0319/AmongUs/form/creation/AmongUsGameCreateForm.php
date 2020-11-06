@@ -62,7 +62,7 @@ class AmongUsGameCreateForm implements Form{
 				],
 				[
 					"type" => "input",
-					"text" => "Max crews",
+					"text" => "Max crewmatess",
 					"default" => (string) Game::DEFAULT_SETTINGS[Game::SETTING_MAX_CREW]
 				],
 				[
@@ -107,11 +107,11 @@ class AmongUsGameCreateForm implements Form{
 			return;
 		}
 		if(!is_numeric($maxCrews) || ($maxCrews = (int) $maxCrews) < 1){
-			$player->sendMessage(AmongUs::$prefix . "Max number of crews must be larger than 1.");
+			$player->sendMessage(AmongUs::$prefix . "Max number of crewmates must be larger than 1.");
 			return;
 		}
 		if($maxImposters > $maxCrews){
-			$player->sendMessage(AmongUs::$prefix . "Max number of crews must be larger than imposters.");
+			$player->sendMessage(AmongUs::$prefix . "Max number of crewmates must be larger than imposters.");
 			return;
 		}
 		if(!is_numeric($emergencyTime) || ($emergencyTime = (int) $emergencyTime) < 60){
