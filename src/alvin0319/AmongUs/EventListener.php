@@ -32,7 +32,7 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs;
 
-use alvin0319\AmongUs\character\Crew;
+use alvin0319\AmongUs\character\Crewmate;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
@@ -96,7 +96,7 @@ class EventListener implements Listener{
 		if(!$victimCharacter instanceof Imposter){
 			return;
 		}
-		if(!$entityCharacter instanceof Crew){
+		if(!$entityCharacter instanceof Crewmate){
 			return;
 		}
 		$game->killPlayer($entity, $victim);

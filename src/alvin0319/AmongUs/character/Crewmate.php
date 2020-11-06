@@ -32,10 +32,10 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\character;
 
-class Crew extends Character{
+class Crewmate extends Character{
 
 	public function getName() : string{
-		return "Crew";
+		return "Crewmate";
 	}
 
 	public function getDescription() : string{

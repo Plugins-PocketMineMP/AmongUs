@@ -34,7 +34,7 @@ namespace alvin0319\AmongUs\game;
 
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\character\Character;
-use alvin0319\AmongUs\character\Crew;
+use alvin0319\AmongUs\character\Crewmate;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\event\GameStartEvent;
@@ -108,7 +108,7 @@ class Game{
 	protected $settings = self::DEFAULT_SETTINGS;
 	/** @var Imposter[] */
 	protected $imposters = [];
-	/** @var Crew[] */
+	/** @var Crewmate[] */
 	protected $crews = [];
 	/** @var int */
 	protected $emergencyTime = self::DEFAULT_SETTINGS[self::SETTING_EMERGENCY_TIME];
@@ -229,7 +229,7 @@ class Game{
 			if(count($this->crews) > count($this->imposters) && count($this->imposters) < $this->settings[self::SETTING_MAX_IMPOSTERS]){
 				$this->imposters[$player->getName()] = $character = new Imposter($player);
 			}else{
-				$this->crews[$player->getName()] = $character = new Crew($player);
+				$this->crews[$player->getName()] = $character = new Crewmate($player);
 			}
 			$player->sendMessage(AmongUs::$prefix . "You are " . $character->getName() . "!");
 			$player->teleport($this->spawnPos);
