@@ -35,6 +35,10 @@ namespace alvin0319\AmongUs\object;
 use pocketmine\level\Position;
 use pocketmine\Player;
 
+use pocketmine\Server;
+
+use function explode;
+
 abstract class Objective{
 	/** @var Position */
 	protected $pos;
@@ -50,4 +54,21 @@ abstract class Objective{
 	abstract public function getName() : string;
 
 	abstract public function onInteract(Player $player) : void;
+
+	public static function getByName(string $name, string $posData) : ?Objective{
+		[$x, $y, $z, $world] = explode(":", $posData);
+		$pos = new Position((float) $x, (float) $y, (float) $z, Server::getInstance()->getLevelByName($world));
+		switch($name){
+			case "Energy change":
+				return new EnergyChangeObjective($pos);
+			case "File receive":
+				return new FileReceiveObjective($pos);
+			case "File send":
+				return new FileSendObjective($pos);
+			case "Manifold open":
+				return new ManifoldOpenObjective($pos);
+			default:
+				return null;
+		}
+	}
 }

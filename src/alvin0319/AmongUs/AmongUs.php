@@ -35,12 +35,21 @@ namespace alvin0319\AmongUs;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
+use alvin0319\AmongUs\object\Objective;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+
+use function explode;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function json_decode;
+use function json_encode;
 
 class AmongUs extends PluginBase{
 	/** @var string */
@@ -49,6 +58,10 @@ class AmongUs extends PluginBase{
 	private static $instance = null;
 	/** @var Game[] */
 	protected $games = [];
+	/** @var Objective[][] */
+	protected $objectives = [];
+
+	protected $data = [];
 
 	public function onLoad() : void{
 		self::$instance = $this;
@@ -67,6 +80,38 @@ class AmongUs extends PluginBase{
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 
 		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"));
+
+		if(file_exists($file = $this->getDataFolder() . "AmongUsData.json")){
+			$this->data = json_decode(file_get_contents($file), true);
+		}
+
+		for($i = 0; $i < $this->getConfig()->get("max_games"); $i++){
+			$gameData = $this->data[$i] ?? null;
+			if($gameData === null){
+				continue;
+			}
+			$objectives = [];
+			foreach($gameData["objectives"] ?? [] as $objectiveName => $objectiveData){
+				$objective = Objective::getByName($objectiveName, $objectiveData);
+				if($objective === null){
+					continue;
+				}
+				$objectives[] = $objective;
+			}
+
+			[$x, $y, $z, $world] = explode(":", $gameData["spawnPos"]);
+
+			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
+			$this->games[$game->getId()] = $game;
+		}
+	}
+
+	public function onDisable() : void{
+		$data = [];
+		foreach($this->games as $game){
+			$data[$game->getId()] = $game->jsonSerialize();
+		}
+		file_put_contents($this->getDataFolder() . "AmongUsData.json", json_encode($data));
 	}
 
 	public function registerGame(Game $game) : void{

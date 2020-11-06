@@ -53,6 +53,7 @@ use function array_search;
 use function array_values;
 use function ceil;
 use function count;
+use function implode;
 use function in_array;
 use function shuffle;
 use function time;
@@ -125,12 +126,15 @@ class Game{
 	protected $waitTick = self::DEFAULT_SETTINGS[self::SETTING_MIN_PLAYER_TO_START];
 	/** @var bool */
 	protected $running = false;
+	/** @var Objective[] */
+	protected $objectives = [];
 
-	public function __construct(int $id, string $map, Position $spawnPos, array $settings = self::DEFAULT_SETTINGS){
+	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
 		$this->map = $map;
 		$this->settings = $settings;
 		$this->spawnPos = $spawnPos;
+		$this->objectives = $objectives;
 	}
 
 	public function getId() : int{
@@ -321,5 +325,18 @@ class Game{
 			}
 		}
 		return false;
+	}
+
+	public function jsonSerialize() : array{
+		$objectives = [];
+		foreach($this->objectives as $name => $objective){
+			$objectives[$objective->getName()] = implode(":", [$objective->getPosition()->getX(), $objective->getPosition()->getY(), $objective->getPosition()->getZ(), $objective->getPosition()->getLevel()->getFolderName()]);
+		}
+		return [
+			"settings" => $this->settings,
+			"map" => $this->map,
+			"spawnPos" => implode(":", [$this->spawnPos->getX(), $this->spawnPos->getY(), $this->spawnPos->getZ(), $this->spawnPos->getLevel()->getFolderName()]),
+			"objectives" => $objectives
+		];
 	}
 }
