@@ -46,10 +46,8 @@ use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\Player;
 use pocketmine\utils\Color;
 
-use function array_slice;
 use function json_decode;
 use function json_encode;
-use function var_dump;
 
 class FilledMap extends Item{
 	public const COLOR_BLOCK_WHITE = 0;
@@ -167,7 +165,6 @@ class FilledMap extends Item{
 	}
 
 	public function updateData() : void{
-		/*
 		if($this->getNamedTag()->hasTag("mapData", ByteArrayTag::class)){
 			$res = [];
 			$mapData = json_decode($this->getNamedTag()->getByteArray("mapData"), true);
@@ -176,8 +173,6 @@ class FilledMap extends Item{
 					$res[$y][$x] = Color::fromRGB($color);
 				}
 			}
-			//var_dump($res);
-			var_dump(array_slice($res, 0, 3));
 			$packet = new ClientboundMapItemDataPacket();
 			$packet->mapId = $this->getMapId();
 			$packet->type = ClientboundMapItemDataPacket::BITFLAG_TEXTURE_UPDATE;
@@ -186,7 +181,6 @@ class FilledMap extends Item{
 			$packet->scale = 1;
 			$this->mapPacket = $packet;
 		}
-		*/
 	}
 
 	public function setMapId(int $id) : void{
@@ -198,12 +192,11 @@ class FilledMap extends Item{
 	}
 
 	public function setMapData(Player $player) : void{
-		/*
 		$colors = [];
 		for($x = 0; $x < 128; $x++){
 			for($y = 0; $y < 128; $y++){
-				$realX = $player->getFloorX() + 128 - $x;
-				$realY = $player->getFloorZ() + 128 - $y;
+				$realX = $player->getFloorX() - 64 + $x;
+				$realY = $player->getFloorZ() - 64 + $y;
 				if(!$player->getLevel()->isChunkLoaded($realX >> 4, $realY >> 4)){
 					$player->getLevel()->loadChunk($realX >> 4, $realY >> 4);
 				}
@@ -213,10 +206,8 @@ class FilledMap extends Item{
 				$colors[$y][$x] = $color->toRGBA();
 			}
 		}
-		//var_dump($colors);
 		$this->getNamedTag()->setByteArray("mapData", json_encode($colors));
 		$this->updateData();
-		*/
 	}
 
 	public function getClientboundMapItemDataPacket() : ?ClientboundMapItemDataPacket{

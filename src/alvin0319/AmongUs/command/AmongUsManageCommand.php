@@ -84,6 +84,7 @@ class AmongUsManageCommand extends PluginCommand{
 				/** @var FilledMap $item */
 				$item = ItemFactory::get(ItemIds::FILLED_MAP);
 				$item->setMapData($sender);
+				$item->setMapId(0);
 				$game->setMapItem($item);
 				$sender->getInventory()->addItem($item);
 				$sender->sendMessage(AmongUs::$prefix . "Success.");
