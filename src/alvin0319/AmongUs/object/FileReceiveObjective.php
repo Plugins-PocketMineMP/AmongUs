@@ -43,10 +43,10 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 
-class FileSendObjective extends Objective{
+class FileReceiveObjective extends Objective{
 
 	public function getName() : string{
-		return "File send";
+		return "File receive";
 	}
 
 	public function onInteract(Player $player) : void{
@@ -74,19 +74,19 @@ class FileSendObjective extends Objective{
 		$inv->setItem(16, $ironBar);
 
 		$bed = ItemFactory::get(BlockIds::BED_BLOCK);
-		$bed->setCustomName("§lStart uploading");
+		$bed->setCustomName("§lStart receiving");
 		$bed->setNamedTagEntry(new IntTag("start"));
 		$inv->setItem(22, $bed);
 		//10(iron_bars), 16(iron_bars), 22(bed)
 
-		ObjectiveQueue::$fileSendQueue[$player->getName()] = false;
+		ObjectiveQueue::$fileReceiveQueue[$player->getName()] = false;
 
 		$menu->setInventoryCloseListener(function(Player $player) use ($character, $game) : void{
-			if(ObjectiveQueue::$fileSendQueue[$player->getName()]){
+			if(ObjectiveQueue::$fileReceiveQueue[$player->getName()]){
 				$character->completeObjective($this);
 				$game->addProgress();
 			}
-			unset(ObjectiveQueue::$fileSendQueue[$player->getName()]);
+			unset(ObjectiveQueue::$fileReceiveQueue[$player->getName()]);
 		});
 
 		$menu->setListener(function(InvMenuTransaction $action) use ($menu) : InvMenuTransactionResult{

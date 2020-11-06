@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\character;
 
+use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\event\PlayerObjectiveCompleteEvent;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\Objective;
@@ -74,6 +75,7 @@ abstract class Character{
 		$ev->call();
 		if(!$ev->isCancelled()){
 			$this->completedObjectives[$objective->getName()] = $objective;
+			$this->player->sendMessage(AmongUs::$prefix . "Objective " . $this->getName() . " completed!");
 		}
 	}
 

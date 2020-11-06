@@ -32,13 +32,31 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\object;
 
-final class ObjectiveQueue{
-	/** @var bool[] */
-	public static $fileSendQueue = [];
-	/** @var bool[] */
-	public static $fileReceiveQueue = [];
+use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\form\crew\ManifoldOpenObjectiveForm;
+use pocketmine\Player;
 
-	private function __construct(){
-		//NOOP
+class ManifoldOpenObjective extends Objective{
+
+	public function getName() : string{
+		return "Manifold open";
+	}
+
+	public function onInteract(Player $player) : void{
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
+		if($game === null){
+			return;
+		}
+		$character = $game->getCharacter($player);
+		if($character === null){
+			return;
+		}
+		if($character->isCompletedObjective($this)){
+			return;
+		}
+		if(!$character->hasObjective($this)){
+			return;
+		}
+		$player->sendForm(new ManifoldOpenObjectiveForm($this, ""));
 	}
 }
