@@ -130,7 +130,7 @@ class AmongUsGameCreateForm implements Form{
 			$player->sendMessage(AmongUs::$prefix . "Min number of players must be larger than 1.");
 			return;
 		}
-		if(!is_numeric($waitTime) || ($minPlayer = (int) $waitTime) < 10){
+		if(!is_numeric($waitTime) || ($waitTime = (int) $waitTime) < 10){
 			$player->sendMessage(AmongUs::$prefix . "Time of wait must be larger than 10.");
 			return;
 		}
