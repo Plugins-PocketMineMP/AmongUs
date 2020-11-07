@@ -318,7 +318,7 @@ class Game{
 		$player->setFlying(true);
 
 		if($killer !== null){
-			$player->sendTitle("§c§l[ §f! §c]", "You've killed by " . $killer->getName() . "!");
+			$player->sendTitle("§c§l[ §f! §c]", "You've been killed by " . $killer->getName() . "!");
 			$this->killCooldowns[$killer->getName()] = time();
 			$nbt = Entity::createBaseNBT($player);
 			$nbt->setTag(new CompoundTag("Skin", [
