@@ -35,6 +35,7 @@ namespace alvin0319\AmongUs;
 use alvin0319\AmongUs\character\Crewmate;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
+use alvin0319\AmongUs\form\game\VoteImposterForm;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\ObjectiveQueue;
@@ -46,6 +47,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
 use pocketmine\Player;
@@ -101,6 +103,9 @@ class EventListener implements Listener{
 		if(!$entityCharacter instanceof Crewmate){
 			return;
 		}
+		if(!$game->canKillPlayer($victim, $entity)){
+			return;
+		}
 		$game->killPlayer($entity, $victim);
 	}
 
@@ -126,6 +131,7 @@ class EventListener implements Listener{
 		}
 		if($game->isEmergencyRunning()){
 			$game->broadcastMessage($player->getName() . " > " . $message);
+			$event->setCancelled();
 			return;
 		}
 		$event->setCancelled();
@@ -162,25 +168,47 @@ class EventListener implements Listener{
 
 		$block = $event->getBlock();
 
-		if(!isset(ObjectiveQueue::$createQueue[$player->getName()])){
+		if(isset(ObjectiveQueue::$createQueue[$player->getName()])){
+			[$type, $maxImposters, $maxCrews, $emergencyTime, $emergencyCall, $coolDown, $minPlayer, $waitTime] = ObjectiveQueue::$createQueue[$player->getName()];
+
+			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], null, [
+				Game::SETTING_WAIT_SECOND => $waitTime,
+				Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
+				Game::SETTING_KILL_COOLDOWN => $coolDown,
+				Game::SETTING_EMERGENCY_PRESS => $emergencyCall,
+				Game::SETTING_EMERGENCY_TIME => $emergencyTime,
+				Game::SETTING_MAX_CREW => $maxCrews,
+				Game::SETTING_MAX_IMPOSTERS => $maxImposters
+			]);
+
+			AmongUs::getInstance()->registerGame($game);
+			$player->sendMessage(AmongUs::$prefix . "Game create success. (Game id: {$game->getId()})");
+			unset(ObjectiveQueue::$createQueue[$player->getName()]);
 			return;
 		}
-
-		[$type, $maxImposters, $maxCrews, $emergencyTime, $emergencyCall, $coolDown, $minPlayer, $waitTime] = ObjectiveQueue::$createQueue[$player->getName()];
-
-		$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], null, [
-			Game::SETTING_WAIT_SECOND => $waitTime,
-			Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
-			Game::SETTING_KILL_COOLDOWN => $coolDown,
-			Game::SETTING_EMERGENCY_PRESS => $emergencyCall,
-			Game::SETTING_EMERGENCY_TIME => $emergencyTime,
-			Game::SETTING_MAX_CREW => $maxCrews,
-			Game::SETTING_MAX_IMPOSTERS => $maxImposters
-		]);
-
-		AmongUs::getInstance()->registerGame($game);
-		$player->sendMessage(AmongUs::$prefix . "Game create success. (Game id: {$game->getId()})");
-		unset(ObjectiveQueue::$createQueue[$player->getName()]);
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
+		if($game === null){
+			return;
+		}
+		$character = $game->getCharacter($player);
+		if($character === null){
+			return;
+		}
+		if(($object = $game->getObjectiveByPos($block->asPosition())) !== null){
+			$object->onInteract($player);
+			return;
+		}
+		$item = $event->getItem();
+		if($item->getId() !== ItemIds::CLOCK){
+			return;
+		}
+		if(!$game->isRunning()){
+			return;
+		}
+		if(!$game->isEmergencyRunning()){
+			return;
+		}
+		$player->sendForm(new VoteImposterForm($game));
 	}
 
 	public function onPlayerJoin(PlayerJoinEvent $event) : void{

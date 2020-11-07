@@ -34,16 +34,14 @@ namespace alvin0319\AmongUs\form\game;
 
 use alvin0319\AmongUs\game\Game;
 use pocketmine\form\Form;
-
 use pocketmine\Player;
 
-use function array_map;
 use function is_int;
 
 class VoteImposterForm implements Form{
 	/** @var Game */
 	protected $game;
-
+	/** @var Player[] */
 	protected $players = [];
 
 	public function __construct(Game $game){
@@ -52,13 +50,15 @@ class VoteImposterForm implements Form{
 
 	public function jsonSerialize() : array{
 		$this->players = $this->game->getPlayers();
+		$buttons = [["text" => "Skip"]];
+		foreach($this->players as $player){
+			$buttons[] = ["text" => "Vote to {$player->getName()}"];
+		}
 		return [
 			"type" => "form",
 			"title" => "Vote imposter",
-			"content" => "Vote imposter!",
-			"buttons" => array_map(function(Player $player) : array{
-				return ["text" => "Vote to {$player->getName()}"];
-			}, $this->players)
+			"content" => "Once you vote, you cannot vote again.",
+			"buttons" => $buttons
 		];
 	}
 
@@ -66,6 +66,10 @@ class VoteImposterForm implements Form{
 		if(!is_int($data)){
 			return;
 		}
-		
+		if($data === 0){
+			$this->game->votePlayer($player, "skip");
+			return;
+		}
+		$this->game->votePlayer($player, $this->players[$data - 1]->getName());
 	}
 }

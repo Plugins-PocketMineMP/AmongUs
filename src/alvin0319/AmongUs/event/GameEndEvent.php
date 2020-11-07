@@ -30,47 +30,30 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\task;
+namespace alvin0319\AmongUs\event;
 
 use alvin0319\AmongUs\game\Game;
-use pocketmine\scheduler\Task;
 
-use function strlen;
-use function substr;
-
-class DisplayTextTask extends Task{
+class GameEndEvent extends AmongUsEvent{
 	/** @var Game */
 	protected $game;
-	/** @var string */
-	protected $title;
-	/** @var string */
-	protected $subtitle;
-	/** @var int */
-	protected $progress = 0;
-	/** @var int */
-	protected $max = -1;
+	/**
+	 * @var string
+	 * @see Game::TEAM_IMPOSTER
+	 * @see Game::TEAM_CREWMATE
+	 */
+	protected $winner;
 
-	public function __construct(Game $game, string $title, string $subtitle){
+	public function __construct(Game $game, string $winner){
 		$this->game = $game;
-		$this->title = $title;
-		$this->subtitle = $subtitle;
-
-		$this->max = strlen($title);
+		$this->winner = $winner;
 	}
 
-	public function onRun(int $currentTick) : void{
-		foreach($this->game->getPlayers() as $player){
-			$player->sendTitle(" ", substr($this->title, 0, $this->progress));
-		}
-		if($this->progress === $this->max){
-			if($this->subtitle !== ""){
-				foreach($this->game->getPlayers() as $player){
-					$player->sendTitle(" ", $this->subtitle);
-				}
-			}
-			$this->getHandler()->cancel();
-			return;
-		}
-		++$this->progress;
+	public function getGame() : Game{
+		return $this->game;
+	}
+
+	public function getWinner() : string{
+		return $this->winner;
 	}
 }

@@ -38,8 +38,12 @@ use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
+use alvin0319\AmongUs\task\WorldCopyAsyncTask;
+use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
+use Closure;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
@@ -51,6 +55,7 @@ use function explode;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
+use function is_dir;
 use function json_decode;
 use function json_encode;
 
@@ -104,7 +109,9 @@ class AmongUs extends PluginBase{
 
 			[$x, $y, $z, $world] = explode(":", $gameData["spawnPos"]);
 
-			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, null, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
+			$map = isset($gameData["mapItem"]) ? Item::jsonDeserialize($gameData["mapItem"]) : null;
+
+			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $map, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
 			$this->games[$game->getId()] = $game;
 		}
 
@@ -128,6 +135,10 @@ class AmongUs extends PluginBase{
 			$data[$game->getId()] = $game->jsonSerialize();
 		}
 		file_put_contents($this->getDataFolder() . "AmongUsData.json", json_encode($data));
+	}
+
+	public function getWorldName() : string{
+		return $this->getConfig()->get("world_name", "amongus");
 	}
 
 	public function registerGame(Game $game) : void{
@@ -162,5 +173,19 @@ class AmongUs extends PluginBase{
 			}
 		}
 		return null;
+	}
+
+	public function copyWorld(Game $game, Closure $successCallback) : void{
+		if(is_dir($dir = $this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/")){
+			$this->deleteWorld($game, function() use ($game, $successCallback) : void{
+				$this->copyWorld($game, $successCallback);
+			});
+			return;
+		}
+		$this->getServer()->getAsyncPool()->submitTask(new WorldCopyAsyncTask($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "/", $this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/", $successCallback));
+	}
+
+	private function deleteWorld(Game $game, Closure $successCallback) : void{
+		$this->getServer()->getAsyncPool()->submitTask(new WorldDeleteAsyncTask($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/", $successCallback));
 	}
 }

@@ -43,6 +43,7 @@ class AmongUsCommand extends PluginCommand{
 	public function __construct(){
 		parent::__construct("amongus", AmongUs::getInstance());
 		$this->setPermission("amongus.command");
+		$this->setDescription("Open an Among Us UI");
 		$this->setAliases(["au", "amu"]);
 	}
 

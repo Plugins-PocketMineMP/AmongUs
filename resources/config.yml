@@ -8,3 +8,5 @@
 # This is a part of AmongUs plugin, you can modify this configuration
 
 max_games: 3
+
+world_name: amongus

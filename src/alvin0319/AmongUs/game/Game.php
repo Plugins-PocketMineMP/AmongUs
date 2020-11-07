@@ -37,11 +37,14 @@ use alvin0319\AmongUs\character\Character;
 use alvin0319\AmongUs\character\Crewmate;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
+use alvin0319\AmongUs\event\GameEndEvent;
 use alvin0319\AmongUs\event\GameStartEvent;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\DisplayTextTask;
 use pocketmine\entity\Entity;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
@@ -61,9 +64,11 @@ use function in_array;
 use function shuffle;
 use function time;
 
-use const PHP_EOL;
-
 class Game{
+
+	public const TEAM_IMPOSTER = "imposter";
+
+	public const TEAM_CREWMATE = "crewmate";
 
 	public const SETTING_MAX_IMPOSTERS = "max_imposter";
 
@@ -126,7 +131,7 @@ class Game{
 	/** @var int[] */
 	protected $killCooldowns = [];
 	/** @var int */
-	protected $waitTick = self::DEFAULT_SETTINGS[self::SETTING_MIN_PLAYER_TO_START];
+	protected $waitTick = self::DEFAULT_SETTINGS[self::SETTING_WAIT_SECOND];
 	/** @var bool */
 	protected $running = false;
 	/** @var Objective[] */
@@ -137,6 +142,8 @@ class Game{
 	protected $mapItem = null;
 	/** @var int[] */
 	protected $votes = [];
+	/** @var string[] */
+	protected $voteQueue = [];
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, ?FilledMap $mapItem = null, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -147,6 +154,33 @@ class Game{
 		if($mapItem !== null){
 			$this->mapItem = clone $mapItem;
 		}
+
+		$this->reset();
+	}
+
+	private function reset() : void{
+		$this->players = [];
+		$this->imposters = [];
+		$this->crews = [];
+		$this->dead = [];
+		$this->killCooldowns = [];
+		$this->votes = [];
+		$this->voteQueue = [];
+		$this->objectiveCount = 0;
+		$this->objectiveProgress = 0;
+		$this->waitTick = $this->settings[self::SETTING_WAIT_SECOND];
+		$this->running = false;
+		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
+		$this->emergencyRunning = false;
+
+		AmongUs::getInstance()->copyWorld($this, function() : void{
+			Server::getInstance()->loadLevel(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}");
+			$this->fixPos();
+		});
+	}
+
+	private function fixPos() : void{
+		$this->spawnPos = Position::fromObject($this->spawnPos, Server::getInstance()->getLevelByName(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}"));
 	}
 
 	public function getId() : int{
@@ -192,6 +226,7 @@ class Game{
 			}
 			$this->broadcastMessage("Player " . $player->getName() . " has left the game.");
 		}
+		$this->checkIfGameDone();
 	}
 
 	public function broadcastMessage(string $message) : void{
@@ -234,18 +269,30 @@ class Game{
 			}else{
 				$this->crews[$player->getName()] = $character = new Crewmate($player);
 			}
-			$player->sendMessage(AmongUs::$prefix . "You are a(n)" . $character->getName() . "!");
+			$player->sendMessage(AmongUs::$prefix . "You are a(n) " . $character->getName() . "!");
 			$player->teleport($this->spawnPos);
 		}
 
-		$maxImposters = $this->settings[self::SETTING_MAX_IMPOSTERS];
-		$str = "There are {$maxImposters} imposters in AmongUs";
+		$imposters = count($this->filterImposters());
+		$str = "There are {$imposters} imposters in AmongUs";
 
-		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 10);
+		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 3);
+	}
+
+	public function getObjectiveByPos(Position $pos) : ?Objective{
+		foreach(array_values($this->objectives) as $objective){
+			if($objective->getPosition()->equals($pos)){
+				return $objective;
+			}
+		}
+		return null;
 	}
 
 	public function canKillPlayer(Player $imposter, Player $crew) : bool{
 		if($this->isDead($crew)){
+			return false;
+		}
+		if($this->isDead($imposter)){
 			return false;
 		}
 		if($this->isEmergencyRunning()){
@@ -265,26 +312,35 @@ class Game{
 	public function killPlayer(Player $player, ?Player $killer = null) : void{
 		$this->dead[] = $player->getName();
 
-		$nbt = Entity::createBaseNBT($player);
-		$nbt->setTag(new CompoundTag("Skin", [
-			new StringTag("Name", $player->getSkin()->getSkinId()),
-			new ByteArrayTag("Data", $player->getSkin()->getSkinData())
-		]));
-		$nbt->setString("playerName", $player->getName());
-		$entity = Entity::createEntity("DeadPlayerEntity", $player->getLevel(), $nbt);
-		$entity->spawnToAll();
-
-		$player->despawnFromAll();
+		$player->setInvisible(true);
 		$player->setGamemode(Player::ADVENTURE);
 		$player->setAllowFlight(true);
 		$player->setFlying(true);
 
 		if($killer !== null){
 			$player->sendTitle("§c§l[ §f! §c]", "You've killed by " . $killer->getName() . "!");
+			$this->killCooldowns[$killer->getName()] = time();
+			$nbt = Entity::createBaseNBT($player);
+			$nbt->setTag(new CompoundTag("Skin", [
+				new StringTag("Name", $player->getSkin()->getSkinId()),
+				new ByteArrayTag("Data", $player->getSkin()->getSkinData())
+			]));
+			$nbt->setString("playerName", $player->getName());
+			$entity = Entity::createEntity("DeadPlayerEntity", $player->getLevel(), $nbt);
+			$entity->spawnToAll();
 		}
+		$this->checkIfGameDone();
+	}
 
-
-		$this->killCooldowns[$killer->getName()] = time();
+	private function checkIfGameDone() : void{
+		if((int) $this->getProgress() === 100){
+			$this->end(self::TEAM_CREWMATE);
+			return;
+		}
+		if(count($this->imposters) >= count($this->filterCrewmates())){
+			$this->end(self::TEAM_IMPOSTER);
+			return;
+		}
 	}
 
 	public function isDead(Player $player) : bool{
@@ -300,9 +356,13 @@ class Game{
 
 	public function addProgress() : void{
 		$this->objectiveProgress += 1;
+		$this->checkIfGameDone();
 	}
 
 	public function getProgress() : float{
+		if($this->objectiveCount === 0 || $this->objectiveProgress === 0){
+			return 0.0;
+		}
 		return (float) (ceil($this->objectiveProgress / $this->objectiveCount) * 100);
 	}
 
@@ -333,6 +393,18 @@ class Game{
 		$this->votes["skip"] = 0;
 	}
 
+	public function votePlayer(Player $player, string $target) : void{
+		if(in_array($player->getName(), $this->voteQueue)){
+			$player->sendMessage(AmongUs::$prefix . "You've been already voted.");
+			return;
+		}
+		$this->voteQueue[] = $player->getName();
+		$this->votes[$target] += 1;
+
+		$player->sendMessage(AmongUs::$prefix . "You've voted to " . $target);
+		$this->checkVote();
+	}
+
 	public function endEmergencyTime() : void{
 		$this->emergencyRunning = false;
 		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
@@ -345,7 +417,7 @@ class Game{
 		$duplicate = false;
 
 		foreach($this->votes as $name => $vote){
-			if($vote > $max){
+			if($vote >= $max){
 				if($vote === $max && $name !== $topVote){
 					$duplicate = true;
 				}
@@ -359,18 +431,25 @@ class Game{
 		}
 
 		if($duplicate){
-			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "", ""), 10);
+			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one killed (skipped vote)", "There are " . count($this->filterImposters()) . " imposters in AmongUs"), 3);
 		}else{
 			$character = $this->imposters[$topVote] ?? $this->crews[$topVote] ?? null;
 			if($character === null){
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one killed (skipped vote)", "There are " . count($this->imposters) . " imposters in AmongUs"), 10);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one killed (skipped vote)", "There are " . count($this->filterImposters()) . " imposters in AmongUs"), 3);
 			}else{
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "an" : "not an") . " imposter", "There are " . count($this->imposters) . " imposters in AmongUs"), 10);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "an" : "not an") . " imposter", "There are " . count($this->filterImposters()) . " imposters in AmongUs"), 3);
+				$this->killPlayer(AmongUs::getInstance()->getServer()->getPlayerExact($topVote));
 			}
-			$this->killPlayer(AmongUs::getInstance()->getServer()->getPlayerExact($topVote));
 		}
 
 		$this->votes = [];
+		$this->voteQueue = [];
+	}
+
+	private function checkVote() : void{
+		if(count($this->voteQueue) === count($this->filterCrewmates())){
+			$this->endEmergencyTime();
+		}
 	}
 
 	public function canJoin(Player $player) : bool{
@@ -386,6 +465,64 @@ class Game{
 		return true;
 	}
 
+	public function filterImposters() : array{
+		return array_values(
+			array_filter(
+				array_map(function(Player $player) : ?Character{
+					return $this->getCharacter($player);
+				}, $this->getPlayers()),
+				function(?Character $character) : bool{
+					return $character instanceof Imposter;
+				}
+			),
+		);
+	}
+
+	public function filterCrewmates() : array{
+		return array_values(
+			array_filter(
+				array_filter(
+					array_map(function(Player $player) : ?Character{
+						return $this->getCharacter($player);
+					}, $this->getPlayers()),
+					function(?Character $character) : bool{
+						return $character instanceof Crewmate;
+					}
+				),
+				function(Crewmate $crewmate) : bool{
+					return !$this->isDead($crewmate->getPlayer());
+				}
+			)
+		);
+	}
+
+	public function getCrewmates() : array{
+		return array_values(
+			array_filter(
+				array_map(function(Crewmate $crew) : Player{
+					return $crew->getPlayer();
+				}, array_values($this->crews)),
+				function(Player $player) : bool{
+					return $player->isOnline();
+				}
+			)
+		);
+	}
+
+	public function getImposters() : array{
+		return array_values(
+			array_filter(
+				array_map(function(Imposter $imposter) : Player{
+					return $imposter->getPlayer();
+				}, array_values($this->imposters)),
+				function(Player $player) : bool{
+					return $player->isOnline();
+				}
+			)
+		);
+	}
+
+
 	///////////////////////////////////////////
 	//////////// INTERNAL METHODS /////////////
 	///////////////////////////////////////////
@@ -400,18 +537,26 @@ class Game{
 			if($this->emergencyRunning){
 				if(--$this->emergencyTime < 1){
 					$this->endEmergencyTime();
+				}else{
+					$text = "§b§l[AmongUs]§r§7\n";
+					$text .= "Vote ends in §d" . $this->emergencyTime . "§r§7s";
+					$this->broadcastPopup($text);
 				}
 			}
 		}else{
-			if(count($this->players) > $this->settings[self::SETTING_MIN_PLAYER_TO_START]){
+			if(count($this->players) >= $this->settings[self::SETTING_MIN_PLAYER_TO_START]){
 				if(--$this->waitTick < 1){
 					$this->start();
 					$this->waitTick = $this->settings[self::SETTING_WAIT_SECOND];
+				}else{
+					$text = "§b§l[AmongUs]§r§7\n";
+					$text .= "Starts in §d" . $this->waitTick . "§r§7s";
+					$this->broadcastPopup($text);
 				}
 			}else{
-				$text = "§b§l[AmongUs]§r§7" . PHP_EOL;
-				$text .= "Waiting for more players..." . PHP_EOL;
-				$text .= "need §d" . ($this->settings[self::SETTING_MIN_PLAYER_TO_START] - count($this->players)) . "§f more players to start";
+				$text = "§b§l[AmongUs]§r§7\n";
+				$text .= "Waiting for more players...\n";
+				$text .= "need §d" . ($this->settings[self::SETTING_MIN_PLAYER_TO_START] - count($this->players)) . "§r§7 more players to start";
 				$this->broadcastPopup($text);
 			}
 		}
@@ -425,7 +570,22 @@ class Game{
 
 		foreach($this->getPlayers() as $player){
 			$player->teleport($this->spawnPos);
+			$player->getInventory()->clearAll();
+			$player->setGamemode(Player::SURVIVAL);
 		}
+		$this->giveDefaultKits();
+	}
+
+	private function end(string $winner) : void{
+		$this->broadcastMessage($winner . " win!");
+		(new GameEndEvent($this, $winner))->call();
+		foreach($this->getPlayers() as $player){
+			$player->teleport($player->getServer()->getDefaultLevel()->getSafeSpawn());
+			$player->getInventory()->clearAll();
+			$player->setGamemode(Player::SURVIVAL);
+			$player->setInvisible(false);
+		}
+		$this->reset();
 	}
 
 	private function assignObjective() : void{
@@ -445,16 +605,35 @@ class Game{
 		return false;
 	}
 
+	private function giveDefaultKits() : void{
+		if($this->mapItem !== null){
+			foreach($this->getPlayers() as $player){
+				$player->getInventory()->addItem(clone $this->mapItem);
+			}
+		}
+		foreach($this->getPlayers() as $player){
+			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 0, 1)->setCustomName("Vote"));
+			$character = $this->getCharacter($player);
+			if($character !== null){
+				$player->getInventory()->addItem(...$character->getItems());
+			}
+		}
+	}
+
 	public function jsonSerialize() : array{
 		$objectives = [];
 		foreach($this->objectives as $name => $objective){
 			$objectives[$objective->getName()] = implode(":", [$objective->getPosition()->getX(), $objective->getPosition()->getY(), $objective->getPosition()->getZ(), $objective->getPosition()->getLevel()->getFolderName()]);
 		}
-		return [
+		$data = [
 			"settings" => $this->settings,
 			"map" => $this->map,
 			"spawnPos" => implode(":", [$this->spawnPos->getX(), $this->spawnPos->getY(), $this->spawnPos->getZ(), $this->spawnPos->getLevel()->getFolderName()]),
 			"objectives" => $objectives
 		];
+		if($this->mapItem !== null){
+			$data["mapItem"] = $this->mapItem->jsonSerialize();
+		}
+		return $data;
 	}
 }
