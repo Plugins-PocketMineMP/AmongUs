@@ -43,6 +43,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
@@ -179,5 +181,21 @@ class EventListener implements Listener{
 		AmongUs::getInstance()->registerGame($game);
 		$player->sendMessage(AmongUs::$prefix . "Game create success. (Game id: {$game->getId()})");
 		unset(ObjectiveQueue::$createQueue[$player->getName()]);
+	}
+
+	public function onPlayerJoin(PlayerJoinEvent $event) : void{
+		$player = $event->getPlayer();
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
+		if($game !== null){
+			$game->removePlayer($player);
+		}
+	}
+
+	public function onPlayerQuit(PlayerQuitEvent $event) : void{
+		$player = $event->getPlayer();
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
+		if($game !== null){
+			$game->removePlayer($player);
+		}
 	}
 }

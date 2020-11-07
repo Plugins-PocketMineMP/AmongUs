@@ -59,7 +59,10 @@ class DisplayTextTask extends Task{
 	}
 
 	public function onRun(int $currentTick) : void{
-		if($this->progress === ($this->max - 1)){
+		foreach($this->game->getPlayers() as $player){
+			$player->sendSubTitle(substr($this->title, 0, $this->progress));
+		}
+		if($this->progress === $this->max){
 			if($this->subtitle !== ""){
 				foreach($this->game->getPlayers() as $player){
 					$player->sendSubTitle($this->subtitle);
@@ -67,9 +70,6 @@ class DisplayTextTask extends Task{
 			}
 			$this->getHandler()->cancel();
 			return;
-		}
-		foreach($this->game->getPlayers() as $player){
-			$player->sendSubTitle(substr($this->title, 0, $this->progress));
 		}
 		++$this->progress;
 	}
