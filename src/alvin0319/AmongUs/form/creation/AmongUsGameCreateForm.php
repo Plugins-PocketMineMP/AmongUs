@@ -62,7 +62,7 @@ class AmongUsGameCreateForm implements Form{
 				],
 				[
 					"type" => "input",
-					"text" => "Max crewmatess",
+					"text" => "Max crewmates",
 					"default" => (string) Game::DEFAULT_SETTINGS[Game::SETTING_MAX_CREW]
 				],
 				[

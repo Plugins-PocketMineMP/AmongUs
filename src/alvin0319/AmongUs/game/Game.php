@@ -280,7 +280,7 @@ class Game{
 		$player->setFlying(true);
 
 		if($killer !== null){
-			$player->sendTitle("§c§l[ §f! §c]", "You are killed by " . $killer->getName() . "!");
+			$player->sendTitle("§c§l[ §f! §c]", "You've killed by " . $killer->getName() . "!");
 		}
 
 
