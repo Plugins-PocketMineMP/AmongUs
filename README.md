@@ -42,15 +42,15 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
 ## Setup
 
-- **plugin is under development**
+**plugin is under development**
 
 ### Plugin Info
  
- Plugin: AmongUs
+ Plugin: **AmongUs**
  
- Author: Alvin0319
+ Author: **Alvin0319**
  
- Version: 1.0.0
+ Version: **0.0.10**
  
- API: 3.0.0, 4.0.0
+ API: **3.0.0, 4.0.0**
  
