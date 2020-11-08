@@ -61,7 +61,7 @@ use function json_encode;
 
 class AmongUs extends PluginBase{
 	/** @var string */
-	public static $prefix = "§b§l[AmongUs] §r§7";
+	public static $prefix = "§a§l[§cAmong§eUs§a] §r>§7 ";
 	/** @var AmongUs|null */
 	private static $instance = null;
 	/** @var Game[] */

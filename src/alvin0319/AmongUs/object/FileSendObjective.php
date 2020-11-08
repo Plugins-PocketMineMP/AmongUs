@@ -65,7 +65,7 @@ class FileSendObjective extends Objective{
 			return;
 		}
 		$menu = InvMenu::create(InvMenu::TYPE_CHEST);
-		$menu->setName("File send");
+		$menu->setName("File Upload");
 		$inv = $menu->getInventory();
 
 		$ironBar = ItemFactory::get(ItemIds::IRON_BARS);

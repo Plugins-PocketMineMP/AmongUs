@@ -5,8 +5,11 @@
 #  /_/   \_\_| |_| |_|\___/|_| |_|\__, |\___/|___/
 #                                 |___/
 #
-# This is a part of AmongUs plugin, you can modify this configuration
+# Here you can Customize the AmongUs Plugin Game settings.
 
-max_games: 3
+# How many games can be made on the server.
+# Recommended: 3-5
+max_games: 4
 
+# Select which world should the game be made.
 world_name: amongus

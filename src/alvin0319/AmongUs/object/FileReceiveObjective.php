@@ -65,7 +65,7 @@ class FileReceiveObjective extends Objective{
 			return;
 		}
 		$menu = InvMenu::create(InvMenu::TYPE_CHEST);
-		$menu->setName("File send");
+		$menu->setName("File Download");
 		$inv = $menu->getInventory();
 
 		$ironBar = ItemFactory::get(ItemIds::IRON_BARS);
@@ -74,7 +74,7 @@ class FileReceiveObjective extends Objective{
 		$inv->setItem(16, $ironBar);
 
 		$bed = ItemFactory::get(BlockIds::BED_BLOCK);
-		$bed->setCustomName("§lStart receiving");
+		$bed->setCustomName("§lStart Downloading");
 		$bed->setNamedTagEntry(new IntTag("start"));
 		$inv->setItem(22, $bed);
 		//10(iron_bars), 16(iron_bars), 22(bed)

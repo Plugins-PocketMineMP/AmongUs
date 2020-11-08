@@ -202,7 +202,7 @@ class Game{
 	public function addPlayer(Player $player) : void{
 		if(!$this->hasPlayer($player)){
 			$this->players[] = $player->getName();
-			$this->broadcastMessage("Player " . $player->getName() . " has joined the game.");
+			$this->broadcastMessage("§bGame:§e " . $player->getName() . " has joined the game.");
 		}
 	}
 
@@ -224,7 +224,7 @@ class Game{
 				unset($this->dead[array_search($player->getName(), $this->dead)]);
 				$this->dead = array_values($this->dead);
 			}
-			$this->broadcastMessage("Player " . $player->getName() . " has left the game.");
+			$this->broadcastMessage("§bGame:§e " . $player->getName() . " has left the game.");
 		}
 		$this->checkIfGameDone();
 	}
@@ -269,12 +269,12 @@ class Game{
 			}else{
 				$this->crews[$player->getName()] = $character = new Crewmate($player);
 			}
-			$player->sendMessage(AmongUs::$prefix . "§eShhhh §ayour Role " . $character->getName() . "§c!");
+			$player->sendMessage(AmongUs::$prefix . "§eShhhhh §aRole: §f" . $character->getName() . "§b!");
 			$player->teleport($this->spawnPos);
 		}
 
 		$imposters = count($this->filterImposters());
-		$str = "There are {$imposters} imposters between us";
+		$str = "§bThere are §f{$imposters} §cimposters §bbetween us";
 
 		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 3);
 	}
@@ -538,7 +538,7 @@ class Game{
 				if(--$this->emergencyTime < 1){
 					$this->endEmergencyTime();
 				}else{
-					$text = "§b§l[AmongUs]§r§7\n";
+					$text = "§b§l[§cAmong§bUs]§r§7\n";
 					$text .= "Vote ends in §d" . $this->emergencyTime . "§r§7s";
 					$this->broadcastPopup($text);
 				}
@@ -549,12 +549,12 @@ class Game{
 					$this->start();
 					$this->waitTick = $this->settings[self::SETTING_WAIT_SECOND];
 				}else{
-					$text = "§b§l[AmongUs]§r§7\n";
+					$text = "§b§l[§cAmong§bUs]§r§7\n";
 					$text .= "Starts in §d" . $this->waitTick . "§r§7s";
 					$this->broadcastPopup($text);
 				}
 			}else{
-				$text = "§b§l[AmongUs]§r§7\n";
+				$text = "§b§l[§cAmong§bUs]§r§7\n";
 				$text .= "Waiting for more players...\n";
 				$text .= "need §d" . ($this->settings[self::SETTING_MIN_PLAYER_TO_START] - count($this->players)) . "§r§7 more players to start";
 				$this->broadcastPopup($text);

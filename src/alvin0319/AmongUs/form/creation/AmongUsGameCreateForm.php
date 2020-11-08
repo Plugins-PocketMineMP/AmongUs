@@ -45,10 +45,12 @@ use function is_numeric;
 
 class AmongUsGameCreateForm implements Form{
 
+	class AmongUsGameCreateForm implements Form{
+
 	public function jsonSerialize() : array{
 		return [
 			"type" => "custom_form",
-			"title" => "Among Us create form",
+			"title" => "Game Setup",
 			"content" => [
 				[
 					"type" => "dropdown",
@@ -67,7 +69,7 @@ class AmongUsGameCreateForm implements Form{
 				],
 				[
 					"type" => "input",
-					"text" => "Emergency time (second) (Convocation of emergency meeting and report)",
+					"text" => "Emergency time (second) (Conversation of emergency meeting and report)",
 					"default" => (string) Game::DEFAULT_SETTINGS[Game::SETTING_EMERGENCY_TIME]
 				],
 				[
@@ -103,35 +105,35 @@ class AmongUsGameCreateForm implements Form{
 			return;
 		}
 		if(!is_numeric($maxImposters) || ($maxImposters = (int) $maxImposters) < 1){
-			$player->sendMessage(AmongUs::$prefix . "Max number of imposters must be larger than 1.");
+			$player->sendMessage(AmongUs::$prefix . "Max number of imposters must be higher than 1.");
 			return;
 		}
 		if(!is_numeric($maxCrews) || ($maxCrews = (int) $maxCrews) < 1){
-			$player->sendMessage(AmongUs::$prefix . "Max number of crewmates must be larger than 1.");
+			$player->sendMessage(AmongUs::$prefix . "Max number of crewmates must be higher than 1.");
 			return;
 		}
 		if($maxImposters > $maxCrews){
-			$player->sendMessage(AmongUs::$prefix . "Max number of crewmates must be larger than imposters.");
+			$player->sendMessage(AmongUs::$prefix . "Max number of crewmates must be higher than imposters.");
 			return;
 		}
 		if(!is_numeric($emergencyTime) || ($emergencyTime = (int) $emergencyTime) < 60){
-			$player->sendMessage(AmongUs::$prefix . "Time of emergency must be larger than 60. (1 minute)");
+			$player->sendMessage(AmongUs::$prefix . "Time of emergency must be higher than 60. (1 minute)");
 			return;
 		}
 		if(!is_numeric($emergencyCall) || ($emergencyCall = (int) $emergencyCall) < 1){
-			$player->sendMessage(AmongUs::$prefix . "Number of emergency call must be larger than 1.");
+			$player->sendMessage(AmongUs::$prefix . "Number of emergency call must be higher than 1.");
 			return;
 		}
 		if(!is_numeric($coolDown) || ($coolDown = (int) $coolDown) < 1){
-			$player->sendMessage(AmongUs::$prefix . "Time of kill cooldown must be larger than 1.");
+			$player->sendMessage(AmongUs::$prefix . "Time of kill cooldown must be higher than 1.");
 			return;
 		}
 		if(!is_numeric($minPlayer) || ($minPlayer = (int) $minPlayer) < 1){
-			$player->sendMessage(AmongUs::$prefix . "Min number of players must be larger than 1.");
+			$player->sendMessage(AmongUs::$prefix . "Min number of players must be higher than 1.");
 			return;
 		}
 		if(!is_numeric($waitTime) || ($waitTime = (int) $waitTime) < 10){
-			$player->sendMessage(AmongUs::$prefix . "Time of wait must be larger than 10.");
+			$player->sendMessage(AmongUs::$prefix . "Time of wait must be higher than 10.");
 			return;
 		}
 		ObjectiveQueue::$createQueue[$player->getName()] = [
@@ -144,6 +146,6 @@ class AmongUsGameCreateForm implements Form{
 			$minPlayer,
 			$waitTime
 		];
-		$player->sendMessage(AmongUs::$prefix . "Touch the world block that will be the spawn point.");
+		$player->sendMessage(AmongUs::$prefix . "Touch/Right-Click a block to set the spawnpoint for the game map.");
 	}
 }

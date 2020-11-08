@@ -36,6 +36,9 @@ use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\object\ManifoldOpenObjective;
 use pocketmine\form\Form;
 use pocketmine\Player;
+use pocketmine\block\Block;
+use pocketmine\math\Vector3;
+use pocketmine\level\particle\DestroyBlockParticle;
 
 use function strlen;
 
@@ -76,10 +79,12 @@ class ManifoldOpenObjectiveForm implements Form{
 		if(strlen($this->progress) === 10){
 			if($this->progress === "0123456789"){
 				// Objective complete
+				$player->sendMessage(AmongUs::$prefix . "Objective Completed";
 				$character->completeObjective($this->objective);
+				$player->getLevel()->addParticle(new DestroyBlockParticle($player->asVector3(), Block::get(133)));
 				$game->addProgress();
 			}else{
-				$player->sendMessage(AmongUs::$prefix . "Invalid input, try again :(");
+				$player->sendMessage(AmongUs::$prefix . "Invalid input, Try again.");
 			}
 		}else{
 			$player->sendForm($this);
