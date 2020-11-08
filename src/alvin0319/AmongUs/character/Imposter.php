@@ -39,7 +39,7 @@ class Imposter extends Character{
 	}
 
 	public function getDescription() : string{
-		return "Objective: Kill all crewmates and blend with the crewmates";
+		return "Objective: Kill all crewmates & do not get caught!";
 	}
 
 	public function getItems() : array{
