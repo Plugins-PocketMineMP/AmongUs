@@ -1,10 +1,12 @@
-name: AmongUs
+name: AmongUs-Beta
 author: alvin0319
 main: alvin0319\AmongUs\AmongUs
 version: 0.0.10
-api: 3.0.0
-
-mcpe-protocol: 408
+api:
+- 2.0.0
+- 3.0.0
+- 4.0.0
+website: https://discord.gg/Py2vSwg3B3
 
 permissions:
   amongus.command:
