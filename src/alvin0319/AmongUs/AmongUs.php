@@ -84,7 +84,7 @@ class AmongUs extends PluginBase{
 	
 	private $removenpcmode = [];
 	
-    public $players = [];
+        public $players = [];
 	/** @var Game[] */
 	protected $games = [];
 	/** @var Objective[][] */
@@ -228,7 +228,7 @@ class AmongUs extends PluginBase{
 					return;
 				}
                 $event->setCancelled(true);
-                $damager->sendMessage(TextFormat::GREEN . $this->searchinggame);
+                $damager->sendMessage(TextFormat::GREEN . "Searching a Available Game");
                 $this->onJoinGame($damager);
 			}
 		}
