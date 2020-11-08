@@ -52,12 +52,12 @@ class VoteImposterForm implements Form{
 		$this->players = $this->game->getPlayers();
 		$buttons = [["text" => "Skip"]];
 		foreach($this->players as $player){
-			$buttons[] = ["text" => "Vote to {$player->getName()}"];
+			$buttons[] = ["text" => "Vote out {$player->getName()}"];
 		}
 		return [
 			"type" => "form",
-			"title" => "Vote imposter",
-			"content" => "Once you vote, you cannot vote again.",
+			"title" => "Who is the imposter?",
+			"content" => "Once you voted, you cannot vote again.",
 			"buttons" => $buttons
 		];
 	}
