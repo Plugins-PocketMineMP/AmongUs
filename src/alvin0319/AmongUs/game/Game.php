@@ -238,24 +238,20 @@ class Game{
 	}
 
 	public function broadcastMessageToDead(string $message) : void{
-		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, array_values(
-			array_filter($this->getPlayers(), function(Player $player) : bool{
+		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, array_values(array_filter($this->getPlayers(), function(Player $player) : bool{
 				return $this->isDead($player);
-			})
-		));
+			})));
 	}
 
 	/**
 	 * @return Player[]
 	 */
 	public function getPlayers() : array{
-		return array_values(
-			array_filter(array_map(function(string $name) : ?Player{
+		return array_values(array_filter(array_map(function(string $name) : ?Player{
 				return Server::getInstance()->getPlayerExact($name);
 			}, $this->players), function(?Player $player) : bool{
 				return $player !== null;
-			})
-		);
+			}));
 	}
 
 	private function shufflePlayers() : void{
@@ -466,60 +462,37 @@ class Game{
 	}
 
 	public function filterImposters() : array{
-		return array_values(
-			array_filter(
-				array_map(function(Player $player) : ?Character{
-					return $this->getCharacter($player);
-				}, $this->getPlayers()),
-				function(?Character $character) : bool{
-					return $character instanceof Imposter;
-				}
-			),
-		);
+		return array_values(array_filter(array_map(function(Player $player) : ?Character{
+			return $this->getCharacter($player);
+		}, $this->getPlayers()), function(?Character $character) : bool{
+			return $character instanceof Imposter;
+		}),);
 	}
 
 	public function filterCrewmates() : array{
-		return array_values(
-			array_filter(
-				array_filter(
-					array_map(function(Player $player) : ?Character{
-						return $this->getCharacter($player);
-					}, $this->getPlayers()),
-					function(?Character $character) : bool{
-						return $character instanceof Crewmate;
-					}
-				),
-				function(Crewmate $crewmate) : bool{
-					return !$this->isDead($crewmate->getPlayer());
-				}
-			)
-		);
+		return array_values(array_filter(array_filter(array_map(function(Player $player) : ?Character{
+				return $this->getCharacter($player);
+			}, $this->getPlayers()), function(?Character $character) : bool{
+				return $character instanceof Crewmate;
+			}), function(Crewmate $crewmate) : bool{
+				return !$this->isDead($crewmate->getPlayer());
+			}));
 	}
 
 	public function getCrewmates() : array{
-		return array_values(
-			array_filter(
-				array_map(function(Crewmate $crew) : Player{
-					return $crew->getPlayer();
-				}, array_values($this->crews)),
-				function(Player $player) : bool{
-					return $player->isOnline();
-				}
-			)
-		);
+		return array_values(array_filter(array_map(function(Crewmate $crew) : Player{
+				return $crew->getPlayer();
+			}, array_values($this->crews)), function(Player $player) : bool{
+				return $player->isOnline();
+			}));
 	}
 
 	public function getImposters() : array{
-		return array_values(
-			array_filter(
-				array_map(function(Imposter $imposter) : Player{
-					return $imposter->getPlayer();
-				}, array_values($this->imposters)),
-				function(Player $player) : bool{
-					return $player->isOnline();
-				}
-			)
-		);
+		return array_values(array_filter(array_map(function(Imposter $imposter) : Player{
+				return $imposter->getPlayer();
+			}, array_values($this->imposters)), function(Player $player) : bool{
+				return $player->isOnline();
+			}));
 	}
 
 
@@ -623,12 +596,22 @@ class Game{
 	public function jsonSerialize() : array{
 		$objectives = [];
 		foreach($this->objectives as $name => $objective){
-			$objectives[$objective->getName()] = implode(":", [$objective->getPosition()->getX(), $objective->getPosition()->getY(), $objective->getPosition()->getZ(), $objective->getPosition()->getLevel()->getFolderName()]);
+			$objectives[$objective->getName()] = implode(":", [
+				$objective->getPosition()->getX(),
+				$objective->getPosition()->getY(),
+				$objective->getPosition()->getZ(),
+				$objective->getPosition()->getLevel()->getFolderName()
+			]);
 		}
 		$data = [
 			"settings" => $this->settings,
 			"map" => $this->map,
-			"spawnPos" => implode(":", [$this->spawnPos->getX(), $this->spawnPos->getY(), $this->spawnPos->getZ(), $this->spawnPos->getLevel()->getFolderName()]),
+			"spawnPos" => implode(":", [
+				$this->spawnPos->getX(),
+				$this->spawnPos->getY(),
+				$this->spawnPos->getZ(),
+				$this->spawnPos->getLevel()->getFolderName()
+			]),
 			"objectives" => $objectives
 		];
 		if($this->mapItem !== null){
