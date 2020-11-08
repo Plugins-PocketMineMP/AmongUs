@@ -43,7 +43,7 @@ class AmongUsCommand extends PluginCommand{
 	public function __construct(){
 		parent::__construct("amongus", AmongUs::getInstance());
 		$this->setPermission("amongus.command");
-		$this->setDescription("Open an Among Us UI");
+		$this->setDescription("Open the AmongUs Game UI");
 		$this->setAliases(["au", "amu"]);
 	}
 
@@ -52,7 +52,7 @@ class AmongUsCommand extends PluginCommand{
 			return false;
 		}
 		if(!$sender instanceof Player){
-			$sender->sendMessage(AmongUs::$prefix . "You must run this command as a player.");
+			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed In-Game.");
 			return false;
 		}
 		$sender->sendForm(new AmongUsMainForm());
