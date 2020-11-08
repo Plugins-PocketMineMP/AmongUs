@@ -48,7 +48,7 @@ class AmongUsManageCommand extends PluginCommand{
 
 	public function __construct(){
 		parent::__construct("amongusmanage", AmongUs::getInstance());
-		$this->setDescription("Manage Among Us's setting");
+		$this->setDescription("Manage AmongUS Game setting");
 		$this->setPermission("amongus.command.manage");
 		$this->setAliases(["aum", "amum"]);
 	}
@@ -58,14 +58,14 @@ class AmongUsManageCommand extends PluginCommand{
 			return false;
 		}
 		if(!$sender instanceof Player){
-			$sender->sendMessage(AmongUs::$prefix . "You must run this command as a player.");
+			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed in-game");
 			return false;
 		}
 		switch($args[0] ?? "x"){
-			case "makegame":
+			case "creategame":
 				$sender->sendForm(new AmongUsGameCreateForm());
 				break;
-			case "makeobjective":
+			case "createobjective":
 				break;
 			case "setmapimage":
 				if(trim($args[1] ?? "") === ""){
@@ -88,12 +88,12 @@ class AmongUsManageCommand extends PluginCommand{
 				//$item->setDisplayPlayers(true);
 				$game->setMapItem($item);
 				$sender->getInventory()->addItem($item);
-				$sender->sendMessage(AmongUs::$prefix . "Setup Successfully completed.");
+				$sender->sendMessage(AmongUs::$prefix . "Successfully completed the game setup!);
 				break;
 			default:
 				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} setmapimage [gameId]");
-				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} makegame");
-				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} makeobjective");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} creategame");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} createobjective");
 		}
 		return true;
 	}
