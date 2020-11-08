@@ -126,7 +126,7 @@ class EventListener implements Listener{
 			return;
 		}
 		if($game->isDead($player)){
-			$game->broadcastMessageToDead("§6[§r§n§7Ghost Chat§r§6]§7 " . $player->getName() . " §8>§r " . $message);" . $player->getName() . " > " . $message);
+			$game->broadcastMessageToDead("§6[§r§n§7Ghost Chat§r§6]§7 " . $player->getName() . " §8>§r " . $message);
 			return;
 		}
 		if($game->isEmergencyRunning()){
