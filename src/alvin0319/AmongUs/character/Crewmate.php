@@ -39,7 +39,7 @@ class Crewmate extends Character{
 	}
 
 	public function getDescription() : string{
-		return ""; // TODO: Fill this with text
+		return "Objective: Fill group task bar or find out the imposter ";
 	}
 
 	public function getItems() : array{

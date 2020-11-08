@@ -78,7 +78,7 @@ class AmongUsManageCommand extends PluginCommand{
 				}
 				$game = AmongUs::getInstance()->getGame((int) $args[1]);
 				if($game === null){
-					$sender->sendMessage(AmongUs::$prefix . "Game id with {$args[1]} not found.");
+					$sender->sendMessage(AmongUs::$prefix . "No Game id with {$args[1]} found.");
 					return false;
 				}
 				/** @var FilledMap $item */
@@ -88,7 +88,7 @@ class AmongUsManageCommand extends PluginCommand{
 				//$item->setDisplayPlayers(true);
 				$game->setMapItem($item);
 				$sender->getInventory()->addItem($item);
-				$sender->sendMessage(AmongUs::$prefix . "Success.");
+				$sender->sendMessage(AmongUs::$prefix . "Setup Successfully completed.");
 				break;
 			default:
 				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} setmapimage [gameId]");

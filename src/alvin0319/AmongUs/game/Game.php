@@ -269,12 +269,12 @@ class Game{
 			}else{
 				$this->crews[$player->getName()] = $character = new Crewmate($player);
 			}
-			$player->sendMessage(AmongUs::$prefix . "You are a(n) " . $character->getName() . "!");
+			$player->sendMessage(AmongUs::$prefix . "§eShhhh §ayour Role " . $character->getName() . "§c!");
 			$player->teleport($this->spawnPos);
 		}
 
 		$imposters = count($this->filterImposters());
-		$str = "There are {$imposters} imposters in AmongUs";
+		$str = "There are {$imposters} imposters between us";
 
 		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 3);
 	}
@@ -380,7 +380,7 @@ class Game{
 
 	public function onEmergencyCall(Player $who, ?DeadPlayerEntity $entity) : void{
 		$this->emergencyRunning = true;
-		$this->broadcastMessage("Emergency call! (caller: {$who->getName()})");
+		$this->broadcastMessage("§aEmergency Meeting§c!§r (§bcaller: {$who->getName()})");
 		if($entity !== null){
 			$this->broadcastMessage($entity->getPlayerName() . " is dead!");
 		}
@@ -401,7 +401,7 @@ class Game{
 		$this->voteQueue[] = $player->getName();
 		$this->votes[$target] += 1;
 
-		$player->sendMessage(AmongUs::$prefix . "You've voted to " . $target);
+		$player->sendMessage(AmongUs::$prefix . "You've voted out " . $target);
 		$this->checkVote();
 	}
 
@@ -431,13 +431,13 @@ class Game{
 		}
 
 		if($duplicate){
-			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one killed (skipped vote)", "There are " . count($this->filterImposters()) . " imposters in AmongUs"), 3);
+			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one was thrown (skipped vote)", "There are " . count($this->filterImposters()) . " imposters left"), 3);
 		}else{
 			$character = $this->imposters[$topVote] ?? $this->crews[$topVote] ?? null;
 			if($character === null){
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one killed (skipped vote)", "There are " . count($this->filterImposters()) . " imposters in AmongUs"), 3);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one was thrown (skipped vote)", "There are " . count($this->filterImposters()) . " imposters left"), 3);
 			}else{
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "an" : "not an") . " imposter", "There are " . count($this->filterImposters()) . " imposters in AmongUs"), 3);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "was the" : "not the") . " imposter", "There are " . count($this->filterImposters()) . " imposters left"), 3);
 				$this->killPlayer(AmongUs::getInstance()->getServer()->getPlayerExact($topVote));
 			}
 		}
