@@ -58,7 +58,7 @@ class AmongUsManageCommand extends PluginCommand{
 			return false;
 		}
 		if(!$sender instanceof Player){
-			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed in-game");
+			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed In-Game.");
 			return false;
 		}
 		switch($args[0] ?? "x"){
