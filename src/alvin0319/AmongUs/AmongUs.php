@@ -50,6 +50,23 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
+use alvin0319\AmongUs\entity\EntityJoin;
+use alvin0319\AmongUs\task\EntityTag;
+use pocketmine\utils\Config;
+use pocketmine\entity\Skin;
+use pocketmine\entity\Entity;
+use pocketmine\entity\Human;
+use pocketmine\nbt\tag\{ByteTag, CompoundTag, DoubleTag, FloatTag, StringTag, ListTag, ShortTag, IntTag};
+use pocketmine\event\entity\EntityExplodeEvent;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\utils\TextFormat;
+use pocketmine\level\Level;
 
 use function explode;
 use function file_exists;
@@ -64,6 +81,10 @@ class AmongUs extends PluginBase{
 	public static $prefix = "§a§l[§cAmong§eUs§a] §r>§7 ";
 	/** @var AmongUs|null */
 	private static $instance = null;
+	
+	private $removenpcmode = [];
+	
+    public $players = [];
 	/** @var Game[] */
 	protected $games = [];
 	/** @var Objective[][] */
@@ -84,7 +105,7 @@ class AmongUs extends PluginBase{
 			InvMenuHandler::register($this);
 		}
 		$this->saveDefaultConfig();
-
+		Entity::registerEntity(EntityJoinFFA::class, true);
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 
 		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"), true);
@@ -114,7 +135,7 @@ class AmongUs extends PluginBase{
 			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $map, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
 			$this->games[$game->getId()] = $game;
 		}
-
+		$this->getScheduler()->scheduleRepeatingTask(new EntityTag($this), 20);
 		$this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(int $unused) : void{
 			foreach($this->games as $game){
 				$game->doTick();
@@ -187,5 +208,84 @@ class AmongUs extends PluginBase{
 
 	private function deleteWorld(Game $game, Closure $successCallback) : void{
 		$this->getServer()->getAsyncPool()->submitTask(new WorldDeleteAsyncTask($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/", $successCallback));
+	}
+	
+	public function onDamageEntityJoin(EntityDamageEvent $event) {
+        $entity = $event->getEntity();
+        if($event instanceof EntityDamageByEntityEvent) {
+           $damager = $event->getDamager();
+		    if(!$entity instanceof EntityJoin) return;
+            if($entity instanceof EntityJoin && $damager instanceof Player) {
+				if(isset($this->removenpcmode[$damager->getName()])) {
+                    switch ($this->removenpcmode[$damager->getName()]) {
+                        case 0:
+						    $damager->sendMessage(TextFormat::GREEN . "Entity removed.");
+							unset($this->removenpcmode[$damager->getName()]);
+						    $entity->close();
+							$event->setCancelled(true);
+						break;
+					}
+					return;
+				}
+                $event->setCancelled(true);
+                $damager->sendMessage(TextFormat::GREEN . $this->searchinggame);
+                $this->onJoinGame($damager);
+			}
+		}
+	}
+	
+	public function onQuit(PlayerQuitEvent $event) {
+		
+		$player = $event->getPlayer();
+		$player->setAllowFlight(false);
+		$player->setGamemode($this->getServer()->getDefaultGamemode());
+		$player->getInventory()->clearAll();
+		unset($this->removenpcmode[$player->getName()]);
+		
+		if($player->getLevel()->getFolderName() == $this->getConfig()->get("world_name")) {
+		   unset($this->players[$player->getName()]);		   
+		}		
+	}
+	
+	public function onJoinGame($damager){
+		$server = $this->getServer();
+		$level = $server->getLevelByName($this->getConfig()->get("world_name"));
+		$res = $server->loadLevel($this->getConfig()->get("world_name"));
+		if($res) $level = $server->getLevelByName($this->getConfig()->get("world_name"));
+		$res = $damager->teleport($level->getSafeSpawn());
+		$damager->getArmorInventory()->clearAll();
+		$damager->setAllowFlight(false);
+		$damager->setGamemode(0);
+		$damager->setScale(1.0);
+		$damager->getInventory()->clearAll();								
+		$this->players[$damager->getName()] = $damager;
+	}
+	
+	public function spawnEntityJoin(Player $player){
+        $nbt = new CompoundTag("", [
+            new ListTag("Pos", [
+            new DoubleTag("", $player->getX()),
+            new DoubleTag("", $player->getY()),
+            new DoubleTag("", $player->getZ())
+        ]),
+            new ListTag("Motion", [
+            new DoubleTag("", 0),
+            new DoubleTag("", 0),
+            new DoubleTag("", 0)
+        ]),
+            new ListTag("Rotation", [
+            new FloatTag("",$player->yaw),
+            new FloatTag("",$player->pitch)
+        ]),
+            new CompoundTag("Skin", [
+            new StringTag("Data", $player->getSkin()->getSkinData()),
+            new StringTag("Name", $player->getSkin()->getSkinId()),
+        ]),]);
+        $human = new EntityJoin($player->getLevel(), $nbt);
+        $human->setScale(1.20);
+        $human->setNametagVisible(true);
+        $human->setNameTagAlwaysVisible(true);
+        $human->setImmobile(true);
+        $human->spawnToAll();
 	}
 }
