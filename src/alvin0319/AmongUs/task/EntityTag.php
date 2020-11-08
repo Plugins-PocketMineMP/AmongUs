@@ -3,7 +3,7 @@
 namespace alvin0319\AmongUs\task;
 
 use pocketmine\scheduler\Task;
-use alvin0319\AmongUs\Main;
+use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\entity\EntityJoin;
 use pocketmine\plugin\Plugin;
 use pocketmine\entity\Entity;
