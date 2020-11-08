@@ -45,8 +45,6 @@ use function is_numeric;
 
 class AmongUsGameCreateForm implements Form{
 
-	class AmongUsGameCreateForm implements Form{
-
 	public function jsonSerialize() : array{
 		return [
 			"type" => "custom_form",
