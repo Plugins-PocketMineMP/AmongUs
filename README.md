@@ -25,6 +25,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 - 0.0.10: Fixed my bad english (thanks to @HydroGames-dev)
 
 ### Download/Installation
+
 - Check Releases for **.phar** download
 - Put the plugin in ``/plugins`` Folder
 - and restart server and edit config.yml
@@ -49,7 +50,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
  Plugin: **AmongUs**
  
  Author: **Alvin0319**
- 
+
  Version: **0.0.10**
  
  API: **3.0.0, 4.0.0**
