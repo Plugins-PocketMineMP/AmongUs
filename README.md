@@ -53,5 +53,5 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
  Version: **0.0.10**
  
- API: **3.0.0, 4.0.0**
+ API: **3.0.0**
  
