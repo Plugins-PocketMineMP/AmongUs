@@ -32,6 +32,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 ### Default Configuration
 
 ``max_games: 3``
+
 ``world_name: amongus``
 
 ### Commands
