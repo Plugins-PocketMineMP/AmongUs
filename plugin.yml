@@ -1,12 +1,10 @@
-name: AmongUs-Beta
+name: AmongUs
 author: alvin0319
 main: alvin0319\AmongUs\AmongUs
 version: 0.0.10
 api:
-- 2.0.0
 - 3.0.0
-- 4.0.0
-website: https://discord.gg/Py2vSwg3B3
+website: https://github.com/alvin0319/AmongUs
 
 permissions:
   amongus.command:
