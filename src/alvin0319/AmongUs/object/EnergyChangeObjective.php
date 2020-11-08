@@ -9,6 +9,8 @@ use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
 use pocketmine\item\ItemIds;
+use pocketmine\level\sound\GenericSound;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 
 use function in_array;
@@ -62,9 +64,10 @@ class EnergyChangeObjective extends Objective{
 			}
 			if($valid){
 				$menu->getInventory()->onClose($player);
-
+				$player->sendMessage(AmongUs::$prefix . "Objective Completed");
+				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
-
+				
 				$game->addProgress();
 
 				return $action->continue()->then(function(Player $o) : void{

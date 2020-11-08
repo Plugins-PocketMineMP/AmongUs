@@ -23,6 +23,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 - 0.0.8: Added basic event API
 - 0.0.9: Now we can play this, but not completed
 - 0.0.10: Fixed my bad english (thanks to @HydroGames-dev)
+- 0.0.11: Added Task Complete message & sound.
 
 ### Download/Installation
 
@@ -32,26 +33,36 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
 ### Default Configuration
 
-``max_games: 3``
+*&max_games:** ``3``
 
-``world_name: amongus``
+**world_name:** ``amongus``
 
 ### Commands
 
 - ``/au`` - Opens the Main UI for the plugin.
-- ``/aum`` - Game setup UI.
+- ``/aum`` - Opens the Game setup UI.
+
+### Permissions
+
+You need ``amongus.command.manage`` to use Game Setup Menu.
+
+### Misc Plugins
+
+- OffHand Plugin [Download](https://github.com/alvin0319/OffHand)
+**you can use offhand plugin to put the map on your left hand.**
+- InvMenu Virion
 
 ## Setup
 
-**plugin is under development**
+**Plugin is under development**
 
 ### Plugin Info
  
  Plugin: **AmongUs**
  
+ API: **3.0.0**
+ 
  Author: **Alvin0319**
 
- Version: **0.0.10**
- 
- API: **3.0.0**
+ Current Version: **0.0.11**
  

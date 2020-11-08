@@ -1,7 +1,7 @@
 name: AmongUs
 author: alvin0319
 main: alvin0319\AmongUs\AmongUs
-version: 0.0.10
+version: 0.0.11
 api:
 - 3.0.0
 website: https://github.com/alvin0319/AmongUs
