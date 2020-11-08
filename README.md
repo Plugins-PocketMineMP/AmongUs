@@ -46,11 +46,11 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
 You need ``amongus.command.manage`` to use Game Setup Menu.
 
-### Plugins needed
+### Misc Plugins
 
-- InvMenu [Download](https://poggit.pmmp.io/r/104428/InvMenu.phar)
 - OffHand Plugin [Download](https://github.com/alvin0319/OffHand)
 **you can use offhand plugin to put the map on your left hand.**
+- InvMenu Virion
 
 ## Setup
 
