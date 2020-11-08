@@ -182,7 +182,7 @@ class EventListener implements Listener{
 			]);
 
 			AmongUs::getInstance()->registerGame($game);
-			$player->sendMessage(AmongUs::$prefix . "Game create success. (Game id: {$game->getId()})");
+			$player->sendMessage(AmongUs::$prefix . "Game creation successfully. (Game id: {$game->getId()})");
 			unset(ObjectiveQueue::$createQueue[$player->getName()]);
 			return;
 		}
