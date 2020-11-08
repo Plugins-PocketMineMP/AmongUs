@@ -42,6 +42,16 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 - ``/au`` - Opens the Main UI for the plugin.
 - ``/aum`` - Opens the Game setup UI.
 
+### Permissions
+
+You need ``amongus.command.manage`` to use Game Setuo Menu.
+
+### Dependencies Plugins
+
+- muqsit's InvMenu Virion [Download](https://github.com/Muqsit/InvMenu)
+- OffHand Plugin [Download](https://github.com/alvin0319/OffHand)
+**you can use offhand plugin to put the map on your left hand.**
+
 ## Setup
 
 **Plugin is under development**
@@ -50,9 +60,9 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
  
  Plugin: **AmongUs**
  
+ API: **3.0.0**
+ 
  Author: **Alvin0319**
 
-Current Version: **0.0.11**
- 
- API: **3.0.0**
+ Current Version: **0.0.11**
  
