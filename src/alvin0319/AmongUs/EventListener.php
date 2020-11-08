@@ -126,16 +126,16 @@ class EventListener implements Listener{
 			return;
 		}
 		if($game->isDead($player)){
-			$game->broadcastMessageToDead("[Dead chat] " . $player->getName() . " > " . $message);
+			$game->broadcastMessageToDead("§6[§r§n§7Ghost Chat§r§6]§7 " . $player->getName() . " §8>§r " . $message);" . $player->getName() . " > " . $message);
 			return;
 		}
 		if($game->isEmergencyRunning()){
-			$game->broadcastMessage($player->getName() . " > " . $message);
+			$game->broadcastMessage("§8[§c!§8]§r " . $player->getName() . " > " . $message);
 			$event->setCancelled();
 			return;
 		}
 		$event->setCancelled();
-		$player->sendMessage(AmongUs::$prefix . "You cannot send message during non-emergency time.");
+		$player->sendMessage(AmongUs::$prefix . "You cannot talk during non-emergency time.");
 	}
 
 	/**
@@ -155,7 +155,7 @@ class EventListener implements Listener{
 				return;
 			}
 			$event->setCancelled();
-			$player->sendMessage(AmongUs::$prefix . "You cannot use command during in Among Us.");
+			$player->sendMessage(AmongUs::$prefix . "You are not allowed to execute commands during games.");
 		}
 	}
 
