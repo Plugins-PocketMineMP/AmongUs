@@ -202,7 +202,7 @@ class Game{
 	public function addPlayer(Player $player) : void{
 		if(!$this->hasPlayer($player)){
 			$this->players[] = $player->getName();
-			$this->broadcastMessage(AmongUs::$prefix . "§e" . $player->getName() . " has joined the game.");
+			$this->broadcastMessage("§bGame:§e " . $player->getName() . " has joined the game.");
 		}
 	}
 
@@ -224,7 +224,7 @@ class Game{
 				unset($this->dead[array_search($player->getName(), $this->dead)]);
 				$this->dead = array_values($this->dead);
 			}
-			$this->broadcastMessage(AmongUs::$prefix . "§e" . $player->getName() . " has left the game.");
+			$this->broadcastMessage("§bGame:§e " . $player->getName() . " has left the game.");
 		}
 		$this->checkIfGameDone();
 	}
