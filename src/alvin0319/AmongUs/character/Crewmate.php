@@ -8,7 +8,7 @@
  * /_/   \_\_| |_| |_|\___/|_| |_|\__, |\___/|___/
  *                                |___/
  *
- * A PocketMine-MP plugin that implements AmongUs
+ * A PocketMine-MP plugin that implements AmongUs.
  *
  * Copyright (C) 2020 alvin0319
  *
@@ -39,7 +39,7 @@ class Crewmate extends Character{
 	}
 
 	public function getDescription() : string{
-		return "Objective: Fill group task bar or find out the imposter ";
+		return "Objective: Complete Objective or find out the imposter ";
 	}
 
 	public function getItems() : array{
