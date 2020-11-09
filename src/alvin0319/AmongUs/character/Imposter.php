@@ -8,7 +8,7 @@
  * /_/   \_\_| |_| |_|\___/|_| |_|\__, |\___/|___/
  *                                |___/
  *
- * A PocketMine-MP plugin that implements AmongUs
+ * A PocketMine-MP plugin that implements AmongUs.
  *
  * Copyright (C) 2020 alvin0319
  *
@@ -39,7 +39,7 @@ class Imposter extends Character{
 	}
 
 	public function getDescription() : string{
-		return "Objective: Kill all crewmates & do not get caught!";
+		return "Objective: Kill crewmates & do not get caught!";
 	}
 
 	public function getItems() : array{
