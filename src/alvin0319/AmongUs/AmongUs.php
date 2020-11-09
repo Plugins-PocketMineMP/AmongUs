@@ -125,7 +125,8 @@ class AmongUs extends PluginBase{
 			new AmongUsCommand(),
 			new AmongUsManageCommand()
 		]);
-
+		
+		$this->getLogger()->info("Successfully Loaded AmongUs");
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}
 
