@@ -33,9 +33,9 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\object;
 
 use alvin0319\AmongUs\AmongUs;
-use muqsit\invmenu\InvMenu;
-use muqsit\invmenu\transaction\InvMenuTransaction;
-use muqsit\invmenu\transaction\InvMenuTransactionResult;
+use alvin0319\AmongUs\libs\muqsit\invmenu\InvMenu;
+use alvin0319\AmongUs\libs\muqsit\invmenu\transaction\InvMenuTransaction;
+use alvin0319\AmongUs\libs\muqsit\invmenu\transaction\InvMenuTransactionResult;
 use pocketmine\block\BlockIds;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
@@ -87,7 +87,6 @@ class FileSendObjective extends Objective{
 			if(ObjectiveQueue::$fileSendQueue[$player->getName()]){
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
-				
 				$game->addProgress();
 			}
 			unset(ObjectiveQueue::$fileSendQueue[$player->getName()]);
