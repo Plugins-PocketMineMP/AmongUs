@@ -77,9 +77,7 @@ class ManifoldOpenObjectiveForm implements Form{
 		}
 		if(strlen($this->progress) === 10){
 			if($this->progress === "0123456789"){
-				// Objective complete
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
-				$player->sendTip("§aObjective Completed");
 				$character->completeObjective($this->objective);
 				$game->addProgress();
 			}else{
