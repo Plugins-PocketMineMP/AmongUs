@@ -39,8 +39,8 @@ use muqsit\invmenu\transaction\InvMenuTransactionResult;
 use pocketmine\block\BlockIds;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\level\sound\GenericSound;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
@@ -85,9 +85,9 @@ class FileReceiveObjective extends Objective{
 
 		$menu->setInventoryCloseListener(function(Player $player) use ($character, $game) : void{
 			if(ObjectiveQueue::$fileReceiveQueue[$player->getName()]){
-			    $player->sendMessage(AmongUs::$prefix . "Objective Completed");
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
+				$player->sendTip("§aObjective Completed");
 				$game->addProgress();
 			}
 			unset(ObjectiveQueue::$fileReceiveQueue[$player->getName()]);
