@@ -1,6 +1,6 @@
 # AmongUs
 
-A PocketMine-MP mini-game plugin called AmongUs,
+A PocketMine-MP mini-game plugin called AmongUs, 
 This is simlar to the AmongUs game but in MCBE.
 
 ## Features
@@ -41,11 +41,13 @@ world_name: amongus
 ### Commands
 
 - ``/au`` Opens the main ui for the plugin.
+
 - ``/aum`` Opens the game setup ui.
 
 ### Permissions
 
 - ``amongus.command`` Permission to use game ui.
+
 - ``amongus.command.manage`` Permission to use game setup ui.
 
 ### Misc Plugins
