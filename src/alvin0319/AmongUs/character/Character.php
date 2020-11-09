@@ -8,7 +8,7 @@
  * /_/   \_\_| |_| |_|\___/|_| |_|\__, |\___/|___/
  *                                |___/
  *
- * A PocketMine-MP plugin that implements AmongUs
+ * A PocketMine-MP plugin that implements AmongUs.
  *
  * Copyright (C) 2020 alvin0319
  *
