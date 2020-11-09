@@ -1,6 +1,6 @@
 # AmongUs
 
-A PocketMine-MP mini-game 0lugin called AmongUs,
+A PocketMine-MP mini-game plugin called AmongUs,
 This is simlar to the AmongUs game but in MCBE.
 
 ## Features
@@ -57,7 +57,7 @@ world_name: amongus
 
 ## Setup
 
-**Plugin is still under development**
+**This plugin is still under development**
 
 This project is still in progress of development, if you want to contribute my project, make a pull request!
 
