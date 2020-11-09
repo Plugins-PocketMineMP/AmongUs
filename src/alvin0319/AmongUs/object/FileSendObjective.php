@@ -87,7 +87,7 @@ class FileSendObjective extends Objective{
 			if(ObjectiveQueue::$fileSendQueue[$player->getName()]){
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
-				$player->sendTip("§aObjective Completed");
+				
 				$game->addProgress();
 			}
 			unset(ObjectiveQueue::$fileSendQueue[$player->getName()]);
