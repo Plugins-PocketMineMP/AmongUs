@@ -64,17 +64,14 @@ class EnergyChangeObjective extends Objective{
 			}
 			if($valid){
 				$menu->getInventory()->onClose($player);
-				
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
-				
 				$game->addProgress();
-
+				
 				return $action->continue()->then(function(Player $o) : void{
 					$o->getCursorInventory()->clearAll();
 				});
 			}
-
 			return $action->continue();
 		});
 	}
