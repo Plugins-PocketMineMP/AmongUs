@@ -85,7 +85,6 @@ class FileSendObjective extends Objective{
 
 		$menu->setInventoryCloseListener(function(Player $player) use ($character, $game) : void{
 			if(ObjectiveQueue::$fileSendQueue[$player->getName()]){
-			    $player->sendMessage(AmongUs::$prefix . "Objective Completed");
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
 				$game->addProgress();

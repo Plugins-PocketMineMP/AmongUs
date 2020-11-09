@@ -1,7 +1,7 @@
 # AmongUs
 
-A PocketMine-MP Mini-Game Plugin called AmongUs
-This is simlar to the AmongUs Game but in Minecraft.
+A PocketMine-MP mini-game Plugin called AmongUs
+This is simlar to the AmongUs game but in MCBE.
 
 ## This is yet not completed!
 
@@ -33,36 +33,26 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
 ### Default Configuration
 
-*&max_games:** ``3``
+```yaml
+max_games: 3
 
-**world_name:** ``amongus``
+world_name: amongus
+```
 
 ### Commands
 
-- ``/au`` - Opens the Main UI for the plugin.
-- ``/aum`` - Opens the Game setup UI.
+- ``/au`` - Opens the main UI for the plugin.
+- ``/aum`` - Opens the game setup UI.
 
 ### Permissions
 
-You need ``amongus.command.manage`` to use Game Setup Menu.
+You need ``amongus.command.manage`` to use game setup menu.
 
 ### Misc Plugins
 
-- OffHand Plugin [Download](https://github.com/alvin0319/OffHand)
+- OffHand plugin [Download](https://github.com/alvin0319/OffHand)
 **you can use offhand plugin to put the map on your left hand.**
-- InvMenu Virion
 
 ## Setup
 
 **Plugin is under development**
-
-### Plugin Info
- 
- Plugin: **AmongUs**
- 
- API: **3.0.0**
- 
- Author: **Alvin0319**
-
- Current Version: **0.0.11**
- 
