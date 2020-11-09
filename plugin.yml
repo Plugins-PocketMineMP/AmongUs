@@ -1,17 +1,17 @@
 name: AmongUs
-description: "AmongUs but in Minecraft"
+description: "AmongUs in Minecraft"
 author: alvin0319
 main: alvin0319\AmongUs\AmongUs
 version: 0.0.11
 api: 3.0.0
 website: https://github.com/alvin0319/AmongUs
-
+       
 permissions:
   amongus.command:
     default: true
-    description: permission for amongus command
+    description: permission for amongus command.
     children:
       amongus.command.manage:
         default: op
-        description: permission for amongus manage command
+        description: permission for amongus manage command.
         
