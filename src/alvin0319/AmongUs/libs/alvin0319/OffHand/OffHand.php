@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\libs\alvin0319\OffHand;
 
 use pocketmine\event\Listener;
+use alvin0319\AmongUs\AmongUs;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
