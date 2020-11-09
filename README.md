@@ -5,11 +5,11 @@ This is simlar to the AmongUs game but in MCBE.
 
 ## Features
 
-- Map. (Can be put in Off-Hand)
+- Map.(Can be put in Off-Hand)
 - Impostor & Crewmate Roles!
 - Crewmate Tasks/objectives.
 - Voting ui System.
-- ui setup manager
+- UI setup manager.
 - More Features comming soon!
 
 ## Changelogs
@@ -25,10 +25,11 @@ This is simlar to the AmongUs game but in MCBE.
 - 0.0.9: Now we can play this, but not yet completed.
 - 0.0.10: Fixed Language Mistakes. (thanks to @HydroGames-dev)
 - 0.0.11: Added Task Complete sound.
+- 0.0.12: Added the Depended plugins into libarys.
 
 ### Download/Installation
 
-once plugin is fully stable.
+Once plugin is fully stable a release will be published.
 
 ### Default Configuration
 
@@ -49,11 +50,6 @@ world_name: amongus
 - ``amongus.command`` Permission to use game ui.
 
 - ``amongus.command.manage`` Permission to use game setup ui.
-
-### Misc Plugins
-
-- Off-Hand plugin [Download](https://github.com/alvin0319/OffHand) 
-**you can use off-hand plugin to put the map on your left hand.**
 
 ## Setup
 
