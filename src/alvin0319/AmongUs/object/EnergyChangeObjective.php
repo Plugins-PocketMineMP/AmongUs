@@ -64,7 +64,6 @@ class EnergyChangeObjective extends Objective{
 			}
 			if($valid){
 				$menu->getInventory()->onClose($player);
-				$player->sendTip("§aObjective Completed");
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
 				
