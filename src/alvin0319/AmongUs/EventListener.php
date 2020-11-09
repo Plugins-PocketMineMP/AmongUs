@@ -38,6 +38,8 @@ use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\form\game\VoteImposterForm;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
+use alvin0319\AmongUs\libs\alvin0319\OffHand\OffHand;
+use alvin0319\AmongUs\libs\alvin0319\OffHand\OffHandInventory;
 use alvin0319\AmongUs\object\ObjectiveQueue;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
@@ -59,6 +61,7 @@ class EventListener implements Listener{
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
+		
 		switch(true){
 			case ($packet instanceof InventoryTransactionPacket):
 				if($packet->transactionType !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
@@ -85,6 +88,7 @@ class EventListener implements Listener{
 	public function onEntityDamage(EntityDamageByEntityEvent $event) : void{
 		$victim = $event->getDamager();
 		$entity = $event->getEntity();
+		
 		if(!$victim instanceof Player || !$entity instanceof Player){
 			return;
 		}

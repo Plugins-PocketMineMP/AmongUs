@@ -41,7 +41,10 @@ use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
 use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
 use Closure;
-use muqsit\invmenu\InvMenuHandler;
+use alvin0319\AmongUs\libs\alvin0319\OffHand\OffHand;
+use alvin0319\AmongUs\libs\alvin0319\OffHand\OffHandInventory;
+use alvin0319\AmongUs\libs\muqsit\invmenu\InvMenu;
+use alvin0319\AmongUs\libs\muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
@@ -80,9 +83,9 @@ class AmongUs extends PluginBase{
 	}
 
 	public function onEnable() : void{
-		if(!InvMenuHandler::isRegistered()){
-			InvMenuHandler::register($this);
-		}
+        if(!InvMenuHandler::isRegistered()){
+            InvMenuHandler::register($this);
+        }
 		$this->saveDefaultConfig();
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
@@ -126,7 +129,6 @@ class AmongUs extends PluginBase{
 			new AmongUsManageCommand()
 		]);
 		
-		$this->getLogger()->info("Successfully Loaded AmongUs");
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}
 
