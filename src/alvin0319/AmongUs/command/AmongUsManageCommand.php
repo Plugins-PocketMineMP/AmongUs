@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\command;
 
 use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\form\creation\AmongUsGameCreateForm;
 use alvin0319\AmongUs\item\FilledMap;
 use pocketmine\command\CommandSender;
@@ -63,6 +64,7 @@ class AmongUsManageCommand extends PluginCommand{
 		}
 		switch($args[0] ?? "x"){
 			case "creategame":
+			    $sender->sendMessage(AmongUs::$prefix . "Make sure to setup the config.yml before using this command");
 				$sender->sendForm(new AmongUsGameCreateForm());
 				break;
 			case "createobjective":
