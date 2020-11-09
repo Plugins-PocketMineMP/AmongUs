@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\form\game;
 
 use alvin0319\AmongUs\game\Game;
+use alvin0319\AmongUs\AmongUs;
 use pocketmine\form\Form;
 use pocketmine\Player;
 
