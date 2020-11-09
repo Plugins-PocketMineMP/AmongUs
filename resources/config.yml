@@ -9,7 +9,7 @@
 
 # How many games can be made on the server.
 # Recommended: 3-5
-max_games: 4
+max_games: 3
 
 # Select which world should the game be made.
 world_name: amongus
