@@ -44,12 +44,13 @@ class AmongUsMainForm implements Form{
 	public function jsonSerialize(){
 		return [
 			"type" => "form",
-			"title" => "AmongUs in Minecraft!",
+			"title" => "§cAmong§eUs §aMCPE",
 			"content" => "",
 			"buttons" => [
-				["text" => "Exit"],
-				["text" => "Play Game"],
-				["text" => "How to Play"]
+				["text" => " §aJoin a match"],
+				["text" => " §aHow to play"],
+				["text" => " §aPlugin Info"],
+				["text" => " §cExit Menu"]
 			]
 		];
 	}
@@ -58,20 +59,30 @@ class AmongUsMainForm implements Form{
 		if(!is_int($data)){
 			return;
 		}
+		
 		switch($data){
 			case 1:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
 				if($game === null){
-				  	$player->sendMessage(AmongUs::$prefix . "There are no available games right now.(all games are currently running!)");
+					$player->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
 					return;
 				}
 				$game->addPlayer($player);
 				break;
 			case 2:
-			    $lines = "§8-------------------------------------------------------";
+			    $lines = "§8------------------------------------------------------";
 			    $space = " ";
-			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§cAmong§eUs§b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal" . "\n" . "§ePlayers are either Crewmates or an Imposter" . "\n" . $space . "\n" . $space . "\n" . "§6Roles" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win" . "\n" . "§cImposter: Kill all Crewmates to win" . "\n" . $space . "\n" . "§6Misc" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aHave Fun Playing§8] -=[§a+§8]=-" . "\n" . $lines);
+			    $player->sendTip("Plugin Credits: Alvin0319");
+			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro:" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . "\n" . $space . "\n" . "§6Roles:" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . "\n" . "§6Info:" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . $space . "§8-=[§a+§8]=- [§aHave Fun Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
+			case 3:
+			    $line = "§8------------------------------------------------------";
+			    $space = " ";
+			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Plugin Info:" . "\n" . $space . "\n" . "§6Name:" . "\n" . "§a§cAmong§eUs§r" . "\n" . $space . "\n" . "§6Author:" . "\n" . $space . "\n" . "§aAlvin0319" . "\n" . $space . "\n" . $space . "§8-=[§a+§8]=- [§cAmong§eUs §aby Alvin0319§8] -=[§a+§8]=-" . "\n" . $lines);
+				break;
+			case 4:
+			    $player->sendTip("§aSuccessfully Closed Game Menu");
+			    break;
 		}
 	}
 }
