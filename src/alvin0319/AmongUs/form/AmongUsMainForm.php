@@ -62,8 +62,7 @@ class AmongUsMainForm implements Form{
 			case 1:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
 				if($game === null){
-				    $player->sendTip("§aAll Games Running, Try again in few minutes");
-					$player->sendMessage(AmongUs::$prefix . "There are no available games right now.(all games are currently running!)");
+				  	$player->sendMessage(AmongUs::$prefix . "There are no available games right now.(all games are currently running!)");
 					return;
 				}
 				$game->addPlayer($player);
@@ -72,7 +71,6 @@ class AmongUsMainForm implements Form{
 			    $lines = "§8-------------------------------------------------------";
 			    $space = " ";
 			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§cAmong§eUs§b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal" . "\n" . "§ePlayers are either Crewmates or an Imposter" . "\n" . $space . "\n" . $space . "\n" . "§6Roles" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win" . "\n" . "§cImposter: Kill all Crewmates to win" . "\n" . $space . "\n" . "§6Misc" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aHave Fun Playing§8] -=[§a+§8]=-" . "\n" . $lines);
-				$player->sendTip("§aCheck the Chat for the Help message");
 				break;
 		}
 	}
