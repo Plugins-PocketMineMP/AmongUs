@@ -30,7 +30,7 @@ This is simlar to the AmongUs game but in MCBE.
 - Check Releases for **.phar** download.
 - Put the plugin in ``/plugins`` Folder.
 - and restart server and edit ``config.yml``.
-- and do /amum to setup the games.
+- and do /aum to setup the games.
 
 ### Default Configuration
 
@@ -57,7 +57,7 @@ world_name: amongus
 
 ## Setup
 
-**Plugin is under development**
+**Plugin is still under development**
 
 This project is still in progress of development, if you want to contribute my project, make a pull request!
 
