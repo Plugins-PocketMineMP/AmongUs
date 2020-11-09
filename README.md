@@ -5,12 +5,23 @@ This is simlar to the AmongUs game but in MCBE.
 
 ## Features
 
-- Map.(Can be put in Off-Hand)
-- Impostor & Crewmate Roles!
-- Crewmate Tasks/objectives.
-- Voting ui System.
-- UI setup manager.
+- [x] - Map. (Can be put in Off-Hand)
+- [x] -  Impostor & Crewmate Roles!
+- [x] - Crewmate Tasks/objectives.
+- [x] - Voting UI System.
+- [x] - UI setup manager.
 - More Features comming soon!
+
+## ToDo
+
+- [ ] Scoreboard (Total Characters left & Emergency Meeting left)
+- [ ] BossBar (ex: Your Role: Crewmate on BossBar)
+- [ ] Colored Name Tags 
+- [ ] Hide Names
+- [ ] Venting
+- [ ] Sabotage
+- [ ] More Tasks/Objectives
+- [ ] More Game Configuration
 
 ## Changelogs
 
@@ -27,9 +38,6 @@ This is simlar to the AmongUs game but in MCBE.
 - 0.0.11: Added Task Complete sound.
 - 0.0.12: Added the Depended plugins into libarys.
 
-### Download/Installation
-
-Once plugin is fully stable a release will be published.
 
 ### Default Configuration
 
@@ -51,7 +59,11 @@ world_name: amongus
 
 - ``amongus.command.manage`` Permission to use game setup ui.
 
-## Setup
+### Download/Installation
+
+**N/A** 
+
+###  Setup
 
 **Plugin is still under development**
 
@@ -60,3 +72,6 @@ This project is still in progress of development, if you want to contribute my p
 ### Join my discord server
 
 You can get plugin updates & progress on my [Discord Server](https://discord.gg/Py2vSwg3B3).
+
+## Screenshots:
+![Example](https://cdn.discordapp.com/attachments/523021633439399936/775489367744839680/20201110_040727.jpg)
