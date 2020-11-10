@@ -87,9 +87,6 @@ class AmongUsMainForm implements Form{
 			  $player->teleport($spawn, 0, 0);
 			  $player->sendMessage(AmongUs::$prefix . "You left the match.");
 			  break;
-			case 4:
-			    $player->sendMessage(AmongUs::$prefix ."§aSuccessfully Closed Game Menu");
-			    break;
 		}
 	}
 }
