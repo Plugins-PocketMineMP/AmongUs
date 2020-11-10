@@ -79,13 +79,13 @@ class AmongUsMainForm implements Form{
 			    $player->sendTip("Plugin Credits: Alvin0319");
 			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro:" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . "\n" . $space . "\n" . "§6Roles:" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . "\n" . "§6Info:" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . $space . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
-			case 3:
-			  $server = AmongUs::getInstance()->getServer();
+			case 2:
 			  $game = AmongUs::getInstance()->getGameByPlayer($player);
 			  $spawn = AmongUs::getInstance()->getServer()->getDefaultLevel()->getSafeSpawn();
-			  $game->removePlayer($player);
-			  $server->getDefaultLevel()->loadChunk($spawn->getX(), $spawn->getZ());
+			  $chunk = $server->getDefaultLevel();
+			  $chunk->loadChunk($spawn->getX(), $spawn->getZ());
 			  $player->teleport($spawn, 0, 0);
+			  $game->removePlayer($player);
 			  $player->sendMessage(AmongUs::$prefix . "You left the match.");
 			  break;
 		}
