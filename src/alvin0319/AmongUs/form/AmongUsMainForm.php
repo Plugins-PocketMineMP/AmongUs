@@ -47,10 +47,10 @@ class AmongUsMainForm implements Form{
 			"title" => "§cAmong§eUs §aMCPE",
 			"content" => "",
 			"buttons" => [
-				["text" => "§cExit"],
+				["text" => "§aPlay"],
 				["text" => "§aHow to play"],
 				["text" => "§aCredits"],
-				["text" => "§aPlay"]
+				["text" => "§cExit"]
 			]
 		];
 	}
@@ -61,7 +61,7 @@ class AmongUsMainForm implements Form{
 		}
 		
 		switch($data){
-			case 1:
+			case 0:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
 				if($game === null){
 					$player->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
@@ -69,17 +69,20 @@ class AmongUsMainForm implements Form{
 				}
 				$game->addPlayer($player);
 				break;
-			case 2:
+			case 1:
 			    $lines = "§8------------------------------------------------------";
 			    $space = " ";
 			    $player->sendTip("Plugin Credits: Alvin0319");
 			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro:" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . "\n" . $space . "\n" . "§6Roles:" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . "\n" . "§6Info:" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . $space . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
-			case 3:
+			case 2:
 			    $line = "§8------------------------------------------------------";
 			    $spaces = " ";
 			    $player->sendMessage($line . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $spaces . "\n" . "§6Plugin Info:" . "\n" . $spaces . "\n" . "§6Name:" . "\n" . "§a§cAmong§eUs§r" . "\n" . $spaces . "\n" . "§6Author:" . "\n" . $spaces . "\n" . "§aAlvin0319" . "\n" . $spaces . "\n" . $spaces . "§8-=[§a+§8]=- [§cAmong§eUs §aby Alvin0319§8] -=[§a+§8]=-" . "\n" . $line);
 				break;
+			case 3:
+			    $player->sendMessage(AmongUs::$prefix ."§aSuccessfully Closed Game Menu");
+			    break;
 		}
 	}
 }
