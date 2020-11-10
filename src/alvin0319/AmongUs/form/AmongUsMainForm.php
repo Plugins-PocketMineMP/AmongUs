@@ -59,7 +59,6 @@ class AmongUsMainForm implements Form{
 		if(!is_int($data)){
 			return;
 		}
-		
 		switch($data){
 			case 0:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
