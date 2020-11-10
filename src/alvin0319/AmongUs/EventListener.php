@@ -38,8 +38,6 @@ use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\form\game\VoteImposterForm;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
-use alvin0319\AmongUs\libs\alvin0319\OffHand\OffHand;
-use alvin0319\AmongUs\libs\alvin0319\OffHand\OffHandInventory;
 use alvin0319\AmongUs\object\ObjectiveQueue;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
