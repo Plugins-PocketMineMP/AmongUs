@@ -82,7 +82,7 @@ class AmongUsMainForm implements Form{
 			case 2:
 			  $game = AmongUs::getInstance()->getGameByPlayer($player);
 			  $spawn = AmongUs::getInstance()->getServer()->getDefaultLevel()->getSafeSpawn();
-			  $chunk = $server->getDefaultLevel();
+			  $chunk = $spawn->getDefaultLevel();
 			  $chunk->loadChunk($spawn->getX(), $spawn->getZ());
 			  $player->teleport($spawn, 0, 0);
 			  $game->removePlayer($player);
