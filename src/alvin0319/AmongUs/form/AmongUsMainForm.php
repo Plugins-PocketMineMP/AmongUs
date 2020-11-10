@@ -87,13 +87,9 @@ class AmongUsMainForm implements Form{
 				break;
 			case 3:
 			  $game = AmongUs::getInstance()->getGameByPlayer($player);
-			  if($game->isRunning()){
-			  			$player->sendMessage(AmongUs::$prefix . "you cannot leave the game when it is running.");
-			  		return;
-			  }
 			  $game->removePlayer($player);
-			  $player->teleport($this->getServer()->getDefaultLevel()->getSpawnLocation());
-			  $player->sendMessage(AmongUs::$prefix . "You left the Match.");
+			  $player->teleport($this->getServer()->getDefaultLevel()->getSafeSpawn());
+				$player->sendMessage(AmongUs::$prefix . "You left the matc.");
 			  break;
 			case 4:
 			    $player->sendMessage(AmongUs::$prefix ."§aSuccessfully Closed Game Menu");
