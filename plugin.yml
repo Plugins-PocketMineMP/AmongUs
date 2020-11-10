@@ -1,5 +1,5 @@
 name: AmongUs
-description: "AmongUs in Minecraft"
+description: "AmongUs plugin for MCBE"
 author: alvin0319
 main: alvin0319\AmongUs\AmongUs
 version: 0.0.12

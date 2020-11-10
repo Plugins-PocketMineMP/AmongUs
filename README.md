@@ -8,7 +8,7 @@ This is simlar to the AmongUs game but in MCBE.
 - Map.(Can be put in Off-Hand)
 - Impostor & Crewmate Roles!
 - Crewmate Tasks/objectives.
-- Voting ui System.
+- Voting UI System.
 - UI setup manager.
 - More Features comming soon!
 
@@ -23,9 +23,9 @@ This is simlar to the AmongUs game but in MCBE.
 - 0.0.7: Implemented DisplayTextTask.
 - 0.0.8: Added basic event API.
 - 0.0.9: Now we can play this, but not yet completed.
-- 0.0.10: Fixed Language Mistakes. (thanks to @HydroGames-dev)
-- 0.0.11: Added Task Complete sound.
-- 0.0.12: Added Color & Emojis to Messsages.
+- 0.0.10: Fixed Language mistakes. (thanks to @HydroGames-dev)
+- 0.0.11: Added Task complete sound.
+- 0.0.12: Added color tags & emojis to Messsages.
 
 ### Download/Installation
 
