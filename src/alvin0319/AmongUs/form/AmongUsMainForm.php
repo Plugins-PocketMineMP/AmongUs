@@ -82,8 +82,8 @@ class AmongUsMainForm implements Form{
 				break;
 			case 3:
 			  $game = AmongUs::getInstance()->getGameByPlayer($player);
-			   if($game !== null){
-			  	$player->sendMessage(AmongUs::$prefix . "§eYou have left the match.");
+			   if(!$game->isRunning()){
+			  	$player->sendMessage(AmongUs::$prefix . "You cannot left the game is currently running");
 			  	return;
 			  }
 			  $game->removePlayer($player);
