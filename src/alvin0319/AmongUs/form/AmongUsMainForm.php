@@ -47,10 +47,10 @@ class AmongUsMainForm implements Form{
 			"title" => "§cAmong§eUs §aMCPE",
 			"content" => "",
 			"buttons" => [
-				["text" => "§aJoin a match"],
+				["text" => "§cExit"],
 				["text" => "§aHow to play"],
-				["text" => "§aPlugin Info"],
-				["text" => "§cExit"]
+				["text" => "§aCredits"],
+				["text" => "§aPlay"]
 			]
 		];
 	}
@@ -80,9 +80,6 @@ class AmongUsMainForm implements Form{
 			    $spaces = " ";
 			    $player->sendMessage($line . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $spaces . "\n" . "§6Plugin Info:" . "\n" . $spaces . "\n" . "§6Name:" . "\n" . "§a§cAmong§eUs§r" . "\n" . $spaces . "\n" . "§6Author:" . "\n" . $spaces . "\n" . "§aAlvin0319" . "\n" . $spaces . "\n" . $spaces . "§8-=[§a+§8]=- [§cAmong§eUs §aby Alvin0319§8] -=[§a+§8]=-" . "\n" . $line);
 				break;
-			case 4:
-			    $player->sendMessage(AmongUs::$prefix . "§aSuccessfully Closed Game Menu");
-			    break;
 		}
 	}
 }
