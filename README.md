@@ -26,6 +26,7 @@ This is simlar to the AmongUs game but in MCBE.
 - 0.0.10: Fixed Language mistakes. (thanks to @HydroGames-dev)
 - 0.0.11: Added Task complete sound.
 - 0.0.12: Added color tags & emojis to Messsages.
+- 0.0.13: Added Leave Command & Fixed Syntax Errors.
 
 ### Download/Installation
 

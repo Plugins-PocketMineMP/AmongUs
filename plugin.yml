@@ -2,7 +2,7 @@ name: AmongUs
 description: "AmongUs plugin for MCBE"
 author: alvin0319
 main: alvin0319\AmongUs\AmongUs
-version: 0.0.12
+version: 0.0.13
 api: 3.0.0
 website: https://github.com/alvin0319/AmongUs
 

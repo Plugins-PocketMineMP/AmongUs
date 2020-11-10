@@ -466,7 +466,7 @@ class Game{
 			return $this->getCharacter($player);
 		}, $this->getPlayers()), function(?Character $character) : bool{
 			return $character instanceof Imposter;
-		}),);
+		}));
 	}
 
 	public function filterCrewmates() : array{
