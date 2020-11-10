@@ -476,7 +476,7 @@ class Game{
 				return $character instanceof Crewmate;
 			}), function(Crewmate $crewmate) : bool{
 				return !$this->isDead($crewmate->getPlayer());
-			}));
+			}),);
 	}
 
 	public function getCrewmates() : array{
