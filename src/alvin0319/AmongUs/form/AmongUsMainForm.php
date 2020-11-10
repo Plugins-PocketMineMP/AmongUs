@@ -50,6 +50,7 @@ class AmongUsMainForm implements Form{
 				["text" => "§aPlay"],
 				["text" => "§aHow to play"],
 				["text" => "§aCredits"],
+				["text" => "§cLeave Game"],
 				["text" => "§cExit"]
 			]
 		];
@@ -80,6 +81,14 @@ class AmongUsMainForm implements Form{
 			    $player->sendMessage($line . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $spaces . "\n" . "§6Plugin Info:" . "\n" . $spaces . "\n" . "§6Name:" . "\n" . "§a§cAmong§eUs§r" . "\n" . $spaces . "\n" . "§6Author:" . "\n" . $spaces . "\n" . "§aAlvin0319" . "\n" . $spaces . "\n" . $spaces . "§8-=[§a+§8]=- [§cAmong§eUs §aby Alvin0319§8] -=[§a+§8]=-" . "\n" . $line);
 				break;
 			case 3:
+			  $game = AmongUs::getInstance()->getGameByPlayer($player);
+			   if($game !== null){
+			  	$player->sendMessage(AmongUs::$prefix . "§eYou have left the match.");
+			  	return;
+			  }
+			  $game->removePlayer($player);
+			  break;
+			case 4:
 			    $player->sendMessage(AmongUs::$prefix ."§aSuccessfully Closed Game Menu");
 			    break;
 		}
