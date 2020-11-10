@@ -83,7 +83,7 @@ class AmongUsMainForm implements Form{
 			case 3:
 			  $game = AmongUs::getInstance()->getGameByPlayer($player);
 			   if($game->isRunning()){
-			  	$player->sendMessage(AmongUs::$prefix . "You cannot left the game is currently running");
+			  	$player->sendMessage(AmongUs::$prefix . "you cannot leave when the game is running.");
 			  	return;
 			  }
 			  $game->removePlayer($player);
