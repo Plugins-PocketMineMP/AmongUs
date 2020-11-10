@@ -83,7 +83,11 @@ class AmongUsMainForm implements Form{
 			  $game = AmongUs::getInstance()->getGameByPlayer($player);
 			  $chunk = AmongUs::getInstance()->getServer()->getDefaultLevel();
 			  $load = $chunk->getSafeSpawn();
-			  $load->loadChunk($load->getX(), $load->getZ());
+			  if($game !== null){
+			    $player->sendMessage("You cannot leave the game while it's running");
+			    return;
+			  }
+			  $load->loadChunk($load->getX(), $l->getZ());
 			  $player->teleport($chunk, 0, 0);
 			  $game->removePlayer($player);
 			  $player->sendMessage(AmongUs::$prefix . "You left the match.");
