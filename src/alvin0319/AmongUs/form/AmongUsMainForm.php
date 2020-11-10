@@ -80,16 +80,17 @@ class AmongUsMainForm implements Form{
 			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§eUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro:" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . "\n" . $space . "\n" . "§6Roles:" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . "\n" . "§6Info:" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . $space . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
 			case 2:
-			  $game = AmongUs::getInstance()->getGameByPlayer($player);
-			  $chunk = AmongUs::getInstance()->getServer()->getDefaultLevel();
-			  $load = $chunk->getSafeSpawn();
-			  if($game !== null){
+			  $game = AmongUs::getInstance()->getGame($id);
+			  if($game !== $this->running){
 			    $player->sendMessage("You cannot leave the game while it's running");
 			    return;
 			  }
+			  $chunk = AmongUs::getInstance()->getServer()->getDefaultLevel();
+			  $load = $chunk->getSafeSpawn();
 			  $load->loadChunk($load->getX(), $l->getZ());
 			  $player->teleport($chunk, 0, 0);
-			  $game->removePlayer($player);
+			  $leave = AmongUs::getInstance()->getGameByPlayer($player);
+			  $leave->removePlayer($player);
 			  $player->sendMessage(AmongUs::$prefix . "You left the match.");
 			  break;
 		}
