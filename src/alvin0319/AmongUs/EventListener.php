@@ -169,7 +169,16 @@ class EventListener implements Listener{
 		$block = $event->getBlock();
 
 		if(isset(ObjectiveQueue::$createQueue[$player->getName()])){
-			[$type, $maxImposters, $maxCrews, $emergencyTime, $emergencyCall, $coolDown, $minPlayer, $waitTime] = ObjectiveQueue::$createQueue[$player->getName()];
+			[
+				$type,
+				$maxImposters,
+				$maxCrews,
+				$emergencyTime,
+				$emergencyCall,
+				$coolDown,
+				$minPlayer,
+				$waitTime
+			] = ObjectiveQueue::$createQueue[$player->getName()];
 
 			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], null, [
 				Game::SETTING_WAIT_SECOND => $waitTime,

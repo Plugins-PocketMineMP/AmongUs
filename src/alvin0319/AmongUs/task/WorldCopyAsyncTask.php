@@ -89,7 +89,6 @@ class WorldCopyAsyncTask extends AsyncTask{
 		}
 	}
 
-
 	public function onCompletion(Server $server) : void{
 		AmongUs::getInstance()->getLogger()->debug("World {$this->origin} copied successfully.");
 		($this->fetchLocal())();

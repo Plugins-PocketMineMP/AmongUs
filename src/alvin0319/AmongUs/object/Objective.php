@@ -34,7 +34,6 @@ namespace alvin0319\AmongUs\object;
 
 use pocketmine\level\Position;
 use pocketmine\Player;
-
 use pocketmine\Server;
 
 use function explode;

@@ -37,7 +37,6 @@ use Closure;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use RecursiveDirectoryIterator;
-
 use SplFileInfo;
 
 use function array_diff;
@@ -45,7 +44,6 @@ use function count;
 use function rmdir;
 use function scandir;
 use function substr;
-
 use function unlink;
 
 use const DIRECTORY_SEPARATOR;

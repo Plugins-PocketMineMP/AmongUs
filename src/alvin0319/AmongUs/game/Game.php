@@ -239,8 +239,8 @@ class Game{
 
 	public function broadcastMessageToDead(string $message) : void{
 		Server::getInstance()->broadcastMessage(AmongUs::$prefix . $message, array_values(array_filter($this->getPlayers(), function(Player $player) : bool{
-				return $this->isDead($player);
-			})));
+			return $this->isDead($player);
+		})));
 	}
 
 	/**
@@ -248,10 +248,10 @@ class Game{
 	 */
 	public function getPlayers() : array{
 		return array_values(array_filter(array_map(function(string $name) : ?Player{
-				return Server::getInstance()->getPlayerExact($name);
-			}, $this->players), function(?Player $player) : bool{
-				return $player !== null;
-			}));
+			return Server::getInstance()->getPlayerExact($name);
+		}, $this->players), function(?Player $player) : bool{
+			return $player !== null;
+		}));
 	}
 
 	private function shufflePlayers() : void{
@@ -471,28 +471,28 @@ class Game{
 
 	public function filterCrewmates() : array{
 		return array_values(array_filter(array_filter(array_map(function(Player $player) : ?Character{
-				return $this->getCharacter($player);
-			}, $this->getPlayers()), function(?Character $character) : bool{
-				return $character instanceof Crewmate;
-			}), function(Crewmate $crewmate) : bool{
-				return !$this->isDead($crewmate->getPlayer());
-			}));
+			return $this->getCharacter($player);
+		}, $this->getPlayers()), function(?Character $character) : bool{
+			return $character instanceof Crewmate;
+		}), function(Crewmate $crewmate) : bool{
+			return !$this->isDead($crewmate->getPlayer());
+		}));
 	}
 
 	public function getCrewmates() : array{
 		return array_values(array_filter(array_map(function(Crewmate $crew) : Player{
-				return $crew->getPlayer();
-			}, array_values($this->crews)), function(Player $player) : bool{
-				return $player->isOnline();
-			}));
+			return $crew->getPlayer();
+		}, array_values($this->crews)), function(Player $player) : bool{
+			return $player->isOnline();
+		}));
 	}
 
 	public function getImposters() : array{
 		return array_values(array_filter(array_map(function(Imposter $imposter) : Player{
-				return $imposter->getPlayer();
-			}, array_values($this->imposters)), function(Player $player) : bool{
-				return $player->isOnline();
-			}));
+			return $imposter->getPlayer();
+		}, array_values($this->imposters)), function(Player $player) : bool{
+			return $player->isOnline();
+		}));
 	}
 
 

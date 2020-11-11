@@ -40,9 +40,21 @@ class EnergyChangeObjective extends Objective{
 		$menu->setName("Energy change");
 
 		$slots = [
-			2, 3, 4, 5, 6,
-			11, 12, 13, 14, 15,
-			20, 21, 22, 23, 24
+			2,
+			3,
+			4,
+			5,
+			6,
+			11,
+			12,
+			13,
+			14,
+			15,
+			20,
+			21,
+			22,
+			23,
+			24
 		];
 
 		$menu->setListener(function(InvMenuTransaction $action) use ($menu, $slots, $game, $character) : InvMenuTransactionResult{
@@ -67,7 +79,7 @@ class EnergyChangeObjective extends Objective{
 				$player->sendMessage(AmongUs::$prefix . "Objective Completed");
 				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this);
-				
+
 				$game->addProgress();
 
 				return $action->continue()->then(function(Player $o) : void{

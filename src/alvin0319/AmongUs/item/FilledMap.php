@@ -43,7 +43,6 @@ use pocketmine\item\Item;
 use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
-use pocketmine\network\mcpe\protocol\types\MapTrackedObject;
 use pocketmine\Player;
 use pocketmine\utils\Color;
 
@@ -68,6 +67,7 @@ class FilledMap extends Item{
 	public const COLOR_BLOCK_GREEN = 13;
 	public const COLOR_BLOCK_RED = 14;
 	public const COLOR_BLOCK_BLACK = 15;
+
 	/**
 	 * Credits from Altay
 	 *
