@@ -24,6 +24,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 - 0.0.9: Now we can play this, but not completed
 - 0.0.10: Fixed my bad english (thanks to @HydroGames-dev)
 - 0.0.11: Added Task Complete message & sound.
+- 0.0.12: Added bossbar API
 
 ### Download/Installation
 
