@@ -36,6 +36,7 @@ use alvin0319\AmongUs\AmongUs;
 use Closure;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
+use pocketmine\utils\Utils;
 use RecursiveDirectoryIterator;
 use SplFileInfo;
 
@@ -45,8 +46,6 @@ use function rmdir;
 use function scandir;
 use function substr;
 use function unlink;
-
-use const DIRECTORY_SEPARATOR;
 
 class WorldDeleteAsyncTask extends AsyncTask{
 	/** @var string */
@@ -62,8 +61,9 @@ class WorldDeleteAsyncTask extends AsyncTask{
 	}
 
 	private function recursiveRmdir(string $dir) : void{
-		if(substr($dir, -1) !== DIRECTORY_SEPARATOR){
-			$dir .= DIRECTORY_SEPARATOR;
+		$dir = Utils::cleanPath($dir);
+		if(substr($dir, -1) !== "/"){
+			$dir .= "/";
 		}
 
 		$recursiveDirectoryIterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);

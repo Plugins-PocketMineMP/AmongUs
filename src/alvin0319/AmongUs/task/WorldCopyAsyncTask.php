@@ -36,6 +36,7 @@ use alvin0319\AmongUs\AmongUs;
 use Closure;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
+use pocketmine\utils\Utils;
 use RecursiveDirectoryIterator;
 use SplFileInfo;
 
@@ -43,8 +44,6 @@ use function copy;
 use function is_dir;
 use function mkdir;
 use function substr;
-
-use const DIRECTORY_SEPARATOR;
 
 class WorldCopyAsyncTask extends AsyncTask{
 	/** @var string */
@@ -63,14 +62,16 @@ class WorldCopyAsyncTask extends AsyncTask{
 	}
 
 	private function recursiveCopy(string $origin, string $destination) : void{
-		if(substr($origin, -1) !== DIRECTORY_SEPARATOR){
-			$origin .= DIRECTORY_SEPARATOR;
+		$origin = Utils::cleanPath($origin);
+		$destination = Utils::cleanPath($destination);
+		if(substr($origin, -1) !== "/"){
+			$origin .= "/";
 		}
-		if(substr($destination, -1) !== DIRECTORY_SEPARATOR){
-			$destination .= DIRECTORY_SEPARATOR;
+		if(substr($destination, -1) !== "/"){
+			$destination .= "/";
 		}
 
-		$recursiveDirectoryIteratorIterator = new RecursiveDirectoryIterator($origin, RecursiveDirectoryIterator::SKIP_DOTS);
+		$recursiveDirectoryIterator = new RecursiveDirectoryIterator($origin, RecursiveDirectoryIterator::SKIP_DOTS);
 
 		if(!is_dir($destination))
 			mkdir($destination);
@@ -78,7 +79,7 @@ class WorldCopyAsyncTask extends AsyncTask{
 		/**
 		 * @var SplFileInfo $fileInfo
 		 */
-		foreach($recursiveDirectoryIteratorIterator as $fileInfo){
+		foreach($recursiveDirectoryIterator as $fileInfo){
 			if($fileInfo->getFilename() !== "." && $fileInfo->getFilename() !== ".."){
 				if($fileInfo->isDir()){
 					$this->recursiveCopy($origin . $fileInfo->getFilename(), $destination . $fileInfo->getFilename());
