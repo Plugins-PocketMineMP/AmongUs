@@ -37,22 +37,3 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 max_games: 3
 
 world_name: amongus
-```
-
-### Commands
-
-- ``/au`` - Opens the main UI for the plugin.
-- ``/aum`` - Opens the game setup UI.
-
-### Permissions
-
-You need ``amongus.command.manage`` to use game setup menu.
-
-### Misc Plugins
-
-- OffHand plugin [Download](https://github.com/alvin0319/OffHand)
-**you can use offhand plugin to put the map on your left hand.**
-
-## Setup
-
-**Plugin is under development**
