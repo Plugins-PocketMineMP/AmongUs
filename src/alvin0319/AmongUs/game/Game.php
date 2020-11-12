@@ -479,7 +479,7 @@ class Game{
 			return $this->getCharacter($player);
 		})->filter(function(?Character $character) : bool{
 			return $character instanceof Imposter;
-		})->toArray();
+		})->values()->toArray();
 	}
 
 	public function filterCrewmates() : array{
