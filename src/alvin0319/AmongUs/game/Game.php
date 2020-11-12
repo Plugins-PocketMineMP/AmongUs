@@ -43,6 +43,7 @@ use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\task\DisplayTextTask;
+use blugin\utils\arrays\ArrayUtil as Arr;
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
@@ -474,21 +475,21 @@ class Game{
 	}
 
 	public function filterImposters() : array{
-		return array_values(array_filter(array_map(function(Player $player) : ?Character{
+		return Arr::map($this->getPlayers(), function(Player $player) : ?Character{
 			return $this->getCharacter($player);
-		}, $this->getPlayers()), function(?Character $character) : bool{
+		})->filter(function(?Character $character) : bool{
 			return $character instanceof Imposter;
-		}),);
+		})->toArray();
 	}
 
 	public function filterCrewmates() : array{
-		return array_values(array_filter(array_filter(array_map(function(Player $player) : ?Character{
+		return Arr::map($this->getPlayers(), function(Player $player) : ?Character{
 			return $this->getCharacter($player);
-		}, $this->getPlayers()), function(?Character $character) : bool{
+		})->filter(function(?Character $character) : bool{
 			return $character instanceof Crewmate;
-		}), function(Crewmate $crewmate) : bool{
+		})->filter(function(Crewmate $crewmate) : bool{
 			return !$this->isDead($crewmate->getPlayer());
-		}));
+		})->values()->toArray();
 	}
 
 	public function getCrewmates() : array{
@@ -508,7 +509,6 @@ class Game{
 	}
 
 	public function onSabotageActivate(Sabotage $sabotage) : void{
-
 	}
 
 
