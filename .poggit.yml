@@ -9,4 +9,7 @@ projects:
       - src: muqsit/InvMenu/InvMenu
         branch: master
         version: ^4.0.1
+      - src: PresentKim/arrayutils/arrayutils
+          branch: main
+          version: ^1.0.0
 ...
