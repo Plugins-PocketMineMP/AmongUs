@@ -41,6 +41,7 @@ use alvin0319\AmongUs\event\GameEndEvent;
 use alvin0319\AmongUs\event\GameStartEvent;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
+use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\task\DisplayTextTask;
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
@@ -144,6 +145,12 @@ class Game{
 	protected $votes = [];
 	/** @var string[] */
 	protected $voteQueue = [];
+	/** @var Sabotage[] */
+	protected $sabotages = [];
+	/** @var Sabotage|null */
+	protected $nowSabotage = null;
+	/** @var int */
+	protected $sabotageCool = -1;
 
 	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, ?FilledMap $mapItem = null, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
@@ -172,6 +179,7 @@ class Game{
 		$this->running = false;
 		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
 		$this->emergencyRunning = false;
+		$this->sabotageCool = -1;
 
 		AmongUs::getInstance()->copyWorld($this, function() : void{
 			Server::getInstance()->loadLevel(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}");
@@ -390,6 +398,10 @@ class Game{
 	}
 
 	public function votePlayer(Player $player, string $target) : void{
+		if(in_array($player->getName(), $this->dead)){
+			$player->sendMessage(AmongUs::$prefix . "You cannot vote at this time.");
+			return;
+		}
 		if(in_array($player->getName(), $this->voteQueue)){
 			$player->sendMessage(AmongUs::$prefix . "You've been already voted.");
 			return;
@@ -493,6 +505,10 @@ class Game{
 		}, array_values($this->imposters)), function(Player $player) : bool{
 			return $player->isOnline();
 		}));
+	}
+
+	public function onSabotageActivate(Sabotage $sabotage) : void{
+
 	}
 
 

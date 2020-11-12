@@ -47,7 +47,21 @@ abstract class Sabotage{
 		return $this->pos;
 	}
 
+	/**
+	 * Called when imposters activate sabotage
+	 *
+	 * @param Player $player
+	 */
 	abstract public function onActivate(Player $player) : void;
 
+	/**
+	 * Called when crewmates or imposters interact sabotage
+	 *
+	 * @param Player $player
+	 */
 	abstract public function onInteract(Player $player) : void;
+
+	public function getCool() : int{
+		return 5;
+	}
 }

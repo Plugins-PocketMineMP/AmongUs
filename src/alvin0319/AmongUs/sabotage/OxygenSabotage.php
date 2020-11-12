@@ -30,25 +30,17 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\api;
+namespace alvin0319\AmongUs\sabotage;
 
 use pocketmine\Player;
 
-class BossbarAPI{
-	/** @var Bossbar[] */
-	protected static $bossbars = [];
+class OxygenSabotage extends Sabotage{
 
-	public static function addPlayer(Player $player, string $text) : void{
-		self::$bossbars[$player->getName()] = new Bossbar($player);
-		self::$bossbars[$player->getName()]->send($text);
+	public function onActivate(Player $player) : void{
+
 	}
 
-	public static function removePlayer(Player $player) : void{
-		self::$bossbars[$player->getName()]->remove();
-		unset(self::$bossbars[$player->getName()]);
-	}
+	public function onInteract(Player $player) : void{
 
-	public static function getBossbar(Player $player) : ?Bossbar{
-		return self::$bossbars[$player->getName()] ?? null;
 	}
 }
