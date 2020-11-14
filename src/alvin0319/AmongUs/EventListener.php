@@ -217,6 +217,9 @@ class EventListener implements Listener{
 		if(!$game->isEmergencyRunning()){
 			return;
 		}
+		if($game->isDead($player)){
+			return;
+		}
 		$player->sendForm(new VoteImposterForm($game));
 	}
 
