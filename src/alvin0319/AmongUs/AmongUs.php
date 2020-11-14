@@ -51,6 +51,7 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 
+use function class_exists;
 use function explode;
 use function file_exists;
 use function file_get_contents;
@@ -80,6 +81,12 @@ class AmongUs extends PluginBase{
 	}
 
 	public function onEnable() : void{
+		if($this->detectBadSpoon()){
+			$this->getLogger()->critical("Forks of PocketMine-MP have been detected.");
+			$this->getLogger()->critical("This plugin does not work with other software. (e.g Altay)");
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
+		}
 		if(!InvMenuHandler::isRegistered()){
 			InvMenuHandler::register($this);
 		}
@@ -127,6 +134,10 @@ class AmongUs extends PluginBase{
 		]);
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+	}
+
+	private function detectBadSpoon() : bool{
+		return $this->getServer()->getName() !== "PocketMine-MP" || class_exists("\\pocketmine\\maps\\MapData");
 	}
 
 	public function onDisable() : void{
