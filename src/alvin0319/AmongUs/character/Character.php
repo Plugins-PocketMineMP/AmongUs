@@ -38,6 +38,8 @@ use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\Objective;
 use pocketmine\entity\Skin;
 use pocketmine\item\Item;
+use pocketmine\level\sound\GenericSound;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 
 abstract class Character{
@@ -76,6 +78,7 @@ abstract class Character{
 		if(!$ev->isCancelled()){
 			$this->completedObjectives[$objective->getName()] = $objective;
 			$this->player->sendMessage(AmongUs::$prefix . "Objective " . $this->getName() . " completed!");
+			$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 		}
 	}
 

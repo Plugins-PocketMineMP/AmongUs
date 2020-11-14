@@ -35,8 +35,6 @@ namespace alvin0319\AmongUs\form\crew;
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\object\ManifoldOpenObjective;
 use pocketmine\form\Form;
-use pocketmine\level\sound\GenericSound;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 
 use function strlen;
@@ -78,8 +76,6 @@ class ManifoldOpenObjectiveForm implements Form{
 		if(strlen($this->progress) === 10){
 			if($this->progress === "0123456789"){
 				// Objective complete
-				$player->sendMessage(AmongUs::$prefix . "Objective Completed");
-				$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 				$character->completeObjective($this->objective);
 				$game->addProgress();
 			}else{
