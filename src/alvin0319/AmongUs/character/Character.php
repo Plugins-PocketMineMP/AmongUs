@@ -78,7 +78,7 @@ abstract class Character{
 		if(!$ev->isCancelled()){
 			$this->completedObjectives[$objective->getName()] = $objective;
 			$this->player->sendMessage(AmongUs::$prefix . "Objective " . $this->getName() . " completed!");
-			$player->getLevel()->addSound(new GenericSound($player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
+			$this->player->getLevel()->addSound(new GenericSound($this->player, LevelSoundEventPacket::SOUND_LEVELUP), [$player]);
 		}
 	}
 

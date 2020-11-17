@@ -61,7 +61,7 @@ class AmongUsMainForm implements Form{
 			case 1:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
 				if($game === null){
-					$player->sendMessage(AmongUs::$prefix . "There are no available games right now.(all games are currently running!)");
+					$player->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
 					return;
 				}
 				$game->addPlayer($player);

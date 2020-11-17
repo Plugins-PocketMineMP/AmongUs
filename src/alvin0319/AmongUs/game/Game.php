@@ -323,6 +323,7 @@ class Game{
 		$player->setFlying(true);
 
 		if($killer !== null){
+			$messages = [];
 			$player->sendTitle("§c§l[ §f! §c]", "You've been killed by " . $killer->getName() . "!");
 			$this->killCooldowns[$killer->getName()] = time();
 			$nbt = Entity::createBaseNBT($player);
@@ -440,13 +441,13 @@ class Game{
 		}
 
 		if($duplicate){
-			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one was thrown (skipped vote)", "There are " . count($this->filterImposters()) . " imposters left"), 3);
+			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one ejected (skipped)", "There are " . count($this->filterImposters()) . " imposters left"), 3);
 		}else{
 			$character = $this->imposters[$topVote] ?? $this->crews[$topVote] ?? null;
 			if($character === null){
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one was thrown (skipped vote)", "There are " . count($this->filterImposters()) . " imposters left"), 3);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one ejected (skipped)", count($this->filterImposters()) . " imposters remain"), 3);
 			}else{
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "was the" : "not the") . " imposter", "There are " . count($this->filterImposters()) . " imposters left"), 3);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "was the" : "not the") . " imposter", count($this->filterImposters()) . " remain"), 3);
 				$this->killPlayer(AmongUs::getInstance()->getServer()->getPlayerExact($topVote));
 			}
 		}
@@ -493,19 +494,19 @@ class Game{
 	}
 
 	public function getCrewmates() : array{
-		return array_values(array_filter(array_map(function(Crewmate $crew) : Player{
+		return Arr::map(Arr::values($this->crews)->values(), function(Crewmate $crew) : Player{
 			return $crew->getPlayer();
-		}, array_values($this->crews)), function(Player $player) : bool{
+		})->filter(function(Player $player) : bool{
 			return $player->isOnline();
-		}));
+		})->values()->toArray();
 	}
 
 	public function getImposters() : array{
-		return array_values(array_filter(array_map(function(Imposter $imposter) : Player{
+		return Arr::map(Arr::values($this->imposters)->values(), function(Imposter $imposter) : Player{
 			return $imposter->getPlayer();
-		}, array_values($this->imposters)), function(Player $player) : bool{
+		})->filter(function(Player $player) : bool{
 			return $player->isOnline();
-		}));
+		})->values()->toArray();
 	}
 
 	public function onSabotageActivate(Sabotage $sabotage) : void{

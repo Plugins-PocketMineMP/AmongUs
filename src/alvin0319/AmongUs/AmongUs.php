@@ -40,6 +40,7 @@ use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
 use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
+use blugin\traits\singleton\SingletonTrait;
 use Closure;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
@@ -61,10 +62,10 @@ use function json_decode;
 use function json_encode;
 
 class AmongUs extends PluginBase{
+	use SingletonTrait;
+
 	/** @var string */
 	public static $prefix = "§a§l[§cAmong§eUs§a] §r>§7 ";
-	/** @var AmongUs|null */
-	private static $instance = null;
 	/** @var Game[] */
 	protected $games = [];
 	/** @var Objective[][] */
@@ -76,10 +77,6 @@ class AmongUs extends PluginBase{
 		self::$instance = $this;
 	}
 
-	public static function getInstance() : AmongUs{
-		return self::$instance;
-	}
-
 	public function onEnable() : void{
 		if($this->detectBadSpoon()){
 			$this->getLogger()->critical("Forks of PocketMine-MP have been detected.");
@@ -87,10 +84,13 @@ class AmongUs extends PluginBase{
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 			return;
 		}
+		$this->saveDefaultConfig();
+		if(!is_dir($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name", "amongus"))){
+			$this->getLogger()->critical("The world set in config was not loaded or couldn't be found.");
+		}
 		if(!InvMenuHandler::isRegistered()){
 			InvMenuHandler::register($this);
 		}
-		$this->saveDefaultConfig();
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 
@@ -197,6 +197,8 @@ class AmongUs extends PluginBase{
 	}
 
 	private function deleteWorld(Game $game, Closure $successCallback) : void{
-		$this->getServer()->getAsyncPool()->submitTask(new WorldDeleteAsyncTask($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/", $successCallback));
+		if(is_dir($dir = $this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/")){
+			$this->getServer()->getAsyncPool()->submitTask(new WorldDeleteAsyncTask($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/", $successCallback));
+		}
 	}
 }

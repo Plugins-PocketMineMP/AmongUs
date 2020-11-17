@@ -12,4 +12,7 @@ projects:
       - src: PresentKim/arrayutils/arrayutils
         branch: main
         version: ^4.1.0
+      - src: PresentKim/singleton-trait/singleton-trait
+        branch: main
+        version: ^2.0.0
 ...
