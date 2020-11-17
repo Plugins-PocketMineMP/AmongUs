@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\util;
 
 use alvin0319\AmongUs\AmongUs;
-use blugin\traits\singleton\SingletonTrait;
+use kim\present\traits\singleton\SingletonTrait;
 
 use function count;
 use function str_replace;
 
 final class Translation{
 	use SingletonTrait;
+
 	/** @var AmongUs */
 	protected $plugin;
 	/** @var array */
