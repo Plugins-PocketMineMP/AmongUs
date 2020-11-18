@@ -33,8 +33,15 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\form;
 
 use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\game\Game;
 use pocketmine\form\Form;
 use pocketmine\Player;
+use pocketmine\Server;
+use pocketmine\level\Position;
+use pocketmine\level\Level;
+use pocketmine\entity\Entity;
+use pocketmine\math\Vector3;
+use pocketmine\event\entity\EntityLevelChangeEvent;
 
 use function is_int;
 
@@ -43,34 +50,48 @@ class AmongUsMainForm implements Form{
 	public function jsonSerialize(){
 		return [
 			"type" => "form",
-			"title" => "AmongUs in Minecraft!",
-			"content" => "",
+			"title" => "§cAmong§bUs §aMCPE",
+			"content" => "§aChoose a option.",
 			"buttons" => [
-				["text" => "Exit"],
-				["text" => "Join the game"],
-				["text" => "How to Play"]
+				["text" => "§aPlay"],
+				["text" => "§aHow to play"],
+				["text" => "§eLeave Game"],
+				["text" => "§cExit Menu"]
 			]
 		];
 	}
 
 	public function handleResponse(Player $player, $data) : void{
 		if(!is_int($data)){
-			return;
+		return;
 		}
 		switch($data){
-			case 1:
+			case 0:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
 				if($game === null){
-					$player->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
-					return;
+				$player->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
+				return;
 				}
 				$game->addPlayer($player);
 				break;
-			case 2:
-				$lines = "§8-------------------------------------------------------";
-				$space = " ";
-				$player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§cAmong§eUs§b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal" . "\n" . "§ePlayers are either Crewmates or an Imposter" . "\n" . $space . "\n" . $space . "\n" . "§6Roles" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win" . "\n" . "§cImposter: Kill all Crewmates to win" . "\n" . $space . "\n" . "§6Misc" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aHave Fun Playing§8] -=[§a+§8]=-" . "\n" . $lines);
+			case 1:
+			    $lines = "§b-------------------------------------------";
+			    $space = " ";
+			    $player->sendTip("§aInfo Message Sent!");
+			    $player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§bUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . "\n" . $space . $space . $space . "§6Intro:" . "\n" . "§cAmong§bUs §eis a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . $space . $space . "§6Roles:" . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . $space . $space . "§6Info:" . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
+			case 2:
+			  $game = AmongUs::getInstance()->getGameByPlayer($player);
+			  if($game !== null){
+				$player->sendMessage(AmongUs::$prefix . "Test 1 - Leave");
+				$player->teleport($player->getServer()->getDefaultLevel()->getSafeSpawn());
+				$game->removePlayer($player);
+				$player->getInventory()->clearAll();
+			  $player->setInvisible(false);
+			    return;
+			}
+			$player->sendMessage(AmongUs::$prefix . "Test 2 - Error");
+			break;
 		}
 	}
 }

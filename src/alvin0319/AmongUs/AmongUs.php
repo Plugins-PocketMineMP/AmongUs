@@ -36,6 +36,7 @@ use alvin0319\AmongUs\command\AmongUsCommand;
 use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
+use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
@@ -85,6 +86,7 @@ class AmongUs extends PluginBase{
 			return;
 		}
 		$this->saveDefaultConfig();
+		$this->sabcooldown = $this->getConfig()->get("cooldown");
 		if(!is_dir($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name", "amongus"))){
 			$this->getLogger()->critical("The world set in config was not loaded or couldn't be found.");
 		}

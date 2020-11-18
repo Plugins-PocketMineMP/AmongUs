@@ -42,9 +42,13 @@ use alvin0319\AmongUs\event\GameStartEvent;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\sabotage\Sabotage;
+use alvin0319\AmongUs\form\SabotageForm;
 use alvin0319\AmongUs\task\DisplayTextTask;
 use blugin\utils\arrays\ArrayUtil as Arr;
 use pocketmine\entity\Entity;
+use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\item\Item;
+use pocketmine\block\Block;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
@@ -274,15 +278,14 @@ class Game{
 			}else{
 				$this->crews[$player->getName()] = $character = new Crewmate($player);
 			}
-			$player->sendMessage(AmongUs::$prefix . "§eShhhhh §aRole: §f" . $character->getName() . "§b!");
+			$player->sendMessage(AmongUs::$prefix . "§eShhhhh, §aYour Role: §r" . $character->getName() . "§r§b!");
 			$player->teleport($this->spawnPos);
-		}
-
-		$imposters = count($this->filterImposters());
-		$str = "§bThere are §f{$imposters} §cimposters §bbetween us";
-
+			}
+			$imposters = count($this->filterImposters());
+			$str = "§bThere are §f§c{$imposters} §cImpostors";
+			
 		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 3);
-	}
+		}
 
 	public function getObjectiveByPos(Position $pos) : ?Objective{
 		foreach(array_values($this->objectives) as $objective){
@@ -388,7 +391,7 @@ class Game{
 		$this->emergencyRunning = true;
 		$this->broadcastMessage("§aEmergency Meeting§c!§r (§bcaller: {$who->getName()})");
 		if($entity !== null){
-			$this->broadcastMessage($entity->getPlayerName() . " is dead!");
+			$this->broadcastMessage($entity->getPlayerName() . " §ais dead!");
 		}
 		foreach($this->getPlayers() as $player){
 			$player->teleport($this->spawnPos);
@@ -405,15 +408,24 @@ class Game{
 			return;
 		}
 		if(in_array($player->getName(), $this->voteQueue)){
-			$player->sendMessage(AmongUs::$prefix . "You've been already voted.");
+			$player->sendMessage(AmongUs::$prefix . "You have already voted.");
 			return;
 		}
 		$this->voteQueue[] = $player->getName();
 		$this->votes[$target] += 1;
 
-		$player->sendMessage(AmongUs::$prefix . "You've voted out " . $target);
+		$player->sendMessage(AmongUs::$prefix . "You have voted for " . $target);
 		$this->checkVote();
 	}
+
+  public function onInteract(PlayerInteractEvent $event){
+  	    $player = $event->getPlayer();
+  	    $item = $event->getItem();
+  	    $block = $event->getBlock();
+  	 if($item->getID() == 409 and $item->getCustomName() == 'Sabotage'){
+  	   		$player->sendForm(new SabotageForm($this, ""));
+  	   	 }
+  	  }
 
 	public function endEmergencyTime() : void{
 		$this->emergencyRunning = false;
@@ -540,7 +552,7 @@ class Game{
 					$this->waitTick = $this->settings[self::SETTING_WAIT_SECOND];
 				}else{
 					$text = "§b§l[§cAmong§bUs]§r§7\n";
-					$text .= "Starts in §d" . $this->waitTick . "§r§7s";
+					$text .= "Starting in §d" . $this->waitTick . "§r§7s";
 					$this->broadcastPopup($text);
 				}
 			}else{
@@ -602,12 +614,16 @@ class Game{
 			}
 		}
 		foreach($this->getPlayers() as $player){
+			$task = Item::get(280, 0);
+			$tasakk->setCustomName('Task');
+			$task->setLore(['Right-Click a Task Block']);
+			$player->getInventory()->addItem($task);
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 0, 1)->setCustomName("Vote"));
 			$character = $this->getCharacter($player);
-			if($character !== null){
-				$player->getInventory()->addItem(...$character->getItems());
-			}
-		}
+					if($character !== null){
+						$player->getInventory()->addItem(...$character->getItems());
+					}
+				}
 	}
 
 	public function jsonSerialize() : array{

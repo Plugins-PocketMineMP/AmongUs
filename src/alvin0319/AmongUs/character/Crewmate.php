@@ -35,11 +35,11 @@ namespace alvin0319\AmongUs\character;
 class Crewmate extends Character{
 
 	public function getName() : string{
-		return "Crewmate";
+		return "§bCrewmate§r";
 	}
 
 	public function getDescription() : string{
-		return "Objective: Fill group task bar or find out the imposter ";
+		return "§6Objective: §bcomplete your tasks or find out the impostor!";
 	}
 
 	public function getItems() : array{

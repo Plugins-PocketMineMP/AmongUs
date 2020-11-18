@@ -30,46 +30,32 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\form\game;
+namespace alvin0319\AmongUs\Impostor\sabotage;
 
-use alvin0319\AmongUs\game\Game;
-use pocketmine\form\Form;
+use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
+use pocketmine\item\ItemFactory;
+use pocketmine\level\Position;
 use pocketmine\Player;
+use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\item\Item;
+use pocketmine\block\Block;
+use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\game\Game;
+use alvin0319\AmongUs\form\SabotageForm;
 
-use function is_int;
+class LightsSabotage extends Sabotage{
 
-class VoteImposterForm implements Form{
-	/** @var Game */
-	protected $game;
-	/** @var Player[] */
-	protected $players = [];
+	public function onActivate(Player $player) : void{
+	  $player->sendMessage("Lights have been Sabotaged");
+  }
 
-	public function __construct(Game $game){
-		$this->game = $game;
-	}
-
-	public function jsonSerialize() : array{
-		$this->players = $this->game->getPlayers();
-		$buttons = [["text" => "§bSkip"]];
-		foreach($this->players as $player){
-			$buttons[] = ["text" => "§aVote for {$player->getName()}"];
-		}
-		return [
-			"type" => "form",
-			"title" => "§aWho is the impostor?",
-			"content" => "§aOnce you voted, you cannot vote again.",
-			"buttons" => $buttons
-		];
-	}
-
-	public function handleResponse(Player $player, $data) : void{
-		if(!is_int($data)){
-			return;
-		}
-		if($data === 0){
-			$this->game->votePlayer($player, "skip");
-			return;
-		}
-		$this->game->votePlayer($player, $this->players[$data - 1]->getName());
-	}
+	public function onInteract(PlayerInteractEvent $event) : void{
+	  $player = $event->getPlayer();
+		$item = $event->getItem();
+			 if($item->getID() == 1 and $item->getCustomName() == 'Task'){
+			   		  $player->removeAllEffects();
+			   		  $this->broadcastMessage("§aLights fixed!");
+			   		}
+			  }
 }

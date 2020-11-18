@@ -34,8 +34,14 @@ namespace alvin0319\AmongUs\command;
 
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\form\AmongUsMainForm;
+use alvin0319\AmongUs\form\AmongUsHelpForm;
+use alvin0319\AmongUs\form\AmongUsTaskForm;
+use alvin0319\AmongUs\game\Game;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
+use pocketmine\item\Item;
 use pocketmine\Player;
 
 class AmongUsCommand extends PluginCommand{
@@ -43,19 +49,43 @@ class AmongUsCommand extends PluginCommand{
 	public function __construct(){
 		parent::__construct("amongus", AmongUs::getInstance());
 		$this->setPermission("amongus.command");
-		$this->setDescription("Open the AmongUs Game UI");
+		$this->setDescription("Main AmongUs Command");
 		$this->setAliases(["au", "amu"]);
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
+	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		if(!$this->testPermission($sender)){
 			return false;
 		}
 		if(!$sender instanceof Player){
-			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed In-Game.");
+			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed in-game.");
 			return false;
 		}
-		$sender->sendForm(new AmongUsMainForm());
+		switch($args[0] ?? "x"){
+			case "play":
+			$sender->sendForm(new AmongUsMainForm());
+				break;
+			case "forcejoin":
+				$game = AmongUs::getInstance()->getAvailableGame($sender);
+				$game->addPlayer($sender);
+				break;
+			case "forceleave":
+			  $game = AmongUs::getInstance()->getAvailableGame($sender);
+			  $game->removePlayer($sender);
+			  break;
+			case "help":
+				$sender->sendForm(new AmongUsHelpForm());
+				break;
+			case "tasks":
+				$sender->sendForm(new AmongUsTaskForm());
+				break;
+			default:
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} play");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} forcejoin");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} forceleave");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} help");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} tasks");
+		}
 		return true;
 	}
 }
