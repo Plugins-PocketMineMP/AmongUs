@@ -34,28 +34,24 @@ namespace alvin0319\AmongUs\sabotage;
 
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
-use pocketmine\item\ItemFactory;
-use pocketmine\level\Position;
 use pocketmine\Player;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\item\Item;
-use pocketmine\block\Block;
-use alvin0319\AmongUs\AmongUs;
-use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\form\SabotageForm;
 
 class LightsSabotage extends Sabotage{
 
 	public function onActivate(Player $player) : void{
-	  $player->sendMessage("Lights have been Sabotaged");
-  }
+		foreach($this->game->filterCrewmates() as $crewmate){
+			$crewmate->getPlayer()->addEffect(new EffectInstance(Effect::getEffect(Effect::BLINDNESS), 20 * 1000, 0));
+		}
+		$this->game->broadcastMessage("Lights have been Sabotaged");
+	}
 
-	public function onInteract(PlayerInteractEvent $event) : void{
-	  $player = $event->getPlayer();
-		$item = $event->getItem();
-			 if($item->getID() == 290 and $item->getCustomName() == 'fix'){
-			   		  $player->removeAllEffects();
-			   		  $this->broadcastMessage("§aLights fixed!");
-			   		}
-			  }
+	public function onInteract(Player $player) : void{
+		$item = $player->getInventory()->getItemInHand();
+		if($item->getId() == 290 and $item->getCustomName() == 'fix'){
+			foreach($this->game->filterCrewmates() as $crewmate){
+				$crewmate->getPlayer()->removeAllEffects();
+			}
+			$this->game->broadcastMessage("§aLights fixed!");
+		}
+	}
 }

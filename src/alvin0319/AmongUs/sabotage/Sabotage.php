@@ -32,25 +32,25 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\sabotage;
 
+use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\form\SabotageForm;
+use alvin0319\AmongUs\game\Game;
+use pocketmine\event\Listener;
 use pocketmine\level\Position;
 use pocketmine\Player;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\item\Item;
-use pocketmine\block\Block;
-use alvin0319\AmongUs\EventListener;
-use alvin0319\AmongUs\AmongUs;
-use pocketmine\utils\Config;
-use alvin0319\AmongUs\form\SabotageForm;
 
-abstract class Sabotage{
+abstract class Sabotage implements Listener{
 	/** @var Position */
 	protected $pos;
+	/** @var int */
+	protected $sabotageCooldown = -1;
+	/** @var Game */
+	protected $game;
 
-	public $sabcooldown;
-
-	public function __construct(Position $pos){
+	public function __construct(Game $game, Position $pos){
+		$this->game = $game;
 		$this->pos = $pos;
-		$this->sabcooldown = $this->plugin->getConfig()->get("cooldown");
+		$this->sabotageCooldown = AmongUs::getInstance()->getConfig()->get("sabotage_cooldown", 10);
 	}
 
 	final public function getPosition() : Position{
@@ -69,16 +69,5 @@ abstract class Sabotage{
 	 *
 	 * @param Player $player
 	 */
-	public function onInteract(PlayerInteractEvent $event){
-	    $player = $event->getPlayer();
-	    $item = $event->getItem();
-	    $block = $event->getBlock();
-	 if($item->getID() == 409 and $item->getCustomName() == 'Sabotage'){
-	   		$player->sendForm(new SabotageForm($this, ""));
-	   	 }
-	  }
-	
-	public function getCool() : int{
-		return 5; 
-	}
+	abstract public function onInteract(Player $player) : void;
 }

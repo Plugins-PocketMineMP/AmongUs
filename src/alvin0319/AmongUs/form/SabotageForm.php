@@ -33,25 +33,16 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\form;
 
 use alvin0319\AmongUs\AmongUs;
-use alvin0319\AmongUs\game\Game;
-use pocketmine\form\Form;
-use pocketmine\Player;
-use pocketmine\Server;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
-use pocketmine\level\Position;
-use pocketmine\level\Level;
-use pocketmine\math\Vector3;
-use alvin0319\AmongUs\task\DisplayTextTask;
-use alvin0319\AmongUs\sabotage\LightsSabotage;
-use pocketmine\entity\Entity;
-use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\form\Form;
+use pocketmine\Player;
 
 use function is_int;
 
 class SabotageForm implements Form{
 
-	public function jsonSerialize(){
+	public function jsonSerialize() : array{
 		return [
 			"type" => "form",
 			"title" => "§6Sabotage Menu",
@@ -69,24 +60,21 @@ class SabotageForm implements Form{
 		if(!is_int($data)){
 			return;
 		}
+		$game = AmongUs::getInstance()->getGameByPlayer($player);
 		switch($data){
 			case 0:
-			  $game = AmongUs::getInstance()->getGameByPlayer($player);
-			  if($game === null){
-				    $player->sendTip("§eLights Sabotaged!");
-					  $player->addEffect(new EffectInstance(Effect::getEffect(15), 550, 100));
-					}
-					$player->sendMessage("Error 1");
-			  break;
-			 case 1:
-					$player->sendMessage("Comming soon");
-			  break;
+				$player->sendTip("§eLights Sabotaged!");
+				$player->sendMessage("Error 1");
+				break;
+			case 1:
+				$player->sendMessage("Comming soon");
+				break;
 			case 2:
 				$player->sendMessage("Comming soon");
-			  break;
+				break;
 			case 3:
 				$player->sendMessage("Comming soon");
-			  break;
+				break;
 		}
 	}
 }

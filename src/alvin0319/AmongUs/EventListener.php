@@ -36,6 +36,7 @@ use alvin0319\AmongUs\character\Crewmate;
 use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\form\game\VoteImposterForm;
+use alvin0319\AmongUs\form\SabotageForm;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\ObjectiveQueue;
@@ -52,6 +53,7 @@ use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
 use pocketmine\Player;
 
+use function in_array;
 use function substr;
 
 class EventListener implements Listener{
@@ -208,19 +210,30 @@ class EventListener implements Listener{
 			return;
 		}
 		$item = $event->getItem();
-		if($item->getId() !== ItemIds::CLOCK){
-			return;
-		}
 		if(!$game->isRunning()){
 			return;
 		}
 		if(!$game->isEmergencyRunning()){
 			return;
 		}
+		if(in_array($item->getId(), [ItemIds::CLOCK, ItemIds::PRISMARINE_SHARD])){
+			switch($item->getId()){
+				case ItemIds::CLOCK:
+					$player->sendForm(new VoteImposterForm($game));
+					break;
+				case ItemIds::PRISMARINE_SHARD:
+					if($character instanceof Imposter){
+						if($item->getId() == 409 and $item->getCustomName() == 'Sabotage'){
+							$player->sendForm(new SabotageForm());
+						}
+					}
+					break;
+			}
+		}
 		if($game->isDead($player)){
 			return;
 		}
-		$player->sendForm(new VoteImposterForm($game));
+		$game->interactSabotage($player);
 	}
 
 	public function onPlayerJoin(PlayerJoinEvent $event) : void{
