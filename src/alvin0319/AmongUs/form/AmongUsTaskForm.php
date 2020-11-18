@@ -37,20 +37,6 @@ use alvin0319\AmongUs\game\Game;
 use pocketmine\form\Form;
 use pocketmine\Player;
 use pocketmine\Server;
-use alvin0319\AmongUs\form\crew\ManifoldOpenObjectiveForm;
-use alvin0319\AmongUs\Crewmate\object\ManifoldOpenObjective;
-use alvin0319\AmongUs\Crewmate\object\EnergyChangeObjective;
-use alvin0319\AmongUs\Crewmate\object\FileReceiveObjective;
-use alvin0319\AmongUs\Crewmate\object\FileSendObjective;
-use alvin0319\AmongUs\Crewmate\object\Objective;
-use alvin0319\AmongUs\Crewmate\object\ObjectiveQueue;
-use pocketmine\level\Position;
-use pocketmine\level\Level;
-use pocketmine\math\Vector3;
-use alvin0319\AmongUs\task\DisplayTextTask;
-use pocketmine\entity\Entity;
-use pocketmine\event\entity\EntityLevelChangeEvent;
-
 use function is_int;
 
 class AmongUsTaskForm implements Form{

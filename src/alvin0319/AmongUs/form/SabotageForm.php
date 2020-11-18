@@ -43,7 +43,7 @@ use pocketmine\level\Position;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use alvin0319\AmongUs\task\DisplayTextTask;
-use alvin0319\AmongUs\Impostor\sabotage\LightsSabotage;
+use alvin0319\AmongUs\sabotage\LightsSabotage;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 

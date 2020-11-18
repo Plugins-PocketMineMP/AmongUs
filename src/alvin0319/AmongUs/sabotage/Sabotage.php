@@ -30,7 +30,7 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\Impostor\sabotage;
+namespace alvin0319\AmongUs\sabotage;
 
 use pocketmine\level\Position;
 use pocketmine\Player;
