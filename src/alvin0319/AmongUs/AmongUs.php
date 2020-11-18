@@ -52,6 +52,7 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
+use SingletonTrait;
 
 use function class_exists;
 use function explode;
@@ -63,7 +64,6 @@ use function json_decode;
 use function json_encode;
 
 class AmongUs extends PluginBase{
-	use SingletonTrait;
 
 	/** @var string */
 	public static $prefix = "§a§l[§cAmong§eUs§a] §r>§7 ";
