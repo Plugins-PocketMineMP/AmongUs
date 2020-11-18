@@ -52,7 +52,6 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
-use SingletonTrait;
 
 use function class_exists;
 use function explode;
@@ -86,7 +85,6 @@ class AmongUs extends PluginBase{
 			return;
 		}
 		$this->saveDefaultConfig();
-		$this->sabcooldown = $this->getConfig()->get("cooldown");
 		if(!is_dir($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name", "amongus"))){
 			$this->getLogger()->critical("The world set in config was not loaded or couldn't be found.");
 		}
