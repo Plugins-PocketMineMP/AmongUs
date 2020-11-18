@@ -64,6 +64,7 @@ use function json_encode;
 
 class AmongUs extends PluginBase{
 
+  use SingletonTrait;
 	/** @var string */
 	public static $prefix = "§a§l[§cAmong§eUs§a] §r>§7 ";
 	/** @var Game[] */
