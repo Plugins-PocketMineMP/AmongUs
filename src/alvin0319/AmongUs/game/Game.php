@@ -43,7 +43,7 @@ use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\task\DisplayTextTask;
-use blugin\utils\arrays\ArrayUtil as Arr;
+use kim\present\lib\arrayutils\ArrayUtils as Arr;
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
