@@ -35,11 +35,11 @@ namespace alvin0319\AmongUs\character;
 class Imposter extends Character{
 
 	public function getName() : string{
-		return "Imposter";
+		return "§cImpostor§r";
 	}
 
 	public function getDescription() : string{
-		return "Objective: Kill all crewmates & do not get caught!";
+		return "§6Objective: §cKill all crewmates & do not get caught!";
 	}
 
 	public function getItems() : array{

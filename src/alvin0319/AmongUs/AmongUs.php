@@ -36,6 +36,7 @@ use alvin0319\AmongUs\command\AmongUsCommand;
 use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
+use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
@@ -62,8 +63,8 @@ use function json_decode;
 use function json_encode;
 
 class AmongUs extends PluginBase{
-	use SingletonTrait;
 
+  use SingletonTrait;
 	/** @var string */
 	public static $prefix = "§a§l[§cAmong§eUs§a] §r>§7 ";
 	/** @var Game[] */

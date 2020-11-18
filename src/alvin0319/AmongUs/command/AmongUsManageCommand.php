@@ -38,6 +38,7 @@ use alvin0319\AmongUs\item\FilledMap;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\item\ItemFactory;
+use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
 
@@ -66,7 +67,22 @@ class AmongUsManageCommand extends PluginCommand{
 				$sender->sendForm(new AmongUsGameCreateForm());
 				break;
 			case "createobjective":
-				break;
+				$sender->sendMessage(AmongUs::$prefix . "Place the Blocks to set the Objectives");
+        $lights = Item::get(Item::WOOL)->setCount(1)->setCustomName("§aLights");
+				$reactor = Item::get(Item::WOOL)->setCount(1)->setCustomName("§aReactor");
+				$o2 = Item::get(Item::WOOL)->setCount(1)->setCustomName("§aO2");
+				$task1 = Item::get(Item::EMERALD_BLOCK)->setCount(1)->setCustomName("§aEnergy task");
+				$task2 = Item::get(Item::IRON_BLOCK)->setCount(1)->setCustomName("§aReceive task");
+			  $task3 = Item::get(Item::GOLD_BLOCK)->setCount(1)->setCustomName("§aSend task");
+				$task4 = Item::get(Item::IRON_BLOCK)->setCount(1)->setCustomName("§aManifold task");
+				$sender->getInventory()->setItem(0, $lights);
+				$sender->getInventory()->setItem(1, $reactor);
+				$sender->getInventory()->setItem(2, $o2);
+				$sender->getInventory()->setItem(5, $task1);
+				$sender->getInventory()->setItem(6, $task2);
+				$sender->getInventory()->setItem(7, $task3);
+				$sender->getInventory()->setItem(8, $task4);
+			break;
 			case "setmapimage":
 				if(trim($args[1] ?? "") === ""){
 					$sender->sendMessage(AmongUs::$prefix . "Usage: /{$commandLabel} setmapimage [gameId]");

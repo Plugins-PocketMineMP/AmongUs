@@ -155,7 +155,7 @@ class EventListener implements Listener{
 				return;
 			}
 			$event->setCancelled();
-			$player->sendMessage(AmongUs::$prefix . "You are not allowed to execute commands during games.");
+			$player->sendMessage(AmongUs::$prefix . "You are not allowed to execute commands when the game is running.");
 		}
 	}
 

@@ -34,13 +34,23 @@ namespace alvin0319\AmongUs\sabotage;
 
 use pocketmine\level\Position;
 use pocketmine\Player;
+use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\item\Item;
+use pocketmine\block\Block;
+use alvin0319\AmongUs\EventListener;
+use alvin0319\AmongUs\AmongUs;
+use pocketmine\utils\Config;
+use alvin0319\AmongUs\form\SabotageForm;
 
 abstract class Sabotage{
 	/** @var Position */
 	protected $pos;
 
+	public $sabcooldown;
+
 	public function __construct(Position $pos){
 		$this->pos = $pos;
+		$this->sabcooldown = $this->plugin->getConfig()->get("cooldown");
 	}
 
 	final public function getPosition() : Position{
@@ -59,9 +69,16 @@ abstract class Sabotage{
 	 *
 	 * @param Player $player
 	 */
-	abstract public function onInteract(Player $player) : void;
-
+	public function onInteract(PlayerInteractEvent $event){
+	    $player = $event->getPlayer();
+	    $item = $event->getItem();
+	    $block = $event->getBlock();
+	 if($item->getID() == 409 and $item->getCustomName() == 'Sabotage'){
+	   		$player->sendForm(new SabotageForm($this, ""));
+	   	 }
+	  }
+	
 	public function getCool() : int{
-		return 5;
+		return 5; 
 	}
 }
