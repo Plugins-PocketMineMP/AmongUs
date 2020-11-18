@@ -3,7 +3,7 @@
 A PocketMine-MP mini-game plugin called AmongUs
 This is simlar to the AmongUs game but in MCBE.
 
-## This is yet not completed!
+## This is yet not complete!
 
 This project is still in progress, if you want to contribute my project, make a pull request!
 
