@@ -475,38 +475,50 @@ class Game{
 		return true;
 	}
 
+	/**
+	 * @return Imposter[]
+	 */
 	public function filterImposters() : array{
-		return Arr::map($this->getPlayers(), function(Player $player) : ?Character{
+		return Arr::mapFrom($this->getPlayers(), function(Player $player) : ?Character{
 			return $this->getCharacter($player);
-		})->filter(function(?Character $character) : bool{
+		})->filterAs(function(?Character $character) : bool{
 			return $character instanceof Imposter;
-		})->values()->toArray();
+		});
 	}
 
+	/**
+	 * @return Crewmate[]
+	 */
 	public function filterCrewmates() : array{
-		return Arr::map($this->getPlayers(), function(Player $player) : ?Character{
+		return Arr::mapFrom($this->getPlayers(), function(Player $player) : ?Character{
 			return $this->getCharacter($player);
 		})->filter(function(?Character $character) : bool{
 			return $character instanceof Crewmate;
-		})->filter(function(Crewmate $crewmate) : bool{
+		})->filterAs(function(Crewmate $crewmate) : bool{
 			return !$this->isDead($crewmate->getPlayer());
-		})->values()->toArray();
+		});
 	}
 
+	/**
+	 * @return Player[]
+	 */
 	public function getCrewmates() : array{
-		return Arr::map(Arr::values($this->crews)->values(), function(Crewmate $crew) : Player{
+		return Arr::mapFrom(Arr::valuesFromAs($this->crews), function(Crewmate $crew) : Player{
 			return $crew->getPlayer();
-		})->filter(function(Player $player) : bool{
+		})->filterAs(function(Player $player) : bool{
 			return $player->isOnline();
-		})->values()->toArray();
+		});
 	}
 
+	/**
+	 * @return Player[]
+	 */
 	public function getImposters() : array{
-		return Arr::map(Arr::values($this->imposters)->values(), function(Imposter $imposter) : Player{
+		return Arr::mapFrom(Arr::valuesFromAs($this->imposters), function(Imposter $imposter) : Player{
 			return $imposter->getPlayer();
-		})->filter(function(Player $player) : bool{
+		})->filterAs(function(Player $player) : bool{
 			return $player->isOnline();
-		})->values()->toArray();
+		});
 	}
 
 	public function onSabotageActivate(Sabotage $sabotage) : void{
