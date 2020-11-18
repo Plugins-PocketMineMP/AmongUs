@@ -614,8 +614,11 @@ class Game{
 			}
 		}
 		foreach($this->getPlayers() as $player){
+		  $fix = Item::get(290, 0);
 			$task = Item::get(280, 0);
-			$tasakk->setCustomName('Task');
+			$fix->setCustomName('fix');
+		  $fix->setLore(['Right-Click Light Fix Block']);
+			$task->setCustomName('task');
 			$task->setLore(['Right-Click a Task Block']);
 			$player->getInventory()->addItem($task);
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 0, 1)->setCustomName("Vote"));

@@ -53,7 +53,7 @@ class LightsSabotage extends Sabotage{
 	public function onInteract(PlayerInteractEvent $event) : void{
 	  $player = $event->getPlayer();
 		$item = $event->getItem();
-			 if($item->getID() == 1 and $item->getCustomName() == 'Task'){
+			 if($item->getID() == 290 and $item->getCustomName() == 'fix'){
 			   		  $player->removeAllEffects();
 			   		  $this->broadcastMessage("§aLights fixed!");
 			   		}

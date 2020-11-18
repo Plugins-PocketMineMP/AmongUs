@@ -38,6 +38,7 @@ use alvin0319\AmongUs\item\FilledMap;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\item\ItemFactory;
+use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
 
