@@ -45,8 +45,6 @@ use kim\present\traits\singleton\SingletonTrait;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -94,8 +92,6 @@ class AmongUs extends PluginBase{
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 
-		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"), true);
-
 		if(file_exists($file = $this->getDataFolder() . "AmongUsData.json")){
 			$this->data = json_decode(file_get_contents($file), true);
 		}
@@ -116,9 +112,7 @@ class AmongUs extends PluginBase{
 
 			[$x, $y, $z, $world] = explode(":", $gameData["spawnPos"]);
 
-			$map = isset($gameData["mapItem"]) ? Item::jsonDeserialize($gameData["mapItem"]) : null;
-
-			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $map, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
+			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
 			$this->games[$game->getId()] = $game;
 		}
 

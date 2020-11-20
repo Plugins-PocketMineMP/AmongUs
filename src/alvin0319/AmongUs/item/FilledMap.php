@@ -50,23 +50,6 @@ use function json_decode;
 use function json_encode;
 
 class FilledMap extends Item{
-	public const COLOR_BLOCK_WHITE = 0;
-
-	public const COLOR_BLOCK_ORANGE = 1;
-	public const COLOR_BLOCK_MAGENTA = 2;
-	public const COLOR_BLOCK_LIGHT_BLUE = 3;
-	public const COLOR_BLOCK_YELLOW = 4;
-	public const COLOR_BLOCK_LIME = 5;
-	public const COLOR_BLOCK_PINK = 6;
-	public const COLOR_BLOCK_GRAY = 7;
-	public const COLOR_BLOCK_LIGHT_GRAY = 8;
-	public const COLOR_BLOCK_CYAN = 9;
-	public const COLOR_BLOCK_PURPLE = 10;
-	public const COLOR_BLOCK_BLUE = 11;
-	public const COLOR_BLOCK_BROWN = 12;
-	public const COLOR_BLOCK_GREEN = 13;
-	public const COLOR_BLOCK_RED = 14;
-	public const COLOR_BLOCK_BLACK = 15;
 
 	/**
 	 * Credits from Altay

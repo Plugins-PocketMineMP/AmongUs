@@ -39,7 +39,6 @@ use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\event\GameEndEvent;
 use alvin0319\AmongUs\event\GameStartEvent;
-use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\task\DisplayTextTask;
@@ -140,8 +139,6 @@ class Game{
 	protected $objectives = [];
 	/** @var bool */
 	protected $emergencyRunning = false;
-	/** @var FilledMap|null */
-	protected $mapItem = null;
 	/** @var int[] */
 	protected $votes = [];
 	/** @var string[] */
@@ -153,15 +150,12 @@ class Game{
 	/** @var int */
 	protected $sabotageCool = -1;
 
-	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, ?FilledMap $mapItem = null, array $settings = self::DEFAULT_SETTINGS){
+	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
 		$this->map = $map;
 		$this->settings = $settings;
 		$this->spawnPos = $spawnPos;
 		$this->objectives = $objectives;
-		if($mapItem !== null){
-			$this->mapItem = clone $mapItem;
-		}
 
 		$this->reset();
 	}
@@ -198,14 +192,6 @@ class Game{
 
 	public function getMap() : string{
 		return $this->map;
-	}
-
-	public function getMapItem() : FilledMap{
-		return clone $this->mapItem;
-	}
-
-	public function setMapItem(FilledMap $map) : void{
-		$this->mapItem = clone $map;
 	}
 
 	public function addPlayer(Player $player) : void{
@@ -608,11 +594,6 @@ class Game{
 	}
 
 	private function giveDefaultKits() : void{
-		if($this->mapItem !== null){
-			foreach($this->getPlayers() as $player){
-				$player->getInventory()->addItem(clone $this->mapItem);
-			}
-		}
 		foreach($this->getPlayers() as $player){
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 0, 1)->setCustomName("Vote"));
 			$character = $this->getCharacter($player);
@@ -632,7 +613,7 @@ class Game{
 				$objective->getPosition()->getLevel()->getFolderName()
 			]);
 		}
-		$data = [
+		return [
 			"settings" => $this->settings,
 			"map" => $this->map,
 			"spawnPos" => implode(":", [
@@ -643,9 +624,5 @@ class Game{
 			]),
 			"objectives" => $objectives
 		];
-		if($this->mapItem !== null){
-			$data["mapItem"] = $this->mapItem->jsonSerialize();
-		}
-		return $data;
 	}
 }
