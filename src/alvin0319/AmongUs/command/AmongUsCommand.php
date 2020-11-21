@@ -62,7 +62,7 @@ class AmongUsCommand extends PluginCommand{
 					$sender->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
 					break;
 				}
-				$game->addPlayer($player);
+				$game->addPlayer($sender);
 				break;
 			case "rule":
 				$lines = "§8-------------------------------------------------------";
