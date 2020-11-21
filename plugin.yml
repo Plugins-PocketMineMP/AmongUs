@@ -5,6 +5,8 @@ version: 0.0.12
 api: 3.0.0
 website: https://github.com/alvin0319/AmongUs
 
+softdepend: ["SimpleMapRenderer"]
+
 permissions:
   amongus.command:
     default: true
