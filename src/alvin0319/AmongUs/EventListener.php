@@ -169,7 +169,7 @@ class EventListener implements Listener{
 				$waitTime
 			] = ObjectiveQueue::$createQueue[$player->getName()];
 
-			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], [
+			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], -1, [
 				Game::SETTING_WAIT_SECOND => $waitTime,
 				Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
 				Game::SETTING_KILL_COOLDOWN => $coolDown,
