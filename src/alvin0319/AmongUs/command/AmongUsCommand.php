@@ -55,7 +55,23 @@ class AmongUsCommand extends PluginCommand{
 			$sender->sendMessage(AmongUs::$prefix . "This command can be only executed In-Game.");
 			return false;
 		}
-		$sender->sendForm(new AmongUsMainForm());
+		switch($args[0] ?? "x"){
+			case "join":
+				$game = AmongUs::getInstance()->getAvailableGame($sender);
+				if($game === null){
+					$sender->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
+					break;
+				}
+				$game->addPlayer($player);
+				break;
+			case "rule":
+				$lines = "§8-------------------------------------------------------";
+				$space = " ";
+				$sender->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§cAmong§eUs§b-=§8[§a+§8]=-" . "\n" . $space . "\n" . "§6Intro" . "\n" . $space . "\n" . "§eAmongUS is a game of teamwork & betrayal" . "\n" . "§ePlayers are either Crewmates or an Imposter" . "\n" . $space . "\n" . $space . "\n" . "§6Roles" . "\n" . $space . "\n" . "§bCrewmate: Complete the tasks to win" . "\n" . "§cImposter: Kill all Crewmates to win" . "\n" . $space . "\n" . "§6Misc" . "\n" . $space . "\n" . "§eDuring Meetings make sure to discuss on who to vote out (vote out the imposter)" . "\n" . $space . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aHave Fun Playing§8] -=[§a+§8]=-" . "\n" . $lines);
+				break;
+			default:
+				$sender->sendForm(new AmongUsMainForm());
+		}
 		return true;
 	}
 }
