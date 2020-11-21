@@ -40,23 +40,28 @@ use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
 use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
+use alvin0319\SimpleMapRenderer\SimpleMapRenderer;
 use Closure;
+use kim\present\lib\arrayutils\ArrayUtils;
 use kim\present\traits\singleton\SingletonTrait;
+use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 
+use function array_keys;
+use function array_map;
+use function array_values;
 use function class_exists;
 use function explode;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
+use function implode;
 use function is_dir;
 use function json_decode;
 use function json_encode;
@@ -73,6 +78,13 @@ class AmongUs extends PluginBase{
 
 	protected $data = [];
 
+	public const REQUIRED_CLASSES = [
+		ArrayUtils::class => "virion",
+		SingletonTrait::class => "virion",
+		InvMenu::class => "virion",
+		SimpleMapRenderer::class => "plugin"
+	];
+
 	public function onLoad() : void{
 		self::$instance = $this;
 	}
@@ -81,6 +93,14 @@ class AmongUs extends PluginBase{
 		if($this->detectBadSpoon()){
 			$this->getLogger()->critical("Forks of PocketMine-MP have been detected.");
 			$this->getLogger()->critical("This plugin does not work with other software. (e.g Altay)");
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
+		}
+		if(!$this->checkDependencies()){
+			$this->getLogger()->critical("Couldn't find required dependencies. (required: " . implode(", ", array_map(function(string $class, string $isPlugin) : string{
+				return "{$class}({$isPlugin})";
+			}, array_keys(self::REQUIRED_CLASSES), array_values(self::REQUIRED_CLASSES))) . ")");
+			$this->getLogger()->critical("Please re-install the plugin or download it from Poggit.");
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 			return;
 		}
@@ -93,8 +113,6 @@ class AmongUs extends PluginBase{
 		}
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
-
-		ItemFactory::registerItem(new FilledMap(ItemIds::FILLED_MAP, 0, "Filled Map"), true);
 
 		if(file_exists($file = $this->getDataFolder() . "AmongUsData.json")){
 			$this->data = json_decode(file_get_contents($file), true);
@@ -116,9 +134,7 @@ class AmongUs extends PluginBase{
 
 			[$x, $y, $z, $world] = explode(":", $gameData["spawnPos"]);
 
-			$map = isset($gameData["mapItem"]) ? Item::jsonDeserialize($gameData["mapItem"]) : null;
-
-			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $map, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
+			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
 			$this->games[$game->getId()] = $game;
 		}
 
@@ -138,6 +154,15 @@ class AmongUs extends PluginBase{
 
 	private function detectBadSpoon() : bool{
 		return $this->getServer()->getName() !== "PocketMine-MP" || class_exists("\\pocketmine\\maps\\MapData");
+	}
+
+	private function checkDependencies() : bool{
+		foreach(array_keys(self::REQUIRED_CLASSES) as $requiredClass){
+			if(!class_exists($requiredClass)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public function onDisable() : void{

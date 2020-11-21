@@ -37,7 +37,6 @@ use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\form\game\VoteImposterForm;
 use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\ObjectiveQueue;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
@@ -49,7 +48,6 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
 use pocketmine\Player;
 
 use function substr;
@@ -69,15 +67,6 @@ class EventListener implements Listener{
 					return;
 				}
 				$entity->interact($player);
-				break;
-			case ($packet instanceof MapInfoRequestPacket):
-				$item = $player->getInventory()->getItemInHand();
-				if($item instanceof FilledMap){
-					if(($packet = $item->getClientboundMapItemDataPacket()) !== null){
-						$player->sendDataPacket($packet);
-					}
-				}
-				$event->setCancelled();
 				break;
 		}
 	}
@@ -180,7 +169,7 @@ class EventListener implements Listener{
 				$waitTime
 			] = ObjectiveQueue::$createQueue[$player->getName()];
 
-			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], null, [
+			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], [
 				Game::SETTING_WAIT_SECOND => $waitTime,
 				Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
 				Game::SETTING_KILL_COOLDOWN => $coolDown,
