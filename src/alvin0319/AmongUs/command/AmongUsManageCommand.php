@@ -34,7 +34,6 @@ namespace alvin0319\AmongUs\command;
 
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\form\creation\AmongUsGameCreateForm;
-use alvin0319\AmongUs\item\FilledMap;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\item\ItemFactory;
