@@ -274,6 +274,10 @@ class Game{
 		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 3);
 	}
 
+	public function setMapId(int $mapId) : void{
+		$this->mapId = $mapId;
+	}
+
 	public function getObjectiveByPos(Position $pos) : ?Objective{
 		foreach(array_values($this->objectives) as $objective){
 			if($objective->getPosition()->equals($pos)){
