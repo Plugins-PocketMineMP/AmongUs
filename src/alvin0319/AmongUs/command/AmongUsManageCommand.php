@@ -34,6 +34,10 @@ namespace alvin0319\AmongUs\command;
 
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\form\creation\AmongUsGameCreateForm;
+use alvin0319\SimpleMapRenderer\data\MapData;
+use alvin0319\SimpleMapRenderer\item\FilledMap;
+use alvin0319\SimpleMapRenderer\MapFactory;
+use alvin0319\SimpleMapRenderer\util\MapUtil;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\item\ItemFactory;
@@ -80,11 +84,23 @@ class AmongUsManageCommand extends PluginCommand{
 					$sender->sendMessage(AmongUs::$prefix . "No Game id with {$args[1]} found.");
 					return false;
 				}
+				$mapData = new MapData(MapFactory::getInstance()->nextId(), [], false, $sender->floor());
+				$colors = [];
+				for($x = 0; $x < 128; $x++){
+					for($y = 0; $y < 128; $y++){
+						$realX = $sender->getFloorX() - 64 + $x;
+						$realY = $sender->getFloorZ() - 64 + $y;
+						$maxY = $sender->getLevel()->getHighestBlockAt($realX, $realY);
+						$block = $sender->getLevel()->getBlockAt($realX, $maxY, $realY);
+						$color = MapUtil::getMapColorByBlock($block);
+						$colors[$y][$x] = $color;
+					}
+				}
+				$mapData->setColors($colors);
+				MapFactory::getInstance()->registerData($mapData);
 				/** @var FilledMap $item */
 				$item = ItemFactory::get(ItemIds::FILLED_MAP);
-				$item->setMapData($sender);
-				$item->setMapId(0);
-				$game->setMapItem($item);
+				$item->setMapId($mapData->getMapId());
 				$sender->getInventory()->addItem($item);
 				$sender->sendMessage(AmongUs::$prefix . "Successfully completed the game setup!");
 				break;

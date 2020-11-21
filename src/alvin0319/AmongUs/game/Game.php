@@ -42,6 +42,7 @@ use alvin0319\AmongUs\event\GameStartEvent;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\task\DisplayTextTask;
+use alvin0319\SimpleMapRenderer\item\FilledMap;
 use kim\present\lib\arrayutils\ArrayUtils as Arr;
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
@@ -139,6 +140,8 @@ class Game{
 	protected $objectives = [];
 	/** @var bool */
 	protected $emergencyRunning = false;
+	/** @var int */
+	protected $mapId = -1;
 	/** @var int[] */
 	protected $votes = [];
 	/** @var string[] */
@@ -150,12 +153,13 @@ class Game{
 	/** @var int */
 	protected $sabotageCool = -1;
 
-	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, array $settings = self::DEFAULT_SETTINGS){
+	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, int $mapId, array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
 		$this->map = $map;
 		$this->settings = $settings;
 		$this->spawnPos = $spawnPos;
 		$this->objectives = $objectives;
+		$this->mapId = $mapId;
 
 		$this->reset();
 	}
@@ -594,6 +598,14 @@ class Game{
 	}
 
 	private function giveDefaultKits() : void{
+		if($this->mapId !== -1){
+			/** @var FilledMap $map */
+			$map = ItemFactory::get(ItemIds::FILLED_MAP, 0, 1);
+			$map->setMapId($this->mapId);
+			foreach($this->getPlayers() as $player){
+				$player->getInventory()->addItem($map);
+			}
+		}
 		foreach($this->getPlayers() as $player){
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 0, 1)->setCustomName("Vote"));
 			$character = $this->getCharacter($player);
@@ -622,7 +634,8 @@ class Game{
 				$this->spawnPos->getZ(),
 				$this->spawnPos->getLevel()->getFolderName()
 			]),
-			"objectives" => $objectives
+			"objectives" => $objectives,
+			"mapId" => $this->mapId
 		];
 	}
 }
