@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\util;
 
 use alvin0319\AmongUs\AmongUs;
-use kim\present\traits\singleton\SingletonTrait;
+use pocketmine\utils\SingletonTrait;
 
 use function count;
 use function str_replace;
@@ -22,7 +22,7 @@ final class Translation{
 
 	public function __construct(AmongUs $plugin){
 		$this->plugin = $plugin;
-		self::$instance = $this;
+		self::setInstance($this);
 	}
 
 	public function init() : void{

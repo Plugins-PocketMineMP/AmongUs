@@ -36,18 +36,16 @@ use alvin0319\AmongUs\command\AmongUsCommand;
 use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\item\FilledMap;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
 use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
 use alvin0319\SimpleMapRenderer\SimpleMapRenderer;
 use Closure;
 use kim\present\lib\arrayutils\ArrayUtils;
-use kim\present\traits\singleton\SingletonTrait;
+use pocketmine\utils\SingletonTrait;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
-use pocketmine\item\Item;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -80,7 +78,6 @@ class AmongUs extends PluginBase{
 
 	public const REQUIRED_CLASSES = [
 		ArrayUtils::class => "virion",
-		SingletonTrait::class => "virion",
 		InvMenu::class => "virion",
 		SimpleMapRenderer::class => "plugin"
 	];
