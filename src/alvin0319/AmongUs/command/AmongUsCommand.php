@@ -66,10 +66,11 @@ class AmongUsCommand extends PluginCommand{
 				break;
 			case "info":
 				$lines = "§b------------------------------------------";
-				$space = " ";
-				$sender->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§bUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . "\n" . $space . $space . $space . "§6Intro:" . "\n" . "§cAmong§bUs §eis a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . $space . $space . "§6Roles:" . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . $space . $space . "§6Info:" . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
+								$space = " ";
+								$player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§bUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . "\n" . $space . $space . $space . $space . $space . " §6Intro:" . "\n" . "§cAmong§bUs §eis a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . $space . $space . $space . $space . " §6Roles:" . "\n" . " — §bCrewmate: §eComplete the tasks to win." . "\n" . " — §cImposter: §eKill all Crewmates to win." . "\n" . $space . $space . $space . $space . $space . " §6Info:" . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "\n" . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
 			case "leave":
+			  break;
 			case "quit":
 				$game = AmongUs::getInstance()->getGameByPlayer($sender);
 				if($game === null){
@@ -77,6 +78,8 @@ class AmongUsCommand extends PluginCommand{
 					break;
 				}
 				$game->removePlayer($sender);
+				$sender->getInventory()->clearAll();
+				$sender->teleport($sender->getServer()->getDefaultLevel()->getSafeSpawn());
 				$sender->sendMessage(AmongUs::$prefix . "Left the game #{$game->getId()}.");
 				break;
 			default:

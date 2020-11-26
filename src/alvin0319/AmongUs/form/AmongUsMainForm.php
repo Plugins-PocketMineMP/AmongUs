@@ -43,12 +43,12 @@ class AmongUsMainForm implements Form{
 	public function jsonSerialize(){
 		return [
 			"type" => "form",
-			"title" => "AmongUs in Minecraft!",
+			"title" => "§cAmong§bUs §cin Minecraft!",
 			"content" => "",
 			"buttons" => [
-				["text" => "Exit"],
-				["text" => "Join the game"],
-				["text" => "How to Play"]
+				["text" => "§aPlay"],
+				["text" => "§aInfo"],
+				["text" => "§cExit"]
 			]
 		];
 	}
@@ -58,7 +58,7 @@ class AmongUsMainForm implements Form{
 			return;
 		}
 		switch($data){
-			case 1:
+			case 0:
 				$game = AmongUs::getInstance()->getAvailableGame($player);
 				if($game === null){
 					$player->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
@@ -66,10 +66,10 @@ class AmongUsMainForm implements Form{
 				}
 				$game->addPlayer($player);
 				break;
-			case 2:
+			case 1:
 				$lines = "§b------------------------------------------";
 				$space = " ";
-				$player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§bUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . "\n" . $space . $space . $space . "§6Intro:" . "\n" . "§cAmong§bUs §eis a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . $space . $space . "§6Roles:" . "\n" . "§bCrewmate: Complete the tasks to win." . "\n" . "§cImposter: Kill all Crewmates to win." . "\n" . $space . $space . $space . "§6Info:" . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
+				$player->sendMessage($lines . "\n" . "§8-=[§a+§8]§b=-§l§cAmong§bUs §r§ain §aMCPE §b-=§8[§a+§8]=-" . "\n" . "\n" . $space . $space . $space . $space . $space . " §6Intro:" . "\n" . "§cAmong§bUs §eis a game of teamwork & betrayal." . "\n" . "§ePlayers are either Crewmates or an Impostor." . "\n" . $space . $space . $space . $space . $space . " §6Roles:" . "\n" . " — §bCrewmate: §eComplete the tasks to win." . "\n" . " — §cImposter: §eKill all Crewmates to win." . "\n" . $space . $space . $space . $space . $space . " §6Info:" . "\n" . "§eDuring Meetings make sure to discuss on who to vote out. (vote out the imposter)" . "\n" . "§ePlayers have access to a personal map to help navigate through the map" . "\n" . "\n" . "§8-=[§a+§8]=- [§aEnjoy Playing§8] -=[§a+§8]=-" . "\n" . $lines);
 				break;
 		}
 	}
