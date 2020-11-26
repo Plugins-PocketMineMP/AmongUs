@@ -35,31 +35,27 @@ namespace alvin0319\AmongUs;
 use alvin0319\AmongUs\command\AmongUsCommand;
 use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
+use alvin0319\AmongUs\entity\VentEntity;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
 use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
-use alvin0319\SimpleMapRenderer\SimpleMapRenderer;
 use Closure;
-use kim\present\lib\arrayutils\ArrayUtils;
-use muqsit\invmenu\InvMenu;
+use kim\present\converter\png\PngConverter;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
+use pocketmine\entity\Skin;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\SingletonTrait;
 
-use function array_keys;
-use function array_map;
-use function array_values;
 use function class_exists;
 use function explode;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
-use function implode;
 use function is_dir;
 use function json_decode;
 use function json_encode;
@@ -75,12 +71,8 @@ class AmongUs extends PluginBase{
 	protected $objectives = [];
 
 	protected $data = [];
-
-	public const REQUIRED_CLASSES = [
-		ArrayUtils::class => "virion",
-		InvMenu::class => "virion",
-		SimpleMapRenderer::class => "plugin"
-	];
+	/** @var Skin|null */
+	protected $ventSkin = null;
 
 	public function onLoad() : void{
 		self::$instance = $this;
@@ -101,7 +93,16 @@ class AmongUs extends PluginBase{
 			InvMenuHandler::register($this);
 		}
 
+		$this->saveResource("vent.json");
+		$this->saveResource("vent.png");
+		$this->saveResource("vent_open.json");
+
+		$skinImage = PngConverter::toSkinImageFromFile($this->getDataFolder() . "vent.png");
+
+		$this->ventSkin = new Skin("Standard_Custom", $skinImage->getData(), "", "geometry.rmsp.vent", file_get_contents($this->getDataFolder() . "vent.json"));
+
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
+		Entity::registerEntity(VentEntity::class, true, ["Vent"]);
 
 		if(file_exists($file = $this->getDataFolder() . "AmongUsData.json")){
 			$this->data = json_decode(file_get_contents($file), true);
@@ -123,7 +124,7 @@ class AmongUs extends PluginBase{
 
 			[$x, $y, $z, $world] = explode(":", $gameData["spawnPos"]);
 
-			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
+			$game = new Game($i, $gameData["map"], new Position((float) $x, (float) $y, (float) $z, $this->getServer()->getLevelByName($world)), $objectives, $gameData["mapId"] ?? -1, $gameData["vents"] ?? [], $gameData["settings"] ?? Game::DEFAULT_SETTINGS);
 			$this->games[$game->getId()] = $game;
 		}
 
@@ -155,6 +156,10 @@ class AmongUs extends PluginBase{
 
 	public function getWorldName() : string{
 		return $this->getConfig()->get("world_name", "amongus");
+	}
+
+	public function getVentSkin() : ?Skin{
+		return $this->ventSkin;
 	}
 
 	public function registerGame(Game $game) : void{

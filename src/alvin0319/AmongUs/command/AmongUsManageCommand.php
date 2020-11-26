@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\command;
 
 use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\EventListener;
 use alvin0319\AmongUs\form\creation\AmongUsGameCreateForm;
 use alvin0319\SimpleMapRenderer\data\MapData;
 use alvin0319\SimpleMapRenderer\item\FilledMap;
@@ -40,8 +41,13 @@ use alvin0319\SimpleMapRenderer\MapFactory;
 use alvin0319\SimpleMapRenderer\util\MapUtil;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
+use pocketmine\entity\Entity;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\nbt\tag\ByteArrayTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 
 use function is_numeric;
@@ -104,6 +110,49 @@ class AmongUsManageCommand extends PluginCommand{
 				$game->setMapId($mapData->getMapId());
 				$sender->getInventory()->addItem($item);
 				$sender->sendMessage(AmongUs::$prefix . "Successfully completed the game setup!");
+				break;
+			case "createvents":
+				if(trim($args[1] ?? "") === ""){
+					$sender->sendMessage(AmongUs::$prefix . "Usage: /{$commandLabel} createvents [gameId]");
+					return false;
+				}
+				if(!is_numeric($args[1])){
+					$sender->sendMessage(AmongUs::$prefix . "Usage: /{$commandLabel} createvents [gameId]");
+					return false;
+				}
+				$gameId = (int) $args[1];
+				EventListener::$interactQueue[$sender->getName()] = function(PlayerInteractEvent $event) use ($gameId) : void{
+					$player = $event->getPlayer();
+					$block = $event->getBlock();
+
+					$game = AmongUs::getInstance()->getGame($gameId);
+					if($game === null){
+						$player->sendMessage(AmongUs::$prefix . "No Game id with {$gameId} found.");
+						return;
+					}
+					$game->addVent($block);
+					$player->sendMessage(AmongUs::$prefix . "Successfully created vent.");
+				};
+				break;
+			case "spawnvent":
+				$pos = $sender->getPosition();
+				$skin = AmongUs::getInstance()->getVentSkin();
+				if(!$pos->getLevel()->isChunkLoaded($pos->getFloorX() >> 4, $pos->getFloorZ() >> 4)){
+					$pos->getLevel()->loadChunk($pos->getFloorX() >> 4, $pos->getFloorZ() >> 4);
+				}
+				$nbt = Entity::createBaseNBT($pos);
+				$nbt->setTag(new CompoundTag("Skin", [
+					new StringTag("Name", $skin->getSkinId()),
+					new ByteArrayTag("Data", $skin->getSkinData()),
+					new ByteArrayTag("CapeData", ""),
+					new StringTag("GeometryName", $skin->getGeometryName()),
+					new ByteArrayTag("GeometryData", $skin->getGeometryData())
+				]));
+				$entity = Entity::createEntity("Vent", $pos->getLevel(), $nbt);
+				$entity->setImmobile(true);
+				$entity->setNameTag("VENT");
+				$entity->spawnToAll();
+				$sender->sendMessage("SUCCESS");
 				break;
 			default:
 				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} setmapimage [gameId]");

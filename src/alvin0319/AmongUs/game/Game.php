@@ -61,6 +61,7 @@ use function array_values;
 use function arsort;
 use function ceil;
 use function count;
+use function explode;
 use function implode;
 use function in_array;
 use function shuffle;
@@ -152,14 +153,19 @@ class Game{
 	protected $nowSabotage = null;
 	/** @var int */
 	protected $sabotageCool = -1;
+	/** @var string[] */
+	protected $rawVents = [];
+	/** @var Position[] */
+	protected $vents = [];
 
-	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, int $mapId, array $settings = self::DEFAULT_SETTINGS){
+	public function __construct(int $id, string $map, Position $spawnPos, array $objectives, int $mapId, array $vents = [], array $settings = self::DEFAULT_SETTINGS){
 		$this->id = $id;
 		$this->map = $map;
 		$this->settings = $settings;
 		$this->spawnPos = $spawnPos;
 		$this->objectives = $objectives;
 		$this->mapId = $mapId;
+		$this->rawVents = $vents;
 
 		$this->reset();
 	}
@@ -183,6 +189,11 @@ class Game{
 		AmongUs::getInstance()->copyWorld($this, function() : void{
 			Server::getInstance()->loadLevel(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}");
 			$this->fixPos();
+			$this->vents = array_map(function(string $data) : Position{
+				[$x, $y, $z] = explode(":", $data);
+				return new Position((float) $x, (float) $y, (float) $z, Server::getInstance()->getLevelByName(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}"));
+			}, $this->rawVents);
+			$this->spawnVents();
 		});
 	}
 
@@ -233,7 +244,7 @@ class Game{
 	}
 
 	protected function broadcastPopup(string $popup) : void{
-		Server::getInstance()->broadcastPopup($popup, $this->getPlayers());
+		Server::getInstance()->broadcastTip($popup, $this->getPlayers());
 	}
 
 	public function broadcastMessageToDead(string $message) : void{
@@ -409,6 +420,30 @@ class Game{
 		$this->checkVote();
 	}
 
+	public function addVent(Position $pos) : void{
+		$this->vents[] = $pos;
+		if($this->isRunning()){
+			$this->spawnVent($pos);
+		}
+	}
+
+	public function spawnVent(Position $pos) : void{
+		$skin = AmongUs::getInstance()->getVentSkin();
+		if(!$pos->getLevel()->isChunkLoaded($pos->getFloorX() >> 4, $pos->getFloorZ() >> 4)){
+			$pos->getLevel()->loadChunk($pos->getFloorX() >> 4, $pos->getFloorZ() >> 4);
+		}
+		$nbt = Entity::createBaseNBT($pos);
+		$nbt->setTag(new CompoundTag("Skin", [
+			new StringTag("Name", $skin->getSkinId()),
+			new ByteArrayTag("Data", $skin->getSkinData()),
+			new ByteArrayTag("CapeData", ""),
+			new StringTag("GeometryName", $skin->getGeometryName()),
+			new ByteArrayTag("GeometryData", $skin->getGeometryData())
+		]));
+		$entity = Entity::createEntity("Vent", $pos->getLevel(), $nbt);
+		$entity->spawnToAll();
+	}
+
 	public function endEmergencyTime() : void{
 		$this->emergencyRunning = false;
 		$this->emergencyTime = $this->settings[self::SETTING_EMERGENCY_TIME];
@@ -515,6 +550,12 @@ class Game{
 		});
 	}
 
+	public function spawnVents() : void{
+		foreach($this->vents as $position){
+			$this->spawnVent($position);
+		}
+	}
+
 	public function onSabotageActivate(Sabotage $sabotage) : void{
 	}
 
@@ -562,6 +603,7 @@ class Game{
 		$this->running = true;
 		$this->shufflePlayers();
 		$this->assignObjective();
+		$this->spawnVents();
 		(new GameStartEvent($this))->call();
 
 		foreach($this->getPlayers() as $player){
@@ -639,7 +681,10 @@ class Game{
 				$this->spawnPos->getLevel()->getFolderName()
 			]),
 			"objectives" => $objectives,
-			"mapId" => $this->mapId
+			"mapId" => $this->mapId,
+			"vents" => array_map(function(Position $pos) : string{
+				return implode(":", [$pos->getFloorX(), $pos->getFloorY(), $pos->getFloorZ()]);
+			}, $this->vents)
 		];
 	}
 }

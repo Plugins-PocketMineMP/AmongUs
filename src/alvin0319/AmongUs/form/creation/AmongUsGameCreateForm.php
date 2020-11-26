@@ -33,8 +33,10 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\form\creation;
 
 use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\EventListener;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\ObjectiveQueue;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\form\Form;
 use pocketmine\Player;
 
@@ -144,6 +146,33 @@ class AmongUsGameCreateForm implements Form{
 			$minPlayer,
 			$waitTime
 		];
+		EventListener::$interactQueue[$player->getName()] = function(PlayerInteractEvent $event) use ($player) : void{
+			$block = $event->getBlock();
+			[
+				$type,
+				$maxImposters,
+				$maxCrews,
+				$emergencyTime,
+				$emergencyCall,
+				$coolDown,
+				$minPlayer,
+				$waitTime
+			] = ObjectiveQueue::$createQueue[$player->getName()];
+
+			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], -1, [
+				Game::SETTING_WAIT_SECOND => $waitTime,
+				Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
+				Game::SETTING_KILL_COOLDOWN => $coolDown,
+				Game::SETTING_EMERGENCY_PRESS => $emergencyCall,
+				Game::SETTING_EMERGENCY_TIME => $emergencyTime,
+				Game::SETTING_MAX_CREW => $maxCrews,
+				Game::SETTING_MAX_IMPOSTERS => $maxImposters
+			]);
+
+			AmongUs::getInstance()->registerGame($game);
+			$player->sendMessage(AmongUs::$prefix . "Game creation successfully. (Game id: {$game->getId()})");
+			unset(ObjectiveQueue::$createQueue[$player->getName()]);
+		};
 		$player->sendMessage(AmongUs::$prefix . "Touch/Right-Click a block to set the spawnpoint for the game map.");
 	}
 }

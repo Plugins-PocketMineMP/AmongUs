@@ -13,10 +13,7 @@ projects:
       - src: PresentKim/arrayutils/arrayutils
         branch: main
         version: ^4.1.0
-      - src: PresentKim/singleton-trait/singleton-trait
+      - src: PresentKim/png-converter/png-converter
         branch: main
-        version: ^2.0.0
-      - src: buchwasa/ScoreFactory/ScoreFactory
-        branch: master
-        version: ^3.0.0
+        version: ^1.0.2
 ...

@@ -38,6 +38,7 @@ use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\form\game\VoteImposterForm;
 use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\object\ObjectiveQueue;
+use Closure;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -53,6 +54,8 @@ use pocketmine\Player;
 use function substr;
 
 class EventListener implements Listener{
+	/** @var Closure[] */
+	public static $interactQueue = [];
 
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
@@ -157,33 +160,12 @@ class EventListener implements Listener{
 
 		$block = $event->getBlock();
 
-		if(isset(ObjectiveQueue::$createQueue[$player->getName()])){
-			[
-				$type,
-				$maxImposters,
-				$maxCrews,
-				$emergencyTime,
-				$emergencyCall,
-				$coolDown,
-				$minPlayer,
-				$waitTime
-			] = ObjectiveQueue::$createQueue[$player->getName()];
-
-			$game = new Game(AmongUs::getInstance()->getNextId(), $block->getLevel()->getFolderName(), $block->asPosition(), [], -1, [
-				Game::SETTING_WAIT_SECOND => $waitTime,
-				Game::SETTING_MIN_PLAYER_TO_START => $minPlayer,
-				Game::SETTING_KILL_COOLDOWN => $coolDown,
-				Game::SETTING_EMERGENCY_PRESS => $emergencyCall,
-				Game::SETTING_EMERGENCY_TIME => $emergencyTime,
-				Game::SETTING_MAX_CREW => $maxCrews,
-				Game::SETTING_MAX_IMPOSTERS => $maxImposters
-			]);
-
-			AmongUs::getInstance()->registerGame($game);
-			$player->sendMessage(AmongUs::$prefix . "Game creation successfully. (Game id: {$game->getId()})");
-			unset(ObjectiveQueue::$createQueue[$player->getName()]);
+		if(isset(self::$interactQueue[$player->getName()])){
+			(self::$interactQueue[$player->getName()])($event);
+			unset(self::$interactQueue[$player->getName()]);
 			return;
 		}
+
 		$game = AmongUs::getInstance()->getGameByPlayer($player);
 		if($game === null){
 			return;
