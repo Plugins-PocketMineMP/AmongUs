@@ -26,6 +26,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 - 0.0.11: Added Task Complete message & sound.
 - 0.0.12: Added bossbar API.
 - 0.1.0: Ditched Map-related methods.
+- 0.1.1: Implemented Scoreboard API, Added vent entity (Special thanks to [@iMasterProX](https://github.com/iMasterProX))
 
 ### Download/Installation
 
