@@ -34,7 +34,7 @@ namespace alvin0319\AmongUs\api;
 
 use pocketmine\Player;
 
-class BossbarAPI{
+final class BossbarAPI{
 	/** @var Bossbar[] */
 	protected static $bossbars = [];
 
