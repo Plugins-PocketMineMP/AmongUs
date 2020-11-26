@@ -8,8 +8,11 @@
 # Here you can Customize the AmongUs Plugin Game settings.
 
 # How many games can be made on the server.
-# Recommended: 3-5
+# Recommended: 4-8
 max_games: 4
 
 # Select which world should the game be made.
 world_name: amongus
+
+# Select which world should be the waiting lobby.
+waiting_lobby: world

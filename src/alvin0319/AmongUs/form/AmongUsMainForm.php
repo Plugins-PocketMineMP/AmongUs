@@ -43,7 +43,7 @@ class AmongUsMainForm implements Form{
 	public function jsonSerialize(){
 		return [
 			"type" => "form",
-			"title" => "§cAmong§bUs §cin Minecraft!",
+			"title" => "§cAmong§bUs §ain Minecraft!",
 			"content" => "",
 			"buttons" => [
 				["text" => "§aPlay"],
@@ -65,6 +65,8 @@ class AmongUsMainForm implements Form{
 					return;
 				}
 				$game->addPlayer($player);
+				$level = $this->getServer()->getLevelByName($this->getConfig()->get("waiting_lobby"));
+				$player->teleport($level->getSafeSpawn());
 				break;
 			case 1:
 				$lines = "§b------------------------------------------";
