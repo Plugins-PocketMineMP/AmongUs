@@ -36,6 +36,7 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
 ### Default Configuration
 
+
 ```yaml
 max_games: 3
 
