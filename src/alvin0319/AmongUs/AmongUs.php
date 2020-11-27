@@ -99,7 +99,7 @@ class AmongUs extends PluginBase{
 
 		$skinImage = PngConverter::toSkinImageFromFile($this->getDataFolder() . "vent.png");
 
-		$this->ventSkin = new Skin("Standard_Custom", $skinImage->getData(), "", "geometry.rmsp.vent", file_get_contents($this->getDataFolder() . "vent.json"));
+		$this->ventSkin = new Skin("Standard_Custom", $skinImage->getData(), "", "geometry.vent", file_get_contents($this->getDataFolder() . "vent.json"));
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 		Entity::registerEntity(VentEntity::class, true, ["Vent"]);
