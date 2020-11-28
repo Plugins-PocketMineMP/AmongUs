@@ -33,6 +33,8 @@ You can get any updates or progress on my [Discord Server](https://discord.gg/Py
 - Put the plugin in ``/plugins`` Folder
 - and put the virions in ``/virions`` folder after adding devirion.
 - and restart server and edit config.yml
+- If you want the AmongUsSkeld Map [here](https://cdn.discordapp.com/attachments/773847823955263518/776089161765486613/world.zip),  
+it's not Fixed, so manually fix it.
 
 ### Dependencies
 
@@ -41,7 +43,7 @@ Plugin that will allow virions to work on your server. (not a virion, put it in 
 
 - Virions / API Librarys
 
-[InvMenu](https://github.com/Muqsit/InvMenu),  [Array-Utils](https://github.com/PresentKim/array-utils),  [Png-converter](https://github.com/PresentKim/png-converter),    
+[InvMenu](https://github.com/Muqsit/InvMenu),  [Array-Utils](https://github.com/PresentKim/array-utils), [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer)  [Png-converter](https://github.com/PresentKim/png-converter),    
 These virions are needed in order for the plugin to function properly.
 
 ### Default Configuration
