@@ -43,7 +43,8 @@ Plugin that will allow virions to work on your server. (not a virion, put it in 
 
 - Virions / API Librarys
 
-[InvMenu](https://github.com/Muqsit/InvMenu),  [Array-Utils](https://github.com/PresentKim/array-utils), [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),  [Png-converter](https://github.com/PresentKim/png-converter),    
+[InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils), [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer), [png-converter](https://github.com/PresentKim/png-converter)
+
 These virions are needed in order for the plugin to function properly.
 
 ### Default Configuration
