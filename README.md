@@ -7,9 +7,8 @@ This is simlar to the AmongUs game but in MCBE.
 
 This project is still in progress, if you want to contribute my project, make a pull request!
 
-### Join my discord server
+You can get any updates or progress on my [Discord Server](https://discord.gg/Py2vSwg3B3).
 
-You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B3) server.
 
 ## Changelogs
 
@@ -28,13 +27,17 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 - 0.1.0: Ditched Map-related methods.
 - 0.1.1: Implemented Scoreboard API, Added vent entity (Special thanks to [@iMasterProX](https://github.com/iMasterProX))
 
-### Download/Installation
+### Download & Installation
 
-- Go to Poggit dev builds or Click the Download Source Code form github.
+- Check the [Poggit-dev builds](https://poggit.pmmp.io/ci/alvin0319/AmongUs) or [Source code](https://github.com/alvin0319/AmongUs/archive/master.zip) from github.
 - Put the plugin in ``/plugins`` Folder
+- and put the virions in ``/virions`` folder after adding devirion.
 - and restart server and edit config.yml
-- You also need these following virions.
- 
+
+### Dependencies
+
+You also need these following virions.
+
 [DEVirion](https://github.com/poggit/devirion),  
 [InvMenu](https://github.com/Muqsit/InvMenu),  
 [Array-Utils](https://github.com/PresentKim/array-utils),  
