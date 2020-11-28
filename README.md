@@ -37,10 +37,13 @@ You can get any updates or progress on my [Discord Server](https://discord.gg/Py
 ### Dependencies
 
 - Plugin
-[DEVirion](https://github.com/poggit/devirion) - Plugin that will allow virions to work on your server. (not a virion, put it in ``/plugins`` folder)
+
+[DEVirion](https://github.com/poggit/devirion),  
+Plugin that will allow virions to work on your server. (not a virion, put it in ``/plugins`` folder)
 
 - Virions / API Librarys
-[InvMenu](https://github.com/Muqsit/InvMenu),  [Array-Utils](https://github.com/PresentKim/array-utils),  [Png-converter](https://github.com/PresentKim/png-converter).
+_
+[InvMenu](https://github.com/Muqsit/InvMenu),  [Array-Utils](https://github.com/PresentKim/array-utils),  [Png-converter](https://github.com/PresentKim/png-converter),  
 These virions are needed in order for the plugin to function properly.
 
 ### Default Configuration
