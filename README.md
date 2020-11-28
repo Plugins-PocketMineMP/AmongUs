@@ -30,9 +30,15 @@ You can get any updates or progress on my [Discord](https://discord.gg/Py2vSwg3B
 
 ### Download/Installation
 
-- Check Releases for **.phar** download
+- Go to Poggit dev builds or Click the Download Source Code form github.
 - Put the plugin in ``/plugins`` Folder
 - and restart server and edit config.yml
+- You also need these following virions.
+ 
+[DEVirion](https://github.com/poggit/devirion),  
+[InvMenu](https://github.com/Muqsit/InvMenu),  
+[Array-Utils](https://github.com/PresentKim/array-utils),  
+[Png-converter](https://github.com/PresentKim/png-converter). 
 
 ### Default Configuration
 
