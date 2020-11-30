@@ -678,7 +678,7 @@ class Game{
 				$this->spawnPos->getX(),
 				$this->spawnPos->getY(),
 				$this->spawnPos->getZ(),
-				$this->spawnPos->getLevel()->getFolderName()
+				$this->spawnPos->getLevelNonNull()->getFolderName()
 			]),
 			"objectives" => $objectives,
 			"mapId" => $this->mapId,
