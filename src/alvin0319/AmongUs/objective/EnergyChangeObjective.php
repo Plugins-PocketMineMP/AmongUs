@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\object;
+namespace alvin0319\AmongUs\objective;
 
 use alvin0319\AmongUs\AmongUs;
 use muqsit\invmenu\InvMenu;

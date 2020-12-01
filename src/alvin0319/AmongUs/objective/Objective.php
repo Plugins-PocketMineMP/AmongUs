@@ -30,7 +30,7 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\object;
+namespace alvin0319\AmongUs\objective;
 
 use pocketmine\level\Position;
 use pocketmine\Player;

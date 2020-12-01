@@ -30,7 +30,7 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\object;
+namespace alvin0319\AmongUs\objective;
 
 final class ObjectiveQueue{
 	/** @var bool[] */

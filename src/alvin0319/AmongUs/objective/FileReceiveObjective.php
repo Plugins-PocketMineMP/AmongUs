@@ -30,7 +30,7 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\object;
+namespace alvin0319\AmongUs\objective;
 
 use alvin0319\AmongUs\AmongUs;
 use muqsit\invmenu\InvMenu;
@@ -45,10 +45,10 @@ use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 
-class FileSendObjective extends Objective{
+class FileReceiveObjective extends Objective{
 
 	public function getName() : string{
-		return "File send";
+		return "File receive";
 	}
 
 	public function onInteract(Player $player) : void{
@@ -67,7 +67,7 @@ class FileSendObjective extends Objective{
 			return;
 		}
 		$menu = InvMenu::create(InvMenu::TYPE_CHEST);
-		$menu->setName("File Upload");
+		$menu->setName("File Download");
 		$inv = $menu->getInventory();
 
 		$ironBar = ItemFactory::get(ItemIds::IRON_BARS);
@@ -76,19 +76,19 @@ class FileSendObjective extends Objective{
 		$inv->setItem(16, $ironBar);
 
 		$bed = ItemFactory::get(BlockIds::BED_BLOCK);
-		$bed->setCustomName("§lStart uploading");
+		$bed->setCustomName("§lStart Downloading");
 		$bed->setNamedTagEntry(new IntTag("start"));
 		$inv->setItem(22, $bed);
 		//10(iron_bars), 16(iron_bars), 22(bed)
 
-		ObjectiveQueue::$fileSendQueue[$player->getName()] = false;
+		ObjectiveQueue::$fileReceiveQueue[$player->getName()] = false;
 
 		$menu->setInventoryCloseListener(function(Player $player) use ($character, $game) : void{
-			if(ObjectiveQueue::$fileSendQueue[$player->getName()]){
+			if(ObjectiveQueue::$fileReceiveQueue[$player->getName()]){
 				$character->completeObjective($this);
 				$game->addProgress();
 			}
-			unset(ObjectiveQueue::$fileSendQueue[$player->getName()]);
+			unset(ObjectiveQueue::$fileReceiveQueue[$player->getName()]);
 		});
 
 		$menu->setListener(function(InvMenuTransaction $action) use ($menu) : InvMenuTransactionResult{
