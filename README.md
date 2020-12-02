@@ -41,8 +41,9 @@ it's not Fixed, so manually fix it.
 ### Dependencies
 
 - Plugins
+
 [DEVirion](https://github.com/poggit/devirion)   
-Plugin that will allow virions to work on your server. (this is %not a virion, put it in ``/plugins`` folder)  
+Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder)  
 
 [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer)  
 
