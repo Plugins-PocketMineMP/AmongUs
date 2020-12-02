@@ -190,7 +190,9 @@ class Game{
 		AmongUs::getInstance()->copyWorld($this, function() : void{
 			Server::getInstance()->loadLevel(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}");
 			$this->fixPos();
+			var_dump($this->rawVents);
 			$this->vents = array_map(function(string $data) : Position{
+				var_dump($data);
 				[$x, $y, $z] = explode(":", $data);
 				return new Position((float) $x, (float) $y, (float) $z, Server::getInstance()->getLevelByName(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}"));
 			}, $this->rawVents);
@@ -501,7 +503,7 @@ class Game{
 	}
 
 	private function checkVote() : void{
-		if(count($this->voteQueue) === count($this->filterCrewmates())){
+		if(count($this->voteQueue) === count($this->filterCrewmates() + $this->filterImposters())){
 			$this->endEmergencyTime();
 		}
 	}
