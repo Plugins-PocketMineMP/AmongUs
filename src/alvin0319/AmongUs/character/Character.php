@@ -35,7 +35,7 @@ namespace alvin0319\AmongUs\character;
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\event\PlayerObjectiveCompleteEvent;
 use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\object\Objective;
+use alvin0319\AmongUs\objective\Objective;
 use pocketmine\entity\Skin;
 use pocketmine\item\Item;
 use pocketmine\level\sound\GenericSound;

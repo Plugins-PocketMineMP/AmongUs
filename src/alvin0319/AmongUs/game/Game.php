@@ -39,7 +39,7 @@ use alvin0319\AmongUs\character\Imposter;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\event\GameEndEvent;
 use alvin0319\AmongUs\event\GameStartEvent;
-use alvin0319\AmongUs\object\Objective;
+use alvin0319\AmongUs\objective\Objective;
 use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\task\DisplayTextTask;
 use alvin0319\SimpleMapRenderer\item\FilledMap;

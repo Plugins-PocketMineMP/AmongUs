@@ -33,7 +33,7 @@ declare(strict_types=1);
 namespace alvin0319\AmongUs\form\crew;
 
 use alvin0319\AmongUs\AmongUs;
-use alvin0319\AmongUs\object\ManifoldOpenObjective;
+use alvin0319\AmongUs\objective\ManifoldOpenObjective;
 use pocketmine\form\Form;
 use pocketmine\Player;
 

@@ -67,6 +67,8 @@ abstract class Objective{
 				return new FileSendObjective($pos);
 			case "Manifold open":
 				return new ManifoldOpenObjective($pos);
+			case "Trash receive":
+				return new TrashReceiveObjective($pos);
 			default:
 				return null;
 		}

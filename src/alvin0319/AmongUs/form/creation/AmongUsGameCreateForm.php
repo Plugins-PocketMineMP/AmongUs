@@ -35,7 +35,7 @@ namespace alvin0319\AmongUs\form\creation;
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\EventListener;
 use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\object\ObjectiveQueue;
+use alvin0319\AmongUs\objective\ObjectiveQueue;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\form\Form;
 use pocketmine\Player;

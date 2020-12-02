@@ -36,19 +36,18 @@ use alvin0319\AmongUs\AmongUs;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
-use pocketmine\block\BlockIds;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
-use pocketmine\level\sound\GenericSound;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
-use pocketmine\scheduler\ClosureTask;
 
-class FileSendObjective extends Objective{
+use function in_array;
+use function mt_rand;
+
+class TrashReceiveObjective extends Objective{
 
 	public function getName() : string{
-		return "File send";
+		return "Trash receive";
 	}
 
 	public function onInteract(Player $player) : void{
@@ -66,51 +65,61 @@ class FileSendObjective extends Objective{
 		if(!$character->hasObjective($this)){
 			return;
 		}
-		$menu = InvMenu::create(InvMenu::TYPE_CHEST);
-		$menu->setName("File Upload");
-		$inv = $menu->getInventory();
+		$menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
+		$menu->setName("Trash receive");
+		// 0~8: Iron bar
+		// 9, 17: Iron bar
+		// 18, 26: Iron bar
+		// 27, 35: Iron bar
+		// 36, 44: Iron bar
+		// 45~53: Iron bar
 
-		$ironBar = ItemFactory::get(ItemIds::IRON_BARS);
-		$ironBar->setCustomName("§l ");
-		$inv->setItem(10, $ironBar);
-		$inv->setItem(16, $ironBar);
+		$bars = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54];
+		$barItem = ItemFactory::get(ItemIds::IRON_BARS, 0, 1);
+		$barItem->setCustomName("§l ");
+		foreach($bars as $index){
+			$menu->getInventory()->setItem($index, $barItem);
+		}
+		$clearItem = ItemFactory::get(ItemIds::SIGN, 0, 1);
+		$clearItem->setCustomName("§fClick to collect trash...");
+		$clearItem->setNamedTagEntry(new StringTag("click"));
+		$menu->getInventory()->setItem(43, $clearItem);
 
-		$bed = ItemFactory::get(BlockIds::BED_BLOCK);
-		$bed->setCustomName("§lStart uploading");
-		$bed->setNamedTagEntry(new IntTag("start"));
-		$inv->setItem(22, $bed);
-		//10(iron_bars), 16(iron_bars), 22(bed)
+		$trashCount = mt_rand(3, 6);
 
-		ObjectiveQueue::$fileSendQueue[$player->getName()] = false;
+		$c = 0;
 
-		$menu->setInventoryCloseListener(function(Player $player) use ($character, $game) : void{
-			if(ObjectiveQueue::$fileSendQueue[$player->getName()]){
+		$trashItem = ItemFactory::get(ItemIds::TALL_GRASS, 0, 1);
+		$trashItem->setCustomName("§cTrash");
+
+		for($i = 0; $i < 54; $i++){
+			if(!in_array($i, $bars) && $i !== 43){
+				if(mt_rand(0, 3) === 2 && $c < $trashCount){
+					$c++;
+					$menu->getInventory()->setItem($i, $trashItem);
+				}
+			}
+		}
+
+		$menu->setListener(function(InvMenuTransaction $action) use ($player, $menu, $character, $game) : InvMenuTransactionResult{
+			$player->getCursorInventory()->sendSlot(0, $player);
+
+			$item = $action->getOut();
+
+			if($item->getNamedTagEntry("click") === null){
+				return $action->discard();
+			}
+			$first = $menu->getInventory()->first(ItemFactory::get(ItemIds::TALL_GRASS, 0, 1));
+
+			if($first === -1){
 				$character->completeObjective($this);
 				$game->addProgress();
+				$menu->onClose($player);
+				return $action->discard();
 			}
-			unset(ObjectiveQueue::$fileSendQueue[$player->getName()]);
-		});
-
-		$menu->setListener(function(InvMenuTransaction $action) use ($menu) : InvMenuTransactionResult{
-			$player = $action->getPlayer();
-			$item = $action->getOut();
-			if($item->getNamedTagEntry("start") !== null){
-				$c = 0;
-				$handler = null;
-				$handler = AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(int $unused) use ($menu, $player, &$handler, &$c) : void{
-					if(++$c < 4){
-						$slot = 15 - (4 - $c);
-						$menu->getInventory()->setItem($slot, ItemFactory::get(ItemIds::EMERALD));
-					}else{
-						ObjectiveQueue::$fileSendQueue[$player->getName()] = true;
-						$menu->onClose($player);
-						$handler->cancel();
-						$handler = null;
-					}
-				}), 20);
-			}
-			$player->getCursorInventory()->sendSlot(0, $player);
+			$menu->getInventory()->setItem($first, ItemFactory::get(0));
 			return $action->discard();
 		});
+		$menu->send($player);
 	}
 }

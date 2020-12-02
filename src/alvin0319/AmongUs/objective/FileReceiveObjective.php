@@ -96,7 +96,8 @@ class FileReceiveObjective extends Objective{
 			$item = $action->getOut();
 			if($item->getNamedTagEntry("start") !== null){
 				$c = 0;
-				$handler = AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(int $unused) use ($menu, $player, &$handler, $c) : void{
+				$handler = null;
+				$handler = AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(int $unused) use ($menu, $player, &$handler, &$c) : void{
 					if(++$c < 4){
 						$slot = 15 - (4 - $c);
 						$menu->getInventory()->setItem($slot, ItemFactory::get(ItemIds::EMERALD));
@@ -104,6 +105,7 @@ class FileReceiveObjective extends Objective{
 						ObjectiveQueue::$fileSendQueue[$player->getName()] = true;
 						$menu->onClose($player);
 						$handler->cancel();
+						$handler = null;
 					}
 				}), 20);
 			}

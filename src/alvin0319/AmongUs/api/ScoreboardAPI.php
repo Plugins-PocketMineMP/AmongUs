@@ -32,22 +32,40 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\api;
 
+use alvin0319\AmongUs\AmongUs;
 use pocketmine\Player;
 
 final class ScoreboardAPI{
 	/** @var Scoreboard[] */
 	private static $scoreBoards = [];
 
-	public static function addPlayer(Player $player, string $title, array $lines = []){
-		self::$scoreBoards[$player->getName()] = new Scoreboard($player);
-		self::$scoreBoards[$player->getName()]->sendLine($title, $lines);
+	public static $supportScoreboard = false;
+
+	private function __construct(){
+		// NOOP
+	}
+
+	public static function init() : void{
+		self::$supportScoreboard = AmongUs::getInstance()->getConfig()->get("support_scoreboard", false);
+	}
+
+	public static function addPlayer(Player $player, string $title, array $lines = []) : void{
+		if(self::$supportScoreboard){
+			self::$scoreBoards[$player->getName()] = new Scoreboard($player);
+			self::$scoreBoards[$player->getName()]->sendLine($title, $lines);
+		}
 	}
 
 	public static function removePlayer(Player $player) : void{
-		unset(self::$scoreBoards[$player->getName()]);
+		if(self::$supportScoreboard){
+			unset(self::$scoreBoards[$player->getName()]);
+		}
 	}
 
 	public static function getScoreboard(Player $player) : ?Scoreboard{
-		return self::$scoreBoards[$player->getName()];
+		if(!self::$supportScoreboard){
+			return null;
+		}
+		return self::$scoreBoards[$player->getName()] ?? null;
 	}
 }
