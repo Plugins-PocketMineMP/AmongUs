@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs;
 
+use alvin0319\AmongUs\api\ScoreboardAPI;
 use alvin0319\AmongUs\command\AmongUsCommand;
 use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
@@ -138,6 +139,8 @@ class AmongUs extends PluginBase{
 			new AmongUsCommand(),
 			new AmongUsManageCommand()
 		]);
+
+		ScoreboardAPI::init();
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}

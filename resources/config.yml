@@ -13,3 +13,5 @@ max_games: 4
 
 # Select which world should the game be made.
 world_name: amongus
+
+support_scoreboard: false
