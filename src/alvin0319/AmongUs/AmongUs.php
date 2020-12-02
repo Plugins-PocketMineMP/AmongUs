@@ -38,7 +38,7 @@ use alvin0319\AmongUs\command\AmongUsManageCommand;
 use alvin0319\AmongUs\entity\DeadPlayerEntity;
 use alvin0319\AmongUs\entity\VentEntity;
 use alvin0319\AmongUs\game\Game;
-use alvin0319\AmongUs\object\Objective;
+use alvin0319\AmongUs\objective\Objective;
 use alvin0319\AmongUs\task\WorldCopyAsyncTask;
 use alvin0319\AmongUs\task\WorldDeleteAsyncTask;
 use Closure;
