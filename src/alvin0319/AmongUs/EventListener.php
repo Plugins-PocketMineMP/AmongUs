@@ -51,6 +51,7 @@ use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\Player;
 
+use function strpos;
 use function substr;
 
 class EventListener implements Listener{
@@ -144,6 +145,9 @@ class EventListener implements Listener{
 				return;
 			}
 			if(!$game->isRunning()){
+				return;
+			}
+			if(strpos($message, "/amu") !== false){
 				return;
 			}
 			$event->setCancelled();
