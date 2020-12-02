@@ -6,7 +6,9 @@ namespace alvin0319\AmongUs\entity;
 
 use alvin0319\AmongUs\AmongUs;
 use alvin0319\AmongUs\character\Imposter;
+use alvin0319\AmongUs\form\imposter\VentForm;
 use pocketmine\entity\Human;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\Player;
 
@@ -21,6 +23,12 @@ class VentEntity extends Human{
 
 	public function attack(EntityDamageEvent $source) : void{
 		$source->setCancelled();
+		if($source instanceof EntityDamageByEntityEvent){
+			$damager = $source->getDamager();
+			if($damager instanceof Player){
+				$this->useVent($damager);
+			}
+		}
 	}
 
 	public function useVent(Player $player) : void{
@@ -40,6 +48,8 @@ class VentEntity extends Human{
 
 		$player->setInvisible(true);
 		$player->setImmobile(true);
+
+		$player->sendForm(new VentForm($player));
 	}
 
 	public function onUpdate(int $currentTick) : bool{

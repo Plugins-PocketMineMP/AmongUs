@@ -183,6 +183,7 @@ class EventListener implements Listener{
 			return;
 		}
 		$item = $event->getItem();
+		/*
 		if($item->getId() !== ItemIds::CLOCK){
 			return;
 		}
@@ -196,6 +197,33 @@ class EventListener implements Listener{
 			return;
 		}
 		$player->sendForm(new VoteImposterForm($game));
+		*/
+		switch(true){
+			case $item->getId() === ItemIds::CLOCK && $item->getDamage() === 10:
+				if(!$game->isRunning()){
+					return;
+				}
+				if(!$game->isEmergencyRunning()){
+					return;
+				}
+				if($game->isDead($player)){
+					return;
+				}
+				$player->sendForm(new VoteImposterForm($game));
+				break;
+			case $item->getId() === ItemIds::COMPASS && $item->getDamage() === 10:
+				if(!$game->isRunning()){
+					return;
+				}
+				if($game->isDead($player)){
+					return;
+				}
+				if(!$character instanceof Imposter){
+					return;
+				}
+				$game->spawnVents();
+				$player->sendMessage(AmongUs::$prefix . "Fixed vents.");
+		}
 	}
 
 	public function onPlayerJoin(PlayerJoinEvent $event) : void{

@@ -195,7 +195,6 @@ class Game{
 				[$x, $y, $z] = explode(":", $data);
 				return new Position((float) $x, (float) $y, (float) $z, Server::getInstance()->getLevelByName(AmongUs::getInstance()->getWorldName() . "_{$this->getId()}"));
 			}, $this->rawVents);
-			$this->spawnVents();
 		});
 	}
 
@@ -458,7 +457,38 @@ class Game{
 		}
 		arsort($res);
 
-		return Arr::sliceFrom($res, 0, 3)->map(function(string $posStr, int $distance) : Position{
+		/*
+		 * FIXME:
+		 * [17:12:38] [Server thread/CRITICAL]: TypeError: "Argument 1 passed to alvin0319\AmongUs\game\Game::alvin0319\AmongUs\game\{closure}() must be of the type string, float given, called in C:\Users\user\Desktop\MCBE\workspace\virions\arrayutils-main\src\kim\present\lib\arrayutils\ArrayUtils.php on line 620" (EXCEPTION) in "plugins/AmongUs/src/alvin0319/AmongUs/game/Game" at line 463
+		 * [17:12:38] [Server thread/CRITICAL]: #0 C:/Users/user/Desktop/MCBE/workspace/virions/arrayutils-main/src/kim/present/lib/arrayutils/ArrayUtils(620): alvin0319\AmongUs\game\Game->alvin0319\AmongUs\game\{closure}(double 1.2625895849404, string[9] 30:16:121, array[1])
+		 * [17:12:38] [Server thread/CRITICAL]: #1 C:/Users/user/Desktop/MCBE/workspace/virions/arrayutils-main/src/kim/present/lib/arrayutils/ArrayUtils(1024): kim\present\lib\arrayutils\ArrayUtils::__map(array[1], object Closure)
+		 * [17:12:38] [Server thread/CRITICAL]: #2 plugins/AmongUs/src/alvin0319/AmongUs/game/Game(466): kim\present\lib\arrayutils\ArrayUtils->__call(string[3] map, array[1])
+		 * [17:12:38] [Server thread/CRITICAL]: #3 plugins/AmongUs/src/alvin0319/AmongUs/form/imposter/VentForm(59): alvin0319\AmongUs\game\Game->getAvailableVents(object pocketmine\Player)
+		 * [17:12:38] [Server thread/CRITICAL]: #4 (): alvin0319\AmongUs\form\imposter\VentForm->jsonSerialize()
+		 * [17:12:38] [Server thread/CRITICAL]: #5 src/pocketmine/Player(3603): json_encode(object alvin0319\AmongUs\form\imposter\VentForm)
+		 * [17:12:38] [Server thread/CRITICAL]: #6 plugins/AmongUs/src/alvin0319/AmongUs/entity/VentEntity(52): pocketmine\Player->sendForm(object alvin0319\AmongUs\form\imposter\VentForm)
+		 * [17:12:38] [Server thread/CRITICAL]: #7 plugins/AmongUs/src/alvin0319/AmongUs/entity/VentEntity(29): alvin0319\AmongUs\entity\VentEntity->useVent(object pocketmine\Player)
+		 * [17:12:38] [Server thread/CRITICAL]: #8 src/pocketmine/Player(2699): alvin0319\AmongUs\entity\VentEntity->attack(object pocketmine\event\entity\EntityDamageByEntityEvent)
+		 * [17:12:38] [Server thread/CRITICAL]: #9 src/pocketmine/network/mcpe/PlayerNetworkSessionAdapter(149): pocketmine\Player->handleInventoryTransaction(object pocketmine\network\mcpe\protocol\InventoryTransactionPacket)
+		 * [17:12:38] [Server thread/CRITICAL]: #10 src/pocketmine/network/mcpe/protocol/InventoryTransactionPacket(173): pocketmine\network\mcpe\PlayerNetworkSessionAdapter->handleInventoryTransaction(object pocketmine\network\mcpe\protocol\InventoryTransactionPacket)
+		 * [17:12:38] [Server thread/CRITICAL]: #11 src/pocketmine/network/mcpe/PlayerNetworkSessionAdapter(109): pocketmine\network\mcpe\protocol\InventoryTransactionPacket->handle(object pocketmine\network\mcpe\PlayerNetworkSessionAdapter)
+		 * [17:12:38] [Server thread/CRITICAL]: #12 src/pocketmine/network/mcpe/protocol/BatchPacket(130): pocketmine\network\mcpe\PlayerNetworkSessionAdapter->handleDataPacket(object pocketmine\network\mcpe\protocol\InventoryTransactionPacket)
+		 * [17:12:38] [Server thread/CRITICAL]: #13 src/pocketmine/network/mcpe/PlayerNetworkSessionAdapter(109): pocketmine\network\mcpe\protocol\BatchPacket->handle(object pocketmine\network\mcpe\PlayerNetworkSessionAdapter)
+		 * [17:12:38] [Server thread/CRITICAL]: #14 src/pocketmine/Player(3273): pocketmine\network\mcpe\PlayerNetworkSessionAdapter->handleDataPacket(object pocketmine\network\mcpe\protocol\BatchPacket)
+		 * [17:12:38] [Server thread/CRITICAL]: #15 src/pocketmine/network/mcpe/RakLibInterface(169): pocketmine\Player->handleDataPacket(object pocketmine\network\mcpe\protocol\BatchPacket)
+		 * [17:12:38] [Server thread/CRITICAL]: #16 vendor/pocketmine/raklib/src/server/ServerHandler(95): pocketmine\network\mcpe\RakLibInterface->handleEncapsulated(string[15] 127.0.0.1 60658, object raklib\protocol\EncapsulatedPacket, integer 0)
+		 * [17:12:38] [Server thread/CRITICAL]: #17 src/pocketmine/network/mcpe/RakLibInterface(109): raklib\server\ServerHandler->handlePacket()
+		 * [17:12:38] [Server thread/CRITICAL]: #18 src/pocketmine/network/mcpe/RakLibInterface(99): pocketmine\network\mcpe\RakLibInterface->process()
+		 * [17:12:38] [Server thread/CRITICAL]: #19 vendor/pocketmine/snooze/src/SleeperHandler(123): pocketmine\network\mcpe\RakLibInterface->pocketmine\network\mcpe\{closure}()
+		 * [17:12:38] [Server thread/CRITICAL]: #20 vendor/pocketmine/snooze/src/SleeperHandler(85): pocketmine\snooze\SleeperHandler->processNotifications()
+		 * [17:12:38] [Server thread/CRITICAL]: #21 src/pocketmine/Server(2157): pocketmine\snooze\SleeperHandler->sleepUntil(double 1606900358.487)
+		 * [17:12:38] [Server thread/CRITICAL]: #22 src/pocketmine/Server(1994): pocketmine\Server->tickProcessor()
+		 * [17:12:38] [Server thread/CRITICAL]: #23 src/pocketmine/Server(1588): pocketmine\Server->start()
+		 * [17:12:38] [Server thread/CRITICAL]: #24 src/pocketmine/PocketMine(273): pocketmine\Server->__construct(object BaseClassLoader, object pocketmine\utils\MainLogger, string[37] C:\Users\user\Desktop\MCBE\workspace\, string[45] C:\Users\user\Desktop\MCBE\workspace\plugins\)
+		 * [17:12:38] [Server thread/CRITICAL]: #25 src/pocketmine/PocketMine(304): pocketmine\server()
+		 * [17:12:38] [Server thread/CRITICAL]: #26 (11): require(string[92] phar://C:/Users/user/Desktop/MCBE/workspace/PocketMine-MP.phar/src/pocketmine/Po)
+		 */
+		return Arr::sliceFrom($res, 0, 3, true)->map(function(string $posStr, int $distance) : Position{
 			[$x, $y, $z] = explode(":", $posStr);
 			return new Position((float) $x, (float) $y, (float) $z, $this->spawnPos->getLevel());
 		})->valuesAs();
@@ -632,6 +662,8 @@ class Game{
 			$player->setGamemode(Player::SURVIVAL);
 		}
 		$this->giveDefaultKits();
+
+		$this->spawnVents();
 	}
 
 	private function end(string $winner) : void{
@@ -673,7 +705,7 @@ class Game{
 			}
 		}
 		foreach($this->getPlayers() as $player){
-			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 0, 1)->setCustomName("Vote"));
+			$player->getInventory()->addItem(ItemFactory::get(ItemIds::CLOCK, 10, 1)->setCustomName("Vote"));
 			$character = $this->getCharacter($player);
 			if($character !== null){
 				$player->getInventory()->addItem(...$character->getItems());
