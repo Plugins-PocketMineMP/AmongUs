@@ -57,6 +57,10 @@ class AmongUsCommand extends PluginCommand{
 		}
 		switch($args[0] ?? "x"){
 			case "join":
+				if(AmongUs::getInstance()->getGameByPlayer($sender) !== null){
+					$sender->sendMessage(AmongUs::$prefix . "You can't join at this time.");
+					break;
+				}
 				$game = AmongUs::getInstance()->getAvailableGame($sender);
 				if($game === null){
 					$sender->sendMessage(AmongUs::$prefix . "There are no available games right now. (all games are currently running!)");
