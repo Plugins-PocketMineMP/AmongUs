@@ -57,6 +57,7 @@ use pocketmine\Server;
 
 use function array_filter;
 use function array_map;
+use function array_rand;
 use function array_search;
 use function array_values;
 use function arsort;
@@ -329,8 +330,12 @@ class Game{
 		$player->setFlying(true);
 
 		if($killer !== null){
-			$messages = [];
-			$player->sendTitle("§c§l[ §f! §c]", "You've been killed by " . $killer->getName() . "!");
+			$messages = [
+				"You've been killed by §c" . $killer->getName() . "§f!",
+				"You've shot by §c" . $killer->getName() . "§f!",
+				"You been back stabbed by §c" . $killer->getName() . "§f!"
+			];
+			$player->sendTitle("§c§l[ §f! §c]", $messages[array_rand($messages)]);
 			$this->killCooldowns[$killer->getName()] = time();
 			$nbt = Entity::createBaseNBT($player);
 			$nbt->setTag(new CompoundTag("Skin", [
