@@ -9,6 +9,8 @@ This project is still in progress, if you want to contribute my project, make a 
 
 You can get any updates or progress on my [Discord Server](https://discord.gg/Py2vSwg3B3).
 
+If you have any problems please open a issue or join our discord server for support.
+
 
 ## Changelogs
 
@@ -33,19 +35,23 @@ You can get any updates or progress on my [Discord Server](https://discord.gg/Py
 - Put the plugin in ``/plugins`` Folder
 - and put the virions in ``/virions`` folder after adding devirion.
 - and restart server and edit config.yml
-- If you want the AmongUsSkeld Map [here](https://cdn.discordapp.com/attachments/773847823955263518/776089161765486613/world.zip),  
+- If you want the AmongUsSkeld Map [here](https://cdn.discordapp.com/attachments/773847823955263518/776089161765486613/world.zip),   
 it's not Fixed, so manually fix it.
 
 ### Dependencies
 
+- Plugins
 [DEVirion](https://github.com/poggit/devirion)   
-Plugin that will allow virions to work on your server. (not a virion, put it in ``/plugins`` folder)  
+Plugin that will allow virions to work on your server. (this is %not a virion, put it in ``/plugins`` folder)  
 
-- Virions / API Librarys
+[SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer)  
 
-[InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils), [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer), [png-converter](https://github.com/PresentKim/png-converter)
+- Virions
+
+[InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils),  [png-converter](https://github.com/PresentKim/png-converter) 
 
 These virions are needed in order for the plugin to function properly.
+
 
 ### Default Configuration
 

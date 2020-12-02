@@ -222,7 +222,7 @@ class EventListener implements Listener{
 					return;
 				}
 				$game->spawnVents();
-				$player->sendMessage(AmongUs::$prefix . "Fixed vents.");
+				$player->sendMessage(AmongUs::$prefix . "Spawned all vents.");
 		}
 	}
 

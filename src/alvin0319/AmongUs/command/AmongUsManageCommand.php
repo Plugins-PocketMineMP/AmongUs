@@ -57,7 +57,7 @@ class AmongUsManageCommand extends PluginCommand{
 
 	public function __construct(){
 		parent::__construct("amongusmanage", AmongUs::getInstance());
-		$this->setDescription("Manage AmongUS Game setting");
+		$this->setDescription("Manage AmongUs game settings");
 		$this->setPermission("amongus.command.manage");
 		$this->setAliases(["aum", "amum"]);
 	}
@@ -152,12 +152,14 @@ class AmongUsManageCommand extends PluginCommand{
 				$entity->setImmobile(true);
 				$entity->setNameTag("VENT");
 				$entity->spawnToAll();
-				$sender->sendMessage("SUCCESS");
+				$sender->sendMessage("Vent Spawned Successfully!");
 				break;
 			default:
 				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} setmapimage [gameId]");
 				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} creategame");
 				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} createobjective");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} createvents");
+				$sender->sendMessage(AmongUs::$prefix . "/{$commandLabel} spawnvent");
 		}
 		return true;
 	}

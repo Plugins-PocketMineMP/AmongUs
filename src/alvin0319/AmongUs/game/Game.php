@@ -281,7 +281,7 @@ class Game{
 		}
 
 		$imposters = count($this->filterImposters());
-		$str = "§bThere are §f{$imposters} §cimposters §bbetween us";
+		$str = "§bThere are §f{$imposters} §cimposters §bamong us";
 
 		AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, $str, ""), 3);
 	}
@@ -330,9 +330,12 @@ class Game{
 
 		if($killer !== null){
 			$messages = [
-				"You've been killed by §c" . $killer->getName() . "§f!",
-				"You've shot by §c" . $killer->getName() . "§f!",
-				"You been back stabbed by §c" . $killer->getName() . "§f!"
+				"You were killed by §c" . $killer->getName() . "§f!",
+				"§c" . $killer->getName() . "§fswallowed you! §c",
+				"You were shot by §c" . $killer->getName() . "§f!",
+				"§c" . $killer->getName() . "§fsnapped your neck" . "§f!",
+				"You were killed by §c" . $killer->getName() . "§fusing magic" . "§f!",
+				"You were stabbed by §c" . $killer->getName() . "§f!"
 			];
 			$player->sendTitle("§c§l[ §f! §c]", $messages[array_rand($messages)]);
 			$this->killCooldowns[$killer->getName()] = time();
@@ -415,13 +418,13 @@ class Game{
 			return;
 		}
 		if(in_array($player->getName(), $this->voteQueue)){
-			$player->sendMessage(AmongUs::$prefix . "You've been already voted.");
+			$player->sendMessage(AmongUs::$prefix . "You have already voted.");
 			return;
 		}
 		$this->voteQueue[] = $player->getName();
 		$this->votes[$target] += 1;
 
-		$player->sendMessage(AmongUs::$prefix . "You've voted out " . $target);
+		$player->sendMessage(AmongUs::$prefix . "You've voted for " . $target);
 		$this->checkVote();
 	}
 
@@ -520,13 +523,13 @@ class Game{
 		}
 
 		if($duplicate){
-			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one ejected (skipped)", "There are " . count($this->filterImposters()) . " imposters left"), 3);
+			AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one ejected (skipped)", "There are " . count($this->filterImposters()) . " impostors left"), 3);
 		}else{
 			$character = $this->imposters[$topVote] ?? $this->crews[$topVote] ?? null;
 			if($character === null){
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one ejected (skipped)", count($this->filterImposters()) . " imposters remain"), 3);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "No one ejected (skipped)", count($this->filterImposters()) . " impostors remaining"), 3);
 			}else{
-				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "was the" : "not the") . " imposter", count($this->filterImposters()) . " remain"), 3);
+				AmongUs::getInstance()->getScheduler()->scheduleRepeatingTask(new DisplayTextTask($this, "{$topVote} was " . ($character instanceof Imposter ? "was the" : "not the") . " impostors", count($this->filterImposters()) . " remaining"), 3);
 				$this->killPlayer(AmongUs::getInstance()->getServer()->getPlayerExact($topVote));
 			}
 		}
@@ -667,7 +670,7 @@ class Game{
 	}
 
 	private function end(string $winner) : void{
-		$this->broadcastMessage($winner . " win!");
+		$this->broadcastMessage($winner . " won!");
 		(new GameEndEvent($this, $winner))->call();
 		foreach($this->getPlayers() as $player){
 			$player->teleport($player->getServer()->getDefaultLevel()->getSafeSpawn());

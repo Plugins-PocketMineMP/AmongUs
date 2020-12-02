@@ -84,7 +84,7 @@ class ScanObjective extends Objective{
 				$handler = null;
 				$character->completeObjective($this);
 				$game->addProgress();
-				$player->sendTitle("Scanning complete!", "You are crewmate!");
+				$player->sendTitle("Scanning complete!", "You are a crewmate!");
 			}
 		}), 20);
 	}
