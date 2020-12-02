@@ -48,6 +48,7 @@ use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\StringTag;
@@ -442,6 +443,20 @@ class Game{
 		]));
 		$entity = Entity::createEntity("Vent", $pos->getLevel(), $nbt);
 		$entity->spawnToAll();
+	}
+
+	public function getAvailableVents(Vector3 $pos) : array{
+		$res = [];
+		foreach($this->vents as $vent){
+			$posStr = implode(":", [$vent->getX(), $vent->getY(), $vent->getZ()]);
+			$res[$posStr] = $pos->distance($vent);
+		}
+		arsort($res);
+
+		return Arr::sliceFrom($res, 0, 3)->map(function(string $posStr, int $distance) : Position{
+			[$x, $y, $z] = explode(":", $posStr);
+			return new Position((float) $x, (float) $y, (float) $z, $this->spawnPos->getLevel());
+		})->valuesAs();
 	}
 
 	public function endEmergencyTime() : void{

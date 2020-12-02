@@ -74,6 +74,8 @@ class AmongUs extends PluginBase{
 	protected $data = [];
 	/** @var Skin|null */
 	protected $ventSkin = null;
+	/** @var Skin|null */
+	protected $openVentSkin = null;
 
 	public function onLoad() : void{
 		self::$instance = $this;
@@ -101,6 +103,8 @@ class AmongUs extends PluginBase{
 		$skinImage = PngConverter::toSkinImageFromFile($this->getDataFolder() . "vent.png");
 
 		$this->ventSkin = new Skin("Standard_Custom", $skinImage->getData(), "", "geometry.vent", file_get_contents($this->getDataFolder() . "vent.json"));
+
+		$this->openVentSkin = new Skin("Standard_Custom", $skinImage->getData(), "", "geometry.vent_open", file_get_contents($this->getDataFolder() . "vent_open.json"));
 
 		Entity::registerEntity(DeadPlayerEntity::class, true, ["DeadPlayerEntity"]);
 		Entity::registerEntity(VentEntity::class, true, ["Vent"]);
@@ -165,6 +169,10 @@ class AmongUs extends PluginBase{
 		return $this->ventSkin;
 	}
 
+	public function getOpenVentSkin() : ?Skin{
+		return $this->openVentSkin;
+	}
+
 	public function registerGame(Game $game) : void{
 		$this->games[$game->getId()] = $game;
 	}
@@ -215,7 +223,6 @@ class AmongUs extends PluginBase{
 			if($world !== null){
 				$this->getServer()->unloadLevel($world);
 			}
-			$this->getServer()->unloadLevel($world);
 			$this->getServer()->getAsyncPool()->submitTask(new WorldDeleteAsyncTask($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/", $successCallback));
 		}
 	}
