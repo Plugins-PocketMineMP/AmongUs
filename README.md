@@ -3,7 +3,11 @@
 A PocketMine-MP mini-game Plugin called AmongUs
 This is simlar to the AmongUs game but in MCBE.
 
-Join our [![Test Server](https://cdn.discordapp.com/attachments/773833936942006286/784003480205393950/images.jpeg)](minecraft://?addExternalServer=AmongUs test server|test.alvin0319.ml:25578)
+Join our Test Server
+```
+🔹️IP: test.alvin0319.ml
+🔸️Port: 25578
+```
 
 ## This is yet not completed!
 
