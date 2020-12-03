@@ -40,18 +40,17 @@ it's not Fixed, so manually fix it.
 
 ### Dependencies
 
-- Plugins
+##### Plugins
 
-[DEVirion](https://github.com/poggit/devirion)   
-Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder)  
+* [DEVirion](https://github.com/poggit/devirion)   
+> Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder)  
 
 [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer)  
 
-- Virions
+##### Virions
 
-[InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils),  [png-converter](https://github.com/PresentKim/png-converter) 
-
-These virions are needed in order for the plugin to function properly.
+* [InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils),  [png-converter](https://github.com/PresentKim/png-converter) 
+> These virions are needed in order for the plugin to function properly.
 
 
 ### Default Configuration
