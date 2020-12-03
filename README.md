@@ -3,7 +3,7 @@
 A PocketMine-MP mini-game Plugin called AmongUs
 This is simlar to the AmongUs game but in MCBE.
 
-Join our <a href="minecraft://?addExternalServer=Among Us test server|test.alvin0319.ml:25578">Test server</a>
+Join our <a href="minecraft://?addExternalServer=Among Us test server|test.alvin0319.ml:25578">AmongUs test server</a>
 ```
 🔹️IP: test.alvin0319.ml
 🔸️Port: 25578
@@ -47,13 +47,9 @@ it's not Fixed, so manually fix it.
 
 ##### Plugins
 
+* [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),
 * [DEVirion](https://github.com/poggit/devirion)   
-> Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder) 
- 
-[SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),
-[DEVirion](https://github.com/poggit/devirion)
-
-DEVirion will allow virions to work on your server. (these are not virions, put it in ``/plugins`` folder)  
+> DEVirion will allow virions to work on your server. (these are not virions, put it in ``/plugins`` folder)  
 
 ##### Virions
 
