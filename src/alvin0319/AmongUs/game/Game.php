@@ -76,6 +76,8 @@ class Game{
 
 	public const TEAM_CREWMATE = "crewmate";
 
+	public const TEAM_NONE = "none";
+
 	public const SETTING_MAX_IMPOSTERS = "max_imposter";
 
 	public const SETTING_MAX_CREW = "max_crew";
@@ -361,6 +363,9 @@ class Game{
 			$this->end(self::TEAM_IMPOSTER);
 			return;
 		}
+		if(count($this->players) <= 1){
+			$this->end(self::TEAM_NONE);
+		}
 	}
 
 	public function isDead(Player $player) : bool{
@@ -640,13 +645,14 @@ class Game{
 	}
 
 	private function end(string $winner) : void{
-		$this->broadcastMessage($winner . " won!");
+		$this->broadcastMessage(($winner === self::TEAM_NONE ? "Draw" : $winner . " won!"));
 		(new GameEndEvent($this, $winner))->call();
 		foreach($this->getPlayers() as $player){
 			$player->teleport($player->getServer()->getDefaultLevel()->getSafeSpawn());
 			$player->getInventory()->clearAll();
 			$player->setGamemode(Player::SURVIVAL);
 			$player->setInvisible(false);
+			$player->setImmobile(false);
 		}
 		$this->reset();
 	}
