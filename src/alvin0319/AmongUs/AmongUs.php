@@ -219,7 +219,7 @@ class AmongUs extends PluginBase{
 
 	private function deleteWorld(Game $game, Closure $successCallback) : void{
 		if(is_dir($dir = $this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name") . "_{$game->getId()}/")){
-			$world = $this->getServer()->getLevelByName($this->getConfig()->get("world_name") . "_{$game->getId()}/");
+			$world = $this->getServer()->getLevelByName($this->getConfig()->get("world_name") . "_{$game->getId()}");
 			if($world !== null){
 				$this->getServer()->unloadLevel($world);
 			}

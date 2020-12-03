@@ -52,6 +52,8 @@ it's not Fixed, so manually fix it.
 * [InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils),  [png-converter](https://github.com/PresentKim/png-converter) 
 > These virions are needed in order for the plugin to function properly.
 
+##### Extensions
+* [GD](https://www.php.net/manual/en/book.image.php) extension **MUST** installed in your php binary.
 
 ### Default Configuration
 
