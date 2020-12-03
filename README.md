@@ -3,6 +3,12 @@
 A PocketMine-MP mini-game Plugin called AmongUs
 This is simlar to the AmongUs game but in MCBE.
 
+Join our Test Server
+```
+🔹️IP: test.alvin0319.ml
+🔸️Port: 25578
+```
+
 ## This is yet not completed!
 
 This project is still in progress, if you want to contribute my project, make a pull request!
@@ -10,7 +16,6 @@ This project is still in progress, if you want to contribute my project, make a 
 You can get any updates or progress on my [Discord Server](https://discord.gg/Py2vSwg3B3).
 
 If you have any problems please open a issue or join our discord server for support.
-
 
 ## Changelogs
 
@@ -42,10 +47,10 @@ it's not Fixed, so manually fix it.
 
 - Plugins
 
+[SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),  
 [DEVirion](https://github.com/poggit/devirion)   
-Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder)  
 
-[SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer)  
+DEVirion will allow virions to work on your server. (these are not virions, put it in ``/plugins`` folder)  
 
 - Virions
 
