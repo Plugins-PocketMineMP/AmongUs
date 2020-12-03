@@ -47,13 +47,11 @@ it's not Fixed, so manually fix it.
 
 ##### Plugins
 
-<<<<<<< HEAD
 * [DEVirion](https://github.com/poggit/devirion)   
-> Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder)  
-=======
-[SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),  
-[DEVirion](https://github.com/poggit/devirion)   
->>>>>>> f62f298ccc5e72f3bdd43752fce7265bcf0df8ca
+> Plugin that will allow virions to work on your server. (this is not a virion, put it in ``/plugins`` folder) 
+ 
+[SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),
+[DEVirion](https://github.com/poggit/devirion)
 
 DEVirion will allow virions to work on your server. (these are not virions, put it in ``/plugins`` folder)  
 
