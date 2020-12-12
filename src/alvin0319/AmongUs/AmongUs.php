@@ -89,7 +89,7 @@ class AmongUs extends PluginBase{
 			return;
 		}
 		$this->saveDefaultConfig();
-		if(!is_dir($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name", ""))){
+		if(!is_dir($this->getServer()->getDataPath() . "worlds/" . $this->getConfig()->get("world_name", "amongus"))){
 			$this->getLogger()->critical("The world set in config was not loaded or couldn't be found.");
 		}
 		if(!InvMenuHandler::isRegistered()){
