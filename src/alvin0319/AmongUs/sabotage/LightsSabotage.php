@@ -1,5 +1,4 @@
 <?php
-
 /*
  *      _                                _   _
  *    / \   _ __ ___   ___  _ __   __ _| | | |___
@@ -32,45 +31,33 @@ declare(strict_types=1);
 
 namespace alvin0319\AmongUs\sabotage;
 
-use pocketmine\event\Listener;
-use pocketmine\level\Position;
+use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
 use pocketmine\Player;
-use alvin0319\AmongUs\form\SabotageForm;
-use alvin0319\AmongUs\game\Game;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use alvin0319\AmongUs\AmongUs;
-use alvin0319\AmongUs\sabotage\LightsSabotage;
+use alvin0319\AmongUs\game\Game;
+use alvin0319\AmongUs\character\Character;
+use alvin0319\AmongUs\character\Crewmate;
 
-abstract class Sabotage implements Listener{
-	/** @var Position */
-	protected $pos;
-	/** @var Game */
-	protected $game;
+class LightsSabotage extends Sabotage {
 
-	public function __construct(Game $game, Position $pos){
-		$this->game = $game;
-		$this->pos = $pos;
-		$this->sabotagecooldown = AmongUs::getInstance()->getConfig()->get("sabotage_cooldown", 5);
+	public function onActivate(Player $player) : void{
+		foreach($this->game->filterCrewmates() as $crewmate){
+			$crewmate->getPlayer()->addEffect(new EffectInstance(Effect::getEffect(Effect::BLINDNESS), 20 * 1000, 0));
+		}
+		$this->game->broadcastMessage("Lights have been Sabotaged");
 	}
 
-	final public function getPosition() : Position{
-		return $this->pos;
-	}
-
-	/**
-	 * Called when imposters activate sabotage
-	 *
-	 * @param Player $player
-	 */
-	abstract public function onActivate(Player $player) : void;
-
-	/**
-	 * Called when crewmates or imposters interact sabotage
-	 *
-	 * @param Player $player
-	 */
-	abstract public function onInteract(Player $player) : void;
-
-	public function getCool() : int{
-		return 5;
+	public function onInteract(Player $player) : void{
+		$item = $player->getInventory()->getItemInHand();
+		
+		if($item->getId() == 143 and $item->getCustomName() == 'test'){
+			foreach($this->game->filterCrewmates() as $crewmate){
+				$crewmate->getPlayer()->removeAllEffects();
+			}
+			$this->game->broadcastMessage("§aLights has been fixed!");
+		}
 	}
 }

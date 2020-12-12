@@ -15,3 +15,5 @@ max_games: 4
 world_name: amongus
 
 support_scoreboard: false
+
+sabotage_cooldown: 5
