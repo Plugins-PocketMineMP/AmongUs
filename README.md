@@ -3,7 +3,7 @@
 A PocketMine-MP mini-game Plugin called AmongUs
 This is simlar to the AmongUs game but in MCBE.
 
-Join our <a href="minecraft://?addExternalServer=Among Us test server|test.alvin0319.ml:25578">AmongUs test server</a>
+Join our AmongUs test server (1.16.200)
 ```
 🔹️IP: test.alvin0319.ml
 🔸️Port: 25578
@@ -40,20 +40,19 @@ If you have any problems please open a issue or join our discord server for supp
 - Put the plugin in ``/plugins`` Folder
 - and put the virions in ``/virions`` folder after adding devirion.
 - and restart server and edit config.yml
-- If you want the AmongUsSkeld Map [here](https://cdn.discordapp.com/attachments/773847823955263518/776089161765486613/world.zip),   
+- If you want the AmongUs Skeld Map [Here](https://cdn.discordapp.com/attachments/773847823955263518/776089161765486613/world.zip),   
 it's not Fixed, so manually fix it.
 
 ### Dependencies
 
 ##### Plugins
 
-* [SimpleMapRenderer](https://github.com/alvin0319/SimpleMapRenderer),
-* [DEVirion](https://github.com/poggit/devirion)   
-> DEVirion will allow virions to work on your server. (these are not virions, put it in ``/plugins`` folder)  
+* [SimpleMapRenderer](https://poggit.pmmp.io/p/SimpleMapRenderer/1.0.0),   [DEVirion](https://github.com/poggit/devirion)    
+> DEVirion will allow virions to work on your server. (these are not virions, put these in ``/plugins`` folder)  
 
 ##### Virions
 
-* [InvMenu](https://github.com/Muqsit/InvMenu),  [array-utils](https://github.com/PresentKim/arrayutils),  [png-converter](https://github.com/PresentKim/png-converter) 
+* [InvMenu](https://github.com/Muqsit/InvMenu),   [array-utils](https://github.com/PresentKim/arrayutils),   [png-converter](https://github.com/PresentKim/png-converter) 
 > These virions are needed in order for the plugin to function properly.
 
 ##### Extensions
