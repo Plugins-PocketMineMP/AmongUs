@@ -49,7 +49,6 @@ abstract class Sabotage implements Listener{
 	public function __construct(Game $game, Position $pos){
 		$this->game = $game;
 		$this->pos = $pos;
-		$this->sabotagecooldown = AmongUs::getInstance()->getConfig()->get("sabotage_cooldown", 5);
 	}
 
 	final public function getPosition() : Position{
