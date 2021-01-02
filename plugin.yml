@@ -4,7 +4,6 @@ main: alvin0319\AmongUs\AmongUs
 version: 0.1.1
 api: 3.0.0
 website: https://github.com/alvin0319/AmongUs
-
 softdepend: ["SimpleMapRenderer"]
 
 permissions:

@@ -30,6 +30,7 @@ assignees: ''
  - OS:
  - PocketMine-MP version:
  - Plugin version:
+ - PHP version:
 
 **Additional context or Notes**
 <!-- Add any other context about the problem here. -->

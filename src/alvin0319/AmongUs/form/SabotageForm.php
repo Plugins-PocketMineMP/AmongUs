@@ -1,5 +1,4 @@
 <?php
-
 /*
  *      _                                _   _
  *    / \   _ __ ___   ___  _ __   __ _| | | |___
@@ -10,7 +9,7 @@
  *
  * A PocketMine-MP plugin that implements AmongUs
  *
- * Copyright (C) 2020 - 2021 alvin0319
+ * Copyright (C) 2020 alvin0319
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,46 +29,48 @@
 
 declare(strict_types=1);
 
-namespace alvin0319\AmongUs\sabotage;
+namespace alvin0319\AmongUs\form;
 
-use pocketmine\event\Listener;
-use pocketmine\level\Position;
-use pocketmine\Player;
-use alvin0319\AmongUs\form\SabotageForm;
-use alvin0319\AmongUs\game\Game;
 use alvin0319\AmongUs\AmongUs;
+use alvin0319\AmongUs\sabotage\Sabotage;
 use alvin0319\AmongUs\sabotage\LightsSabotage;
+use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
+use pocketmine\form\Form;
+use pocketmine\Player;
+use function is_int;
 
-abstract class Sabotage implements Listener{
-	/** @var Position */
-	protected $pos;
-	/** @var Game */
-	protected $game;
+class SabotageForm implements Form{
 
-	public function __construct(Game $game, Position $pos){
-		$this->game = $game;
-		$this->pos = $pos;
+	public function jsonSerialize() : array{
+		return [
+			"type" => "form",
+			"title" => "§6Sabotage Menu",
+			"content" => "§eChoose a option to Sabotage!",
+			"buttons" => [
+				["text" => "§aLights"],
+				["text" => "§aOxygen"],
+				["text" => "§aReactor"],
+				["text" => "§cExit Menu"]
+			]
+		];
 	}
 
-	final public function getPosition() : Position{
-		return $this->pos;
-	}
-
-	/**
-	 * Called when imposters activate sabotage
-	 *
-	 * @param Player $player
-	 */
-	abstract public function onActivate(Player $player) : void;
-
-	/**
-	 * Called when crewmates or imposters interact sabotage
-	 *
-	 * @param Player $player
-	 */
-	abstract public function onInteract(Player $player) : void;
-
-	public function getCool() : int{
-		return 5;
+	public function handleResponse(Player $player, $data) : void{
+		if(!is_int($data)){
+			return;
+		}
+		switch($data){
+			case 0:
+			  // todo: Sabotage api & Sabotage setup
+			  $player->sendMessage("Oxygen Comming soon");
+			  break;
+			case 1:
+				$player->sendMessage("Oxygen Comming soon");
+				break;
+			case 2:
+				$player->sendMessage("Reactor Comming soon");
+				break;
+		}
 	}
 }

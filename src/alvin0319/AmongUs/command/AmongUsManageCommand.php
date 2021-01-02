@@ -151,6 +151,7 @@ class AmongUsManageCommand extends PluginCommand{
 				$entity = Entity::createEntity("Vent", $pos->getLevel(), $nbt);
 				$entity->setImmobile(true);
 				$entity->setNameTag("VENT");
+				$entity->setNameTagAlwaysVisible(false);
 				$entity->spawnToAll();
 				$sender->sendMessage("Vent Spawned Successfully!");
 				break;
